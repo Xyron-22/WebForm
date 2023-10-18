@@ -18,6 +18,11 @@ module.exports = {
       md: '768px',
       lg: '976px',
       xl: '1440px',
+    },
+    colors: {
+      "whiteSmoke": "#f5f5f5",
+      "black": "#000000",
+      "white": "#FFFFFF"
     }
   },
   plugins: [],

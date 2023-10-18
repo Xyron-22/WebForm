@@ -2,6 +2,7 @@ import React from 'react'
 
 const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProducts, setArrayProducts}) => {
 
+    //function for closing modal and setting the product state empty
     const closeModal = (e) => {
         e.preventDefault();
         setProduct({
@@ -12,7 +13,8 @@ const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProd
         setToggle(!toggle)
     }
 
-    const handleArrayProducts = (e) => {
+    //function for adding a product in the array of added products
+    const handleAddProduct = (e) => {
         e.preventDefault();
         if(product.quantity !== "" && product.price !== "") {
             setArrayProducts([...arrayProducts, product])
@@ -20,7 +22,8 @@ const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProd
         } 
       }
       
-    const handleRemove = (e) => {
+    //function for removing a product in the added products array
+    const handleRemoveProduct = (e) => {
         e.preventDefault();
         let tempArrayOfProducts = arrayProducts
         tempArrayOfProducts = tempArrayOfProducts.filter((prod) => {
@@ -46,10 +49,10 @@ const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProd
             </div>
             <div className='w-[40%] flex justify-between'>
                 <button type='button' onClick={(e) => {
-                    handleArrayProducts(e)
+                    handleAddProduct(e)
                 }}>ADD</button>
                 <button type='button' onClick={(e) => {
-                    handleRemove(e)
+                    handleRemoveProduct(e)
                     closeModal(e)
                 }}>REMOVE</button>
             </div>
