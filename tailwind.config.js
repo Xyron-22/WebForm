@@ -22,7 +22,9 @@ module.exports = {
     colors: {
       "whiteSmoke": "#f5f5f5",
       "black": "#000000",
-      "white": "#FFFFFF"
+      "white": "#FFFFFF",
+      "lightBlue": "#ADD8E6",
+      "lightGreen": "#90EE90"
     }
   },
   plugins: [],

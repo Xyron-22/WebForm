@@ -34,8 +34,8 @@ const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProd
   
 
   return (
-    <div className='bg-black opacity-90 z-50 absolute w-full h-full flex justify-center items-center'>
-        <div className='w-full md:w-[60%] h-[40%] rounded-xl bg-white opacity-100 flex justify-center items-center flex-col'>
+    <div className='bg-black opacity-100 z-40 sticky bottom-0 w-screen h-screen flex justify-center items-center'>
+        <div className='w-full md:w-[60%] h-[40%] rounded-xl bg-white opacity-100 flex justify-center items-center flex-col z-50'>
             <h1>{product.product}</h1>
             <div>
                 <div className='flex flex-row justify-between m-5'>
