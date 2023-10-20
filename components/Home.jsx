@@ -39,6 +39,10 @@ const HomePage = () => {
     const [contactNumber, setContactNumber] = useState("")
     //state for term
     const [term, setTerm] = useState("")
+    //state for remarks/freebies/concer
+    const [remarksFreebiesAndConcern, setRemarksFreebiesAndConcern] = useState("")
+    //state for delivery date
+    const [deliveryDate, setDeliveryDate] = useState("")
     //state for toggling the modal
     const [toggle, setToggle] = useState(false)
     
@@ -112,24 +116,27 @@ const HomePage = () => {
   return (
     <>
     <div className='flex-col flex items-center lg:w-[80%] bg-white shadow-2xl'>
-      <h1 className='m-10 text-xl text-center md:text-2xl'>WESTERN BROTHERS OIL AND LUBRICANTS INC. ORDER FORM</h1>
-      <h3 className='mb-5 text-lg text-center md:text-xl'>DISTRIBUTOR SALES PERSONNEL ORDER FORM</h3>
-    <label htmlFor='date' className='mt-5 mb-2 text-xs md:text-xl text-center bg-[#ffcccb] p-1 rounded'>ORDER DATE</label>
-    <input className='shadow bg-whiteSmoke' type='date' name='date' value={date.toLocaleDateString("en-CA")} onChange={onSetDate}></input>
-    <h1 className='text-xs md:text-xl text-center mt-5 mb-2 bg-[#FFD580] p-1 rounded'>DSP ASSIGNED</h1>
+      <h1 className='m-10 text-xl text-center md:text-3xl'>WESTERN BROTHERS OIL AND LUBRICANTS INC. ORDER FORM</h1>
+      <h3 className='mb-5 text-lg text-center md:text-2xl'>DISTRIBUTOR SALES PERSONNEL ORDER FORM</h3>
+      <hr className='border-2 border-black w-full my-3'/>
+    <label htmlFor='date' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-[#ffcccb] p-1 rounded'>ORDER DATE</label>
+    <input className='shadow bg-whiteSmoke text-xl md:text-2xl' type='date' name='date' value={date.toLocaleDateString("en-CA")} onChange={onSetDate}></input>
+    <hr className='border-2 border-black w-full my-3'/>
+    <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#FFD580] p-1 rounded'>DSP ASSIGNED</h1>
     <div className='text-center flex'>
       {DspData.map((dsp, i) => {
         return (
           <div className='m-1 flex flex-col' key={i}>
-          <label htmlFor={dsp}>{dsp}</label>
+          <label htmlFor={dsp} className='text-xl md:text-2xl'>{dsp}</label>
           <input type='radio' name={dsp} value={dsp} checked={dspAssigned === dsp} onChange={(e) => setDspAssigned(e.target.value)}></input>
         </div>
         )
       })}
     </div>
-    <h1 className='text-xs md:text-xl text-center mt-5 mb-2 bg-[#CBC3E3] p-1 rounded'>OUTLET NAME</h1>
-    <input type='search' onChange={handleSearchOutletName} placeholder='Search Outlet Name' className='text-xs md:text-xl xl:text-xl mt-5 text-center border border-black'></input>
-    <div className='w-[95%] flex m-5 flex-wrap text-xs md:text-xl border border-black h-[20vh] overflow-auto'>
+      <hr className='border-2 border-black w-full my-3'/>
+    <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#CBC3E3] p-1 rounded'>OUTLET NAME</h1>
+    <input type='search' onChange={handleSearchOutletName} placeholder='Search Outlet Name' className='text-lg md:text-2xl mt-5 text-center border border-black rounded'></input>
+    <div className='w-[95%] flex m-5 flex-wrap text-lg md:text-2xl border border-black rounded-xl h-[20vh] overflow-auto'>
     {outletArray.map((val, i) => {
       return (
           <input className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-[#CBC3E3] rounded p-1 shadow hover:scale-110' key={i} name="product" type='button' value={val} onClick={() => setOutlet(val)}>
@@ -137,30 +144,34 @@ const HomePage = () => {
       )
     })}
     </div>
-    <h1 className='text-xs md:text-xl text-center mb-2'>ADDED OUTLET</h1>
-    <h1 className='text-xs md:text-xl text-center mb-2 bg-whiteSmoke shadow p-2'>{outlet}</h1>
-    <h1 className='text-xs md:text-xl text-center mb-2 bg-[#ADD8E6] p-1 rounded'>CUSTOMER NAME</h1>
-    <h1 className='text-xs md:text-xl text-center mb-2 bg-[#ADD8E6] rounded shadow p-2'>{customerName}</h1>
-    <input type='text' placeholder='Enter Customer name' className='text-xs md:text-xl xl:text-xl mt-5 text-center border border-black' onChange={(e) => setCustomerName(e.target.value)}></input>
-    <h1 className='text-xs md:text-xl text-center mt-5 mb-2 bg-[#C4A484] p-1 rounded'>ADDRESS</h1>
-    <input type='search' onChange={handleSearchAddress} placeholder='Search Address' className='text-xs md:text-xl xl:text-xl mt-5 text-center border border-black'></input>
-    <div className='w-[95%] flex m-5 flex-wrap text-xs md:text-xl border border-black h-[20vh] overflow-auto'>
+    <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#CBC3E3] p-1 rounded'>ADDED OUTLET</h1>
+    <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#CBC3E3] rounded shadow p-2'>{outlet}</h1>
+      <hr className='border-2 border-black w-full my-3'/>
+    <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#ADD8E6] p-1 rounded'>CUSTOMER NAME</h1>
+    <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#ADD8E6] rounded shadow p-2'>{customerName}</h1>
+    <input type='text' placeholder='Enter Customer name' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setCustomerName(e.target.value)}></input>
+      <hr className='border-2 border-black w-full my-3'/>
+    <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#C4A484] p-1 rounded'>ADDRESS</h1>
+    <input type='search' onChange={handleSearchAddress} placeholder='Search Address' className='text-lg md:text-2xl mt-5 text-center border border-black rounded'></input>
+    <div className='w-[95%] flex m-5 flex-wrap text-lg md:text-2xl border border-black rounded-xl h-[20vh] overflow-auto'>
     {arrayOfAddressShown && arrayOfAddressShown.map((address, i) => {
       return (
         <input type='button' className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-[#C4A484] rounded p-1 shadow hover:scale-110' value={address} onClick={(e) => setAddress(e.target.value)} key={i}></input>
       )
     })}
     </div>
-    <h1 className='text-xs md:text-xl text-center mb-2'>ADDED ADDRESS</h1>
-    <h1 className='text-xs md:text-xl text-center mb-2 bg-whiteSmoke shadow p-2'>{address}</h1>
-    <h1 className='text-xs md:text-xl text-center mt-5 mb-2 bg-[#D3D3D3] p-1 rounded'>TIN NUMBER AND CONTACT NUMBER</h1>
+    <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#C4A484] p-1 rounded'>ADDED ADDRESS</h1>
+    <h1 className='text-lg md:text-2xl text-center mb-2 shadow bg-[#C4A484] p-2 rounded'>{address}</h1>
+      <hr className='border-2 border-black w-full my-3'/>
+    <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#D3D3D3] p-1 rounded'>TIN NUMBER AND CONTACT NUMBER</h1>
     <div className='text-center flex flex-col lg:flex-row'>
-      <label htmlFor='TIN' className='text-xs md:text-xl text-center m-1'>TIN NUMBER:</label>
-      <input name='TIN' type='text' className='text-xs md:text-xl xl:text-xl text-center border border-black' onChange={(e) => setTinNumber(e.target.value)}></input>
-      <label htmlFor='Contact' className='text-xs md:text-xl text-center m-1'>CONTACT NUMBER:</label>
-      <input name='Contact' type='text' className='text-xs md:text-xl xl:text-xl text-center border border-black' onChange={(e) => setContactNumber(e.target.value)}></input>
+      <label htmlFor='TIN' className='text-lg md:text-2xl text-center m-1'>TIN NUMBER:</label>
+      <input name='TIN' type='text' className='text-lg md:text-2xl text-center border border-black rounded' placeholder='Enter TIN' onChange={(e) => setTinNumber(e.target.value)}></input>
+      <label htmlFor='Contact' className='text-lg md:text-2xl text-center m-1'>CONTACT NUMBER:</label>
+      <input name='Contact' type='text' className='text-lg md:text-2xl text-center border border-black rounded' placeholder='Enter Contact' onChange={(e) => setContactNumber(e.target.value)}></input>
     </div>
-    <h1 className='text-xs md:text-xl text-center mb-2 mt-5 bg-[#FFC0CB] p-1 rounded'>TERMS</h1>
+      <hr className='border-2 border-black w-full my-3'/>
+    <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-[#FFC0CB] p-1 rounded'>TERMS</h1>
     <div className='text-center flex'>
       {TermsData.map((termValue, i) => {
         return (
@@ -171,9 +182,10 @@ const HomePage = () => {
         )
       })}
     </div>
-    <h1 className='text-xs md:text-xl text-center mb-2 mt-5 bg-lightGreen p-1 rounded'>PRODUCTS</h1>
-    <input type='search' onChange={handleSearchProduct} placeholder='Search Product' className='text-xs md:text-xl xl:text-xl mt-5 text-center border border-black'></input>
-    <div className='w-[95%] flex m-5 flex-wrap text-xs md:text-xl border border-black h-[20vh] overflow-auto'>
+      <hr className='border-2 border-black w-full my-3'/>
+    <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-lightGreen p-1 rounded'>PRODUCTS</h1>
+    <input type='search' onChange={handleSearchProduct} placeholder='Search Product' className='text-lg md:text-2xl mt-5 text-center border border-black rounded'></input>
+    <div className='w-[95%] flex m-5 flex-wrap text-lg md:text-2xl border border-black rounded-xl h-[20vh] overflow-auto'>
     {mockDataArray.map((val, i) => {
       return (
           <input className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-lightGreen shadow hover:scale-110 p-1 rounded' key={i} name="product" type='button' value={val} onClick={(e) => {
@@ -185,15 +197,23 @@ const HomePage = () => {
     })}
     </div>
     <div className='pb-5'>
-    <h1 className='text-xs md:text-xl text-center mb-2'>ADDED PRODUCTS</h1>
+    <h1 className='text-lg md:text-2xl text-center mb-2 bg-lightGreen p-1 rounded'>ADDED PRODUCTS</h1>
     {arrayProducts.map(({product, quantity, price}, i) => {
       return (
-        <div className='text-xs md:text-xl text-center'>
+        <div className='text-lg md:text-2xl text-center mb-2 shadow bg-lightGreen p-2 rounded'>
           <li key={i}>Product:{product}, Quantity:{quantity}, Price:&#x20B1;{price} <button type='button' onClick={(e) => handleRemoveProductOnArray(e, product)}>REMOVE</button></li>
         </div>
       )
     })}
     </div>
+    <hr className='border-2 border-black w-full my-3'/>
+     <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-[#CF9FFF] p-1 rounded'>REMARKS/FREEBIES/CONCERN</h1>
+    <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#CF9FFF] rounded shadow p-2'>{remarksFreebiesAndConcern}</h1>
+    <textarea type='text' placeholder='Enter Text' className='w-[50%] text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setRemarksFreebiesAndConcern(e.target.value)}></textarea>
+    <hr className='border-2 border-black w-full my-3'/>
+    <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-[#808000] p-1 rounded'>DELIVERY DATE</h1>
+    <input className='shadow bg-whiteSmoke mb-5 text-xl md:text-2xl' type='date' name='orderDate' onChange={(e) => setDeliveryDate(e.target.value)}></input>
+    <hr className='border-2 border-black w-full mt-3'/>
     {toggle && <Modal setToggle={setToggle} toggle={toggle} product={product} handleProduct={handleProduct} setProduct={setProduct} setArrayProducts={setArrayProducts} arrayProducts={arrayProducts}></Modal>}
     </div>
     </>

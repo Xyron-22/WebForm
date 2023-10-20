@@ -36,27 +36,27 @@ const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProd
   return (
     <div className='bg-black opacity-100 z-40 sticky bottom-0 w-screen h-screen flex justify-center items-center'>
         <div className='w-full md:w-[60%] h-[40%] rounded-xl bg-white opacity-100 flex justify-center items-center flex-col z-50'>
-            <h1>{product.product}</h1>
+            <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-lightGreen p-1 rounded shadow-xl'>{product.product}</h1>
             <div>
                 <div className='flex flex-row justify-between m-5'>
-                <label htmlFor='price'>PRICE:</label>
-                <input name='price' type='number' placeholder='1' onChange={handleProduct} required></input>
+                <label htmlFor='price' className='text-lg md:text-2xl text-center'>Price:</label>
+                <input name='price' type='number' placeholder='1' className='rounded border border-black' onChange={handleProduct} required></input>
                 </div>
             <div className='flex flex-row justify-between m-5'>
-            <label htmlFor='quantity'>QUANTITY:</label>
-            <input name='quantity' type='number' placeholder='1' onChange={handleProduct} required></input>
+            <label htmlFor='quantity' className='text-lg md:text-2xl text-center'>Quantity:</label>
+            <input name='quantity' type='number' placeholder='1' className='rounded border border-black' onChange={handleProduct} required></input>
             </div>
             </div>
-            <div className='w-[40%] flex justify-between'>
-                <button type='button' onClick={(e) => {
+            <div className='w-[40%] flex justify-evenly'>
+                <button type='button' className='text-lg md:text-2xl shadow-xl text-center mb-2 mt-5 bg-lightGreen p-1 rounded' onClick={(e) => {
                     handleAddProduct(e)
-                }}>ADD</button>
-                <button type='button' onClick={(e) => {
+                }}>Add</button>
+                <button type='button' className='text-lg md:text-2xl shadow-xl text-center mb-2 mt-5 bg-[#FF0000] p-1 rounded' onClick={(e) => {
                     handleRemoveProduct(e)
                     closeModal(e)
-                }}>REMOVE</button>
+                }}>Remove</button>
             </div>
-            <button className='m-10' type='button' onClick={closeModal}>CLOSE</button>
+            <button className='m-10 bg-lightGreen rounded shadow-xl text-lg md:text-2xl p-2' type='button' onClick={closeModal}>CLOSE</button>
         </div>
     </div>
   )
