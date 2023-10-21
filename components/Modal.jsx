@@ -1,6 +1,7 @@
 import React from 'react'
+import toast from "react-hot-toast"
 
-const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProducts, setArrayProducts}) => {
+const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProducts, setArrayProducts, form, setForm}) => {
 
     //function for closing modal and setting the product state empty
     const closeModal = (e) => {
@@ -17,7 +18,12 @@ const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProd
     const handleAddProduct = (e) => {
         e.preventDefault();
         if(product.quantity !== "" && product.price !== "") {
+            toast.success("Product Added", {
+                duration: 3000,
+                className: "text-2xl"
+            })
             setArrayProducts([...arrayProducts, product])
+            setForm({...form, products: [...arrayProducts, product]})
             closeModal(e)
         } 
       }
