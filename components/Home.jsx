@@ -203,10 +203,6 @@ const HomePage = () => {
             setDspAssigned(e.target.value)
             setForm({...form, dspAssigned: e.target.value})
           }} type='button' value={dsp} className={`text-xl md:text-2xl ${dspAssigned === dsp ? "bg-[#FFD580]" : "bg-transparent"} rounded p-1 mb-1 hover:cursor-pointer`}></input>
-          {/* <input type='radio' name="dspAssigned" value={dsp} checked={dspAssigned === dsp} onChange={(e) => {
-            setDspAssigned(e.target.value)
-            setForm({...form, dspAssigned: e.target.value})
-          }}></input> */}
         </div>
         )
       })}
@@ -260,7 +256,6 @@ const HomePage = () => {
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-lightGreen p-1 rounded font-semibold'>PRODUCTS</h1>
     <div>
-    {/* <h1 className='text-lg md:text-2xl text-center mb-2 bg-lightGreen p-1 rounded'>ADDED PRODUCTS</h1> */}
     {arrayProducts.map(({product, quantity, price}, i) => {
       return (
         <div className='text-lg md:text-2xl text-center p-2 rounded flex'>
