@@ -10,7 +10,7 @@ import DspData from '@/data/DspData';
 import TermsData from '@/data/TermsData';
 import Modal from './Modal';
 
-const HomePage = () => {
+const Home = () => {
  
   // ORDER DATE -----------------------------------------------------
   //getting the date today
@@ -224,7 +224,7 @@ const HomePage = () => {
     <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#ADD8E6] rounded shadow p-2'>{form.customerName}</h1>
     <input type='text' placeholder='Enter Customer name' name='customerName' val={form.customerName} className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setForm({...form, customerName: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
-    <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#C4A484] p-1 rounded font-semibold'>ADDRESS</h1>
+    {/* <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#C4A484] p-1 rounded font-semibold'>ADDRESS</h1>
     <h1 className='text-lg md:text-2xl text-center mb-2 shadow bg-[#C4A484] p-2 rounded'>{form.address}</h1>
     <input type='search' onChange={handleSearchAddress} placeholder='Search Address' className='text-lg md:text-2xl mt-5 text-center border border-black rounded'></input>
     <div className='w-[95%] flex m-5 flex-wrap text-lg md:text-2xl border border-black rounded-xl h-[20vh] overflow-auto'>
@@ -233,7 +233,7 @@ const HomePage = () => {
         <input type='button' className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-[#C4A484] rounded p-1 shadow hover:scale-110' name='address' value={address} onClick={(e) => setForm({...form, address: e.target.value})} key={i}></input>
       )
     })}
-    </div>
+    </div> */}
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#D3D3D3] p-1 rounded font-semibold'>TIN NUMBER AND CONTACT NUMBER</h1>
     <div className='text-center flex flex-col lg:flex-row mb-3'>
@@ -292,4 +292,4 @@ const HomePage = () => {
   )
 }
 
-export default HomePage
+export default Home
