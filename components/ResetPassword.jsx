@@ -2,7 +2,6 @@
 
 import React, {useState} from 'react'
 import axios from 'axios'
-import { redirect } from 'next/navigation'
 
 const ResetPasswordForm = ({params}) => {
     const [password, setPassword] = useState("")

@@ -1,8 +1,13 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect,  useState } from 'react';
+import cookie from "js-cookie"
 import axios from "axios";
+import { jwtDecode } from 'jwt-decode';
+import useStore from '@/stateManagement/store';
+import { useRouter } from 'next/navigation';
 import toast, {Toaster} from "react-hot-toast";
+import ReactLoading from "react-loading";
 import ProductData from '@/data/ProductData';
 import Outlet from "@/data/OutletNameData";
 import DspAddresses from '@/data/DspAddresses';
@@ -10,8 +15,15 @@ import DspData from '@/data/DspData';
 import TermsData from '@/data/TermsData';
 import Modal from './Modal';
 
-const Home = () => {
- 
+const OrderForm = () => {
+
+  const token = useStore((state) => state.token)
+  const decodeToken = useStore((state) => state.decodeToken)
+  const decodedToken = useStore((state) => state.decodedToken)
+  // const decodedToken = useStore((state) => state.decodedToken)
+   
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(true)
   // ORDER DATE -----------------------------------------------------
   //getting the date today
   let defaultDate = new Date()
@@ -124,7 +136,7 @@ const Home = () => {
       && form.remarksFreebiesConcern !== "" 
       && form.deliveryDate !== "") {
         try {
-          await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + "/api/v1/form", form, {
+          await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`, form, {
             headers: {
               "Content-Type": "application/json"
             }
@@ -164,6 +176,19 @@ const Home = () => {
       e.target.reset()  
     }
 
+    useLayoutEffect(() => {
+      if (!token) return router.replace("/auth/login")
+      const decodedToken = jwtDecode(token)
+      if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) {
+        router.replace("/auth/login")
+      } else {
+        decodeToken()
+        setIsLoading(false)
+      }
+    }, [])
+
+    console.log(decodedToken)
+
     //function for showing addresses based on DSP assigned
     useEffect(() => {
       switch (dspAssigned) {
@@ -187,8 +212,9 @@ const Home = () => {
  
   return (
     <>
-   <form className='flex-col flex items-center lg:w-[80%] bg-white shadow-2xl' onSubmit={handleSubmit}>
-      <h1 className='m-7 md:m-10 text-xl text-center md:text-4xl font-extrabold'>WESTERN BROTHERS OIL AND LUBRICANTS INC. ORDER FORM</h1>
+    {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
+    <form className='flex-col flex items-center lg:w-[80%] bg-white shadow-2xl' onSubmit={handleSubmit}>
+      <h1 className='m-7 md:m-10 text-xl text-center md:text-4xl font-extrabold'>ORDER FORM</h1>
       <h3 className='mb-5 text-lg text-center md:text-2xl font-bold'>DISTRIBUTOR SALES PERSONNEL ORDER FORM</h3>
       <hr className='border-[1px] border-black w-[90%] my-3'/>
     <label htmlFor='orderDate' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-[#ffcccb] p-1 rounded font-semibold'>ORDER DATE</label>
@@ -288,8 +314,9 @@ const Home = () => {
     {toggle && <Modal setToggle={setToggle} toggle={toggle} product={product} handleProduct={handleProduct} setProduct={setProduct} setArrayProducts={setArrayProducts} arrayProducts={arrayProducts} form={form} setForm={setForm}></Modal>}
     </form>
     <Toaster></Toaster>
+    </>}
     </>
   )
 }
 
-export default Home
+export default OrderForm

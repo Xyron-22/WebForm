@@ -1,24 +1,92 @@
 "use client"
 
-import React, {useState} from 'react'
+import React, {useState, useRef, useLayoutEffect} from 'react'
 import Link from 'next/link'
+import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai"
+import axios from "axios"
+import { useRouter } from 'next/navigation'
+import useStore from '@/stateManagement/store'
+import toast, {Toaster} from 'react-hot-toast'
 
 const LoginForm = () => {
 
-  const [loginOrRegister, setLoginOrRegister] = useState(false)
+  const form = useRef()
+
+  const router = useRouter()
+
+  const setTokenToStorage = useStore((state) => state.setTokenToStorage)
+  const extractJwtFromStorage = useStore((state) => state.extractJwtFromStorage)
+  const token = useStore((state) => state.token)
+  const decodeToken = useStore((state) => state.decodeToken)
+  
+  const [isRegistered, setIsRegistered] = useState(true)
+  const [toggleHidePassword, setToggleHidePassword] = useState(false)
+  const [toggleHideConfirmPassword, setToggleHideConfirmPassword] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${isRegistered ? "signin" : "signup"}`, form.current, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      if (data.status === "success") {
+        setTokenToStorage(data.token)
+        extractJwtFromStorage()
+        toast.success("Successfully Logged In", {
+          duration: 3000,
+          className: "text-2xl"
+        })
+        router.replace("/")
+      }
+    } catch (error) {
+      console.log(error.response.data)
+        toast.error(error.response.data.message, {
+          duration: 3000,
+          className: "text-2xl"
+        })
+    }
+  }
+
+  useLayoutEffect(() => {
+    if(token) router.replace("/")
+  }, [])
 
   return (
-    <div className='w-full min-h-screen flex justify-center items-center'>
-    <form className='flex flex-wrap justify-center items-center flex-col w-[90%] h-[50vh]'>
-      <h1>{loginOrRegister ? "Register" : "Login"}</h1>
-        <input type='email' name='email' required placeholder='Email'></input>
-        <input type='password' name='password' required placeholder='Password'></input>
-        {loginOrRegister &&   <>
-        <input type='password' name='confirmPassword' required placeholder='Confirm Password'></input>
-        <input type='text' name='role' required placeholder='Role'></input>
+    <div className='w-full min-h-full flex justify-center items-center'>
+    <form className='flex flex-wrap items-center flex-col w-[90%] lg:w-[50%] min-h-[50vh] bg-whiteSmoke shadow-2xl rounded justify-center' ref={form} onSubmit={handleSubmit}>
+      <h1 className='text-2xl font-bold m-5 h-auto'>{isRegistered ? "Login" : "Register"}</h1>
+      <div className='flex items-center flex-wrap justify-center flex-col w-full min-h-[30vh] text-lg'>
+        <div className='flex flex-col w-[80%]'>
+        <label htmlFor='email' className='ml-1'>Email</label>
+        <input type='email' name='email' required placeholder='Email' className='text-center border-black border rounded'></input>
+        </div>
+        <div className='flex flex-col w-[80%] relative'>
+          <label htmlFor='password' className='ml-1'>Password</label>
+        <input type={toggleHidePassword ? "text" : "password"} name='password' required placeholder='Password' className='text-center border-black border rounded'></input>
+        {toggleHidePassword ? <AiFillEye className='absolute right-[3%] top-[55%] text-2xl cursor-pointer' onClick={() => setToggleHidePassword(!toggleHidePassword)}></AiFillEye>
+        : <AiFillEyeInvisible className='absolute right-[3%] top-[55%] text-2xl cursor-pointer' onClick={() => setToggleHidePassword(!toggleHidePassword)}></AiFillEyeInvisible>  
+        }
+        </div>
+        {isRegistered ? <></> : <>
+        <div className='flex flex-col w-[80%] relative'>
+          <label htmlFor='confirmPassword' className='ml-1'>Confirm Password</label>
+        <input type={toggleHideConfirmPassword ? "text" : "password"} name='confirmPassword' required placeholder='Confirm Password' className='text-center border-black border rounded'></input>
+        {toggleHideConfirmPassword ? <AiFillEye className='absolute right-[3%] top-[55%] text-2xl cursor-pointer' onClick={() => setToggleHideConfirmPassword(!toggleHideConfirmPassword)}></AiFillEye>
+        : <AiFillEyeInvisible className='absolute right-[3%] top-[55%] text-2xl cursor-pointer' onClick={() => setToggleHideConfirmPassword(!toggleHideConfirmPassword)}></AiFillEyeInvisible>  
+        }
+        </div>
+        <div className='flex flex-col w-[80%]'>
+          <label htmlFor='role'  className='ml-1'>Role</label>
+        <input type='text' name='role' required placeholder='Role' className='text-center border-black border rounded'></input>
+        </div>
         </>}
-        <button type='button' onClick={() => setLoginOrRegister(!loginOrRegister)}>{loginOrRegister ? "Already have an account ? login here" : "No account ? Register here"}</button>
-        <Link href={"/forgotpassword"}>Forgot password ?</Link>
+        </div>
+        <button type='submit' className='mx-auto m-3 p-1 px-3 rounded bg-lightBlue'>{isRegistered ? "Login" : "Register"}</button>
+        <button type='button' onClick={() => setIsRegistered(!isRegistered)} className='mx-auto'>{isRegistered ? "Not registered yet? Click here" : "Already have an account? Click here"}</button>
+        <Link className='mx-auto my-5' href={"/auth/forgotpassword"}>Forgot password?</Link>
+        <Toaster></Toaster>
     </form>
     </div>
   )
