@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useEffect, useLayoutEffect,  useState } from 'react';
-import cookie from "js-cookie"
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 import useStore from '@/stateManagement/store';
