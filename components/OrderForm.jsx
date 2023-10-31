@@ -181,12 +181,9 @@ const OrderForm = () => {
       if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) {
         router.replace("/auth/login")
       } else {
-        decodeToken()
         setIsLoading(false)
       }
     }, [])
-
-    console.log(decodedToken)
 
     //function for showing addresses based on DSP assigned
     useEffect(() => {

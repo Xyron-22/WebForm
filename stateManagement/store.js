@@ -1,13 +1,11 @@
 import {create} from "zustand";
-import cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 const useStore = create((set) => ({
-    token: cookies.get("jwt"),
-    decodedToken: null,
-    setTokenToStorage: (token) => set(() => cookies.set("jwt", token)),
-    extractJwtFromStorage: () => set({token: cookies.get("jwt")}),
-    decodeToken: () => set((state) => ({decodedToken: jwtDecode(state.token)}))
+    token: Cookies.get("jwt"),
+    setTokenToStorage: (token) => set(() => Cookies.set("jwt", token)),
+    extractJwtFromStorage: () => set({token: Cookies.get("jwt")}),
+    setTokenToNull: () => set({token: null}),
 }))
 
 export default useStore;

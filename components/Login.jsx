@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useState, useRef, useLayoutEffect} from 'react'
+import React, {useState, useRef, useLayoutEffect, useEffect} from 'react'
 import Link from 'next/link'
 import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai"
 import axios from "axios"
@@ -17,8 +17,7 @@ const LoginForm = () => {
   const setTokenToStorage = useStore((state) => state.setTokenToStorage)
   const extractJwtFromStorage = useStore((state) => state.extractJwtFromStorage)
   const token = useStore((state) => state.token)
-  const decodeToken = useStore((state) => state.decodeToken)
-  
+   
   const [isRegistered, setIsRegistered] = useState(true)
   const [toggleHidePassword, setToggleHidePassword] = useState(false)
   const [toggleHideConfirmPassword, setToggleHideConfirmPassword] = useState(false)
@@ -38,20 +37,16 @@ const LoginForm = () => {
           duration: 3000,
           className: "text-2xl"
         })
-        router.replace("/")
+        router.replace("/records/order")
       }
     } catch (error) {
-      console.log(error.response.data)
+      console.log(error)
         toast.error(error.response.data.message, {
           duration: 3000,
           className: "text-2xl"
         })
     }
   }
-
-  useLayoutEffect(() => {
-    if(token) router.replace("/")
-  }, [])
 
   return (
     <div className='w-full min-h-full flex justify-center items-center'>

@@ -1,10 +1,11 @@
 "use client"
 
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef} from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import toast, {Toaster} from "react-hot-toast";
+import { useDownloadExcel } from 'react-export-table-to-excel';
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
 
@@ -19,6 +20,8 @@ const arrayOfDSP = [
 const AccountRecord = ({data}) => {
     const router = useRouter()
 
+    const tableRef = useRef(null)
+
     const token = useStore((state) => state.token)
     const decodeToken = useStore((state) => state.decodeToken)
 
@@ -28,7 +31,9 @@ const AccountRecord = ({data}) => {
     //function for filtering the account record base on DSP
     const handleFilterDSP = (e) => {
         e.preventDefault()
-        const arrayOfRecordsFiltered = data.data.filter((account) => account.DSP === e.target.value)
+        const arrayOfRecordsFiltered = data.data.filter((account) => {
+            return account.DSP.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+        })
         setAccountRecordsShown(arrayOfRecordsFiltered)
     }
 
@@ -49,7 +54,7 @@ const AccountRecord = ({data}) => {
         })
         setAccountRecordsShown(arrayOfFilteredAccountName)
     }
-
+ 
     //function for fetching all and latest account records
     const fetchAllAccountRecords = async (e) => {
         e.preventDefault()
@@ -94,33 +99,37 @@ const AccountRecord = ({data}) => {
         setAccountRecordsShown(tempArr)
     }
 
+
+    const {onDownload} = useDownloadExcel({
+        currentTableRef: tableRef.current,
+        filename: "Account Records Table",
+        sheet: "Accounts"
+    })
+
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) {
           router.replace("/auth/login")
         } else {
-          decodeToken()
           setIsLoading(false)
         }
     },[])
 
   return (
     <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-     <div className=' bg-white p-2 text-center my-5'>
+     <div className=' bg-white p-2 text-center my-5 md:text-xl'>
         <h1 className='md:text-3xl font-bold mx-3 mb-2'>Account Records</h1>
         <h1>Number of records: {accountRecordsShown.length}</h1>
-        <input type='button' value={"Refresh"} onClick={fetchAllAccountRecords} className='m-2 cursor-pointer rounded bg-lightBlue p-1 shadow-2xl'></input>
-        {arrayOfDSP.map((DSP, i) => {
-            return (
-                <input type='button' name='DSP' value={DSP} key={i} className='m-2 cursor-pointer rounded bg-lightBlue p-1 shadow-2xl' onClick={handleFilterDSP}></input>
-            )
-        })}
+        <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-lightBlue p-1 shadow-2xl m-2'>Download Table</button>
+        <hr></hr>
+        <input type='button' value={"Reload"} onClick={fetchAllAccountRecords} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
+        <input type='search' placeholder='Search DSP' onChange={handleFilterDSP} className='text-center border border-black m-2'></input>
         <input type='search' name='filterLocation' placeholder='Search Location' onChange={handleFilterLocation} className='text-center border border-black m-2'></input>
         <input type='search' name='filterAccountName' placeholder='Search Account Name' onChange={handleFilterAccountName} className='text-center border border-black m-2'></input>
-        <input type='button' name='sortByName' value={"Sort by Account name"} onClick={handleSortByName} className='m-2 cursor-pointer rounded bg-lightBlue p-1 shadow-2xl'></input>
-        <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer rounded bg-lightBlue p-1 shadow-2xl'></input>
-        <table className='border border-black md:min-w-full m-auto'>
+        <input type='button' name='sortByName' value={"Sort by Account name"} onClick={handleSortByName} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
+        <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
+        <table className='border border-black md:min-w-full m-auto' ref={tableRef}>
             <thead>
             <tr>
                 <th className='border border-black'>Customer Number</th>

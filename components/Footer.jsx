@@ -2,7 +2,7 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div className='bg-whiteSmoke'>Copyright © 2023 Xyron Uy • Philippines Based Developer</div>
+    <div className='bg-whiteSmoke w-full text-center md:text-xl font-semibold'>Copyright © 2023 XU Software Services • Philippines Based Developer</div>
   )
 }
 
