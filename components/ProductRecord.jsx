@@ -8,6 +8,7 @@ import toast, {Toaster} from "react-hot-toast";
 import { useDownloadExcel } from 'react-export-table-to-excel';
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
+import Link from 'next/link';
 
 const ProductRecord = ({data}) => {
 
@@ -16,8 +17,7 @@ const ProductRecord = ({data}) => {
     const tableRef = useRef(null)
 
     const token = useStore((state) => state.token)
-    const decodeToken = useStore((state) => state.decodeToken)
-
+ 
     const [isLoading, setIsLoading] = useState(true)
     const [productRecordsShown, setProductRecordsShown] = useState(data.data)
 
@@ -61,15 +61,17 @@ const ProductRecord = ({data}) => {
     },[])
 
   return (
+    <>{data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
     <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-    <div className=' bg-white p-2 text-center my-5 md:text-xl'>
+    <div className=' bg-white p-2 text-center my-5 md:text-xl relative w-screen lg:w-[90%]'>
+    <Link href={"/"} className='absolute left-3 bg-lightBlue p-1 m-1'>Home</Link>
        <h1 className='md:text-3xl font-bold mx-3 mb-2'>Product Records</h1>
        <h1>Number of records: {productRecordsShown.length}</h1>
        <input type='button' value={"Reload"} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl' onClick={fetchAllProductRecords}></input>
        <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-lightBlue p-1 shadow-2xl m-2'>Download Table</button>
        <hr></hr>
         <input type='search' name='filterProductName' placeholder='Search Product Name' onChange={handleFilterByProductName} className='text-center border border-black m-2'></input>
-       <table className='border border-black md:min-w-full m-auto' ref={tableRef}>
+       <table className='border border-black min-w-full m-auto' ref={tableRef}>
            <thead>
            <tr>
                <th className='border border-black'>Product ID</th>
@@ -89,6 +91,7 @@ const ProductRecord = ({data}) => {
        </table>
        <Toaster></Toaster>
    </div></>}</>
+    }</>
   )
 }
 

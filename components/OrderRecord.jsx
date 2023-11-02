@@ -8,14 +8,7 @@ import toast, {Toaster} from "react-hot-toast";
 import { useDownloadExcel } from 'react-export-table-to-excel';
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
-
-const arrayOfDSP = [
-    "DSP 1",
-    "DSP 2",
-    "DSP 3",
-    "DSP 4",
-    "DSP 5",
-]
+import Link from 'next/link';
 
 const OrderRecord = ({data}) => {
 
@@ -24,8 +17,7 @@ const OrderRecord = ({data}) => {
     const tableRef = useRef(null)
 
     const token = useStore((state) => state.token)
-    const decodeToken = useStore((state) => state.decodeToken)
-
+   
     const [isLoading, setIsLoading] = useState(true)
     const [orderRecordsShown, setOrderRecordsShown] = useState(data.data)
 
@@ -133,8 +125,12 @@ const OrderRecord = ({data}) => {
     },[])
 
   return (
-    <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-     <div className=' bg-white p-2 text-center my-5 w-screen xl:w-[75%] overflow-hidden md:text-xl'>
+    <>
+    {data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
+    <>
+     {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
+     <div className=' bg-white p-2 text-center my-5 w-screen xl:w-[90%] md:text-xl relative'>
+        <Link href={"/"} className='absolute left-3 bg-lightBlue p-1 m-1'>Home</Link>
         <h1 className='md:text-3xl font-bold mx-3 mb-2'>Order Records</h1>
         <h1>Number of records: {orderRecordsShown.length}</h1>
         <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-lightBlue p-1 shadow-2xl m-2'>Download Table</button>
@@ -148,7 +144,7 @@ const OrderRecord = ({data}) => {
         <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
         <input type='button' name='sortByOrderDate' value={"Sort by Order Date"} onClick={handleSortByOrderDate} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
         <div className='w-full overflow-auto'>
-        <table className='border border-black m-auto lg:text-base' ref={tableRef}>
+        <table className='border border-black m-auto lg:text-base min-w-full' ref={tableRef}>
             <thead>
             <tr>
                 <th className='border border-black'>Order Date</th>
@@ -191,8 +187,10 @@ const OrderRecord = ({data}) => {
             </tbody>
         </table>
         </div>  
-        <Toaster></Toaster>
-    </div></>}</>
+    </div></>}
+    </>
+    }
+   </>
   )
 }
 

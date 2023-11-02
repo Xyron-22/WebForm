@@ -1,6 +1,7 @@
 "use client"
 
 import React, {useState, useRef, useLayoutEffect, useEffect} from 'react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai"
 import axios from "axios"
@@ -14,8 +15,8 @@ const LoginForm = () => {
 
   const router = useRouter()
 
-  const setTokenToStorage = useStore((state) => state.setTokenToStorage)
-  const extractJwtFromStorage = useStore((state) => state.extractJwtFromStorage)
+  const setToken = useStore((state) => state.setToken)
+  // const extractJwtFromStorage = useStore((state) => state.extractJwtFromStorage)
   const token = useStore((state) => state.token)
    
   const [isRegistered, setIsRegistered] = useState(true)
@@ -30,23 +31,25 @@ const LoginForm = () => {
           "Content-Type": "application/json"
         }
       })
-      if (data.status === "success") {
-        setTokenToStorage(data.token)
-        extractJwtFromStorage()
+        Cookies.set("jwt", data.token)
+        setToken()
         toast.success("Successfully Logged In", {
           duration: 3000,
           className: "text-2xl"
         })
-        router.replace("/records/order")
-      }
+        router.replace("/")
     } catch (error) {
       console.log(error)
-        toast.error(error.response.data.message, {
+        toast.error(error?.response?.data?.message, {
           duration: 3000,
           className: "text-2xl"
         })
     }
   }
+
+  useLayoutEffect(() => {
+    if (token) router.replace("/")
+  }, [])
 
   return (
     <div className='w-full min-h-full flex justify-center items-center'>

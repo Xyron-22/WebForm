@@ -3,9 +3,6 @@ import ProductRecord from '@/components/ProductRecord'
 
 async function getProductRecords () {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/product`, {cache: 'no-store'})
-    if (!res.ok) {
-        throw new Error("Failed to fetch data")
-    }
     return res.json()
 }
 
