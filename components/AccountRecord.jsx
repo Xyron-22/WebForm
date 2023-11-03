@@ -51,8 +51,10 @@ const AccountRecord = ({data}) => {
     const fetchAllAccountRecords = async (e) => {
         e.preventDefault()
         try {
+            setIsLoading(true)
             const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/account`)
             setAccountRecordsShown(data.data)
+            setIsLoading(false)
         } catch (error) {
             toast.error("Error occurred, please try again", {
                 duration: 3000,
@@ -65,10 +67,10 @@ const AccountRecord = ({data}) => {
     const handleSortByName = () => {
         let tempArr = [...accountRecordsShown]
         tempArr.sort((a, b) => {
-            if(a.account_name < b.account_name) {
+            if(a.account_name.trim() < b.account_name.trim()) { //trim the account name first so it can be sort correctly
                 return -1
             } 
-            if(a.account_name > b.account_name) {
+            if(a.account_name.trim() > b.account_name.trim()) {
                 return 1
             }
             return 0
@@ -112,26 +114,26 @@ const AccountRecord = ({data}) => {
     <>{data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
     <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
     <div className=' bg-white p-2 text-center my-5 md:text-xl w-screen lg:w-[90%] relative'>
-    <Link href={"/"} className='absolute left-3 bg-lightBlue p-1 m-1'>Home</Link>
+    <Link href={"/"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Home</Link>
        <h1 className='md:text-3xl font-bold mx-3 mb-2'>Account Records</h1>
        <h1>Number of records: {accountRecordsShown.length}</h1>
-       <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-lightBlue p-1 shadow-2xl m-2'>Download Table</button>
+       <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table</button>
        <hr></hr>
-       <input type='button' value={"Reload"} onClick={fetchAllAccountRecords} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
+       <input type='button' value={"Reload"} onClick={fetchAllAccountRecords} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
        <input type='search' placeholder='Search DSP' onChange={handleFilterDSP} className='text-center border border-black m-2'></input>
        <input type='search' name='filterLocation' placeholder='Search Location' onChange={handleFilterLocation} className='text-center border border-black m-2'></input>
        <input type='search' name='filterAccountName' placeholder='Search Account Name' onChange={handleFilterAccountName} className='text-center border border-black m-2'></input>
-       <input type='button' name='sortByName' value={"Sort by Account name"} onClick={handleSortByName} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
-       <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
+       <input type='button' name='sortByName' value={"Sort by Account name"} onClick={handleSortByName} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
+       <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
        <div className='w-full overflow-auto'>
        <table className='border border-black sm:min-w-full m-auto' ref={tableRef}>
            <thead>
            <tr>
-                <th className='border border-black'>Account ID</th>
-               <th className='border border-black'>Customer Number</th>
-               <th className='border border-black'>Account Name</th>
-               <th className='border border-black'>Location</th>
-               <th className='border border-black'>DSP</th>
+                <th className='border border-black bg-red text-white'>Account ID</th>
+               <th className='border border-black bg-red text-white'>Customer Number</th>
+               <th className='border border-black bg-red text-white'>Account Name</th>
+               <th className='border border-black bg-red text-white'>Location</th>
+               <th className='border border-black bg-red text-white'>DSP</th>
            </tr>
            </thead>
            <tbody>

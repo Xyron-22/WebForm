@@ -49,7 +49,7 @@ const Modal = ({setToggle, toggle, product, setProduct, arrayProducts, setArrayP
   return (
     <div className='bg-black opacity-100 z-40 sticky bottom-0 w-screen h-screen flex justify-center items-center'>
         <div className='w-full md:w-[60%] h-[40%] rounded-xl bg-white opacity-100 flex justify-center items-center flex-col z-50'>
-            <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-lightGreen p-1 rounded shadow-xl'>{product.product}</h1>
+            <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-blue text-white p-1 rounded shadow-xl'>{product.product}</h1>
             <div>
                 <div className='flex flex-row justify-between m-5'>
                 <label htmlFor='price' className='text-lg md:text-2xl text-center'>Price:</label>
@@ -61,15 +61,15 @@ const Modal = ({setToggle, toggle, product, setProduct, arrayProducts, setArrayP
             </div>
             </div>
             <div className='w-[40%] flex justify-evenly'>
-                <button type='button' className='text-lg md:text-2xl shadow-xl text-center mb-2 mt-5 bg-lightGreen p-1 rounded' onClick={(e) => {
+                <button type='button' className='text-lg md:text-2xl shadow-xl text-center mb-2 mt-5 bg-red text-white p-1 rounded' onClick={(e) => {
                     handleAddProduct(e)
                 }}>Add</button>
-                <button type='button' className='text-lg md:text-2xl shadow-xl text-center mb-2 mt-5 bg-[#FF0000] p-1 rounded' onClick={(e) => {
+                <button type='button' className='text-lg md:text-2xl shadow-xl text-center mb-2 mt-5 bg-red text-white p-1 rounded' onClick={(e) => {
                     handleRemoveProduct(e)
                     closeModal(e)
                 }}>Remove</button>
             </div>
-            <button className='m-10 bg-lightGreen rounded shadow-xl text-lg md:text-2xl p-2' type='button' onClick={closeModal}>CLOSE</button>
+            <button className='m-10 bg-blue text-white rounded shadow-xl text-lg md:text-2xl p-2' type='button' onClick={closeModal}>CLOSE</button>
         </div>
     </div>
   )
