@@ -25,7 +25,7 @@ const ProductRecord = ({data}) => {
     const handleFilterByProductName = (e) => {
         e.preventDefault()
         const arrayOfFilteredProductName = data.data.filter((product) => {
-            return product.product_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+            return product.mat_description.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setProductRecordsShown(arrayOfFilteredProductName)
     }
@@ -75,15 +75,19 @@ const ProductRecord = ({data}) => {
            <thead>
            <tr>
                <th className='border border-black'>Product ID</th>
-               <th className='border border-black'>Product Name</th>
+               <th className='border border-black'>Material Code</th>
+               <th className='border border-black'>Material Description</th>
+               <th className='border border-black'>Product Family</th>
            </tr>
            </thead>
            <tbody>
-               {productRecordsShown.map(({product_id, product_name}, i) => {
+               {productRecordsShown.map(({product_id, mat_code, mat_description, product_family}, i) => {
                    return (
                        <tr key={i}>
                        <td className='border border-black text-center'>{product_id}</td>
-                       <td className='border border-black'>{product_name}</td>
+                       <td className='border border-black'>{mat_code}</td>
+                       <td className='border border-black'>{mat_description}</td>
+                       <td className='border border-black'>{product_family}</td>
                    </tr>
                    )
                })}

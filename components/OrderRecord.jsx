@@ -25,7 +25,7 @@ const OrderRecord = ({data}) => {
     const handleFilterDSP = (e) => {
         e.preventDefault()
         const arrayOfFilteredDSP = data.data.filter((order) => {
-            return order.DSP.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+            return order.dsp.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setOrderRecordsShown(arrayOfFilteredDSP)
     }
@@ -33,7 +33,7 @@ const OrderRecord = ({data}) => {
      const handleFilterLocation = (e) => {
         e.preventDefault()
         const arrayOfFilteredLocation = data.data.filter((order) => {
-            return order.Location.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+            return order.location.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setOrderRecordsShown(arrayOfFilteredLocation)
     }
@@ -42,7 +42,7 @@ const OrderRecord = ({data}) => {
     const handleFilterAccountName = (e) => {
         e.preventDefault()
         const arrayOfFilteredAccountName = data.data.filter((order) => {
-            return order.Account_Name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+            return order.account_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setOrderRecordsShown(arrayOfFilteredAccountName)
     }
@@ -74,10 +74,10 @@ const OrderRecord = ({data}) => {
     const handleSortByName = () => {
         let tempArr = [...orderRecordsShown]
         tempArr.sort((a, b) => {
-            if(a.Account_Name < b.Account_Name) {
+            if(a.account_name < b.account_name) {
                 return -1
             } 
-            if(a.Account_Name > b.Account_Name) {
+            if(a.account_name > b.account_name) {
                 return 1
             }
             return 0
@@ -89,10 +89,10 @@ const OrderRecord = ({data}) => {
     const handleSortByLocation = () => {
         let tempArr = [...orderRecordsShown]
         tempArr.sort((a, b) => {
-            if(a.Location < b.Location) {
+            if(a.location < b.location) {
                 return -1
             } 
-            if(a.Location > b.Location) {
+            if(a.location > b.location) {
                 return 1
             }
             return 0
@@ -164,7 +164,7 @@ const OrderRecord = ({data}) => {
             </tr>
             </thead>
             <tbody>
-                {orderRecordsShown.map(({order_date, Account_Name, Location, DSP, product_name, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price}, i) => {
+                {orderRecordsShown.map(({order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price}, i) => {
                     return (
                         <tr key={i}>
                         <td className='border border-black text-center'>{new Date(order_date).toLocaleDateString()}</td>
@@ -172,14 +172,14 @@ const OrderRecord = ({data}) => {
                         <td className='border border-black'>{customer_name}</td>
                         <td className='border border-black text-center'>{contact}</td>
                         <td className='border border-black text-center'>{tin}</td>
-                        <td className='border border-black text-center'>{product_name}</td>
+                        <td className='border border-black text-center'>{mat_description}</td>
                         <td className='border border-black text-center'>{price}</td>
                         <td className='border border-black text-center'>{quantity}</td>
                         <td className='border border-black text-center'>{total_price}</td>
                         <td className='border border-black text-center'>{terms}</td>
-                        <td className='border border-black text-center'>{Account_Name}</td>
-                        <td className='border border-black text-center'>{Location}</td>
-                        <td className='border border-black text-center'>{DSP}</td>
+                        <td className='border border-black text-center'>{account_name}</td>
+                        <td className='border border-black text-center'>{location}</td>
+                        <td className='border border-black text-center'>{dsp}</td>
                         <td className='border border-black text-center'>{remarks_freebies_concern}</td>
                     </tr>
                     )

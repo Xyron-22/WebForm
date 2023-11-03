@@ -1,17 +1,24 @@
 import React from 'react'
 import toast from "react-hot-toast"
 
-const Modal = ({setToggle, toggle, product, handleProduct, setProduct, arrayProducts, setArrayProducts, form, setForm}) => {
+const Modal = ({setToggle, toggle, product, setProduct, arrayProducts, setArrayProducts, form, setForm}) => {
 
     //function for closing modal and setting the product state empty
     const closeModal = (e) => {
         e.preventDefault();
         setProduct({
             product: "",
+            productId: "",
             quantity: "",
             price: ""
         })
         setToggle(!toggle)
+    }
+    
+    //function for filling in the fields of a single product
+    const handleProduct = (e) => {
+        e.preventDefault();
+        setProduct({...product, [e.target.name]: e.target.value})
     }
 
     //function for adding a product in the array of added products

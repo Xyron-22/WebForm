@@ -24,7 +24,7 @@ const AccountRecord = ({data}) => {
     const handleFilterDSP = (e) => {
         e.preventDefault()
         const arrayOfRecordsFiltered = data.data.filter((account) => {
-            return account.DSP.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+            return account.dsp.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setAccountRecordsShown(arrayOfRecordsFiltered)
     }
@@ -33,7 +33,7 @@ const AccountRecord = ({data}) => {
     const handleFilterLocation = (e) => {
         e.preventDefault()
         const arrayOfFilteredLocation = data.data.filter((account) => {
-            return account.Location.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+            return account.location.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setAccountRecordsShown(arrayOfFilteredLocation)
     }
@@ -42,7 +42,7 @@ const AccountRecord = ({data}) => {
     const handleFilterAccountName = (e) => {
         e.preventDefault()
         const arrayOfFilteredAccountName = data.data.filter((account) => {
-            return account.Account_Name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+            return account.account_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setAccountRecordsShown(arrayOfFilteredAccountName)
     }
@@ -65,10 +65,10 @@ const AccountRecord = ({data}) => {
     const handleSortByName = () => {
         let tempArr = [...accountRecordsShown]
         tempArr.sort((a, b) => {
-            if(a.Account_Name < b.Account_Name) {
+            if(a.account_name < b.account_name) {
                 return -1
             } 
-            if(a.Account_Name > b.Account_Name) {
+            if(a.account_name > b.account_name) {
                 return 1
             }
             return 0
@@ -80,10 +80,10 @@ const AccountRecord = ({data}) => {
     const handleSortByLocation = () => {
         let tempArr = [...accountRecordsShown]
         tempArr.sort((a, b) => {
-            if(a.Location < b.Location) {
+            if(a.location < b.location) {
                 return -1
             } 
-            if(a.Location > b.Location) {
+            if(a.location > b.location) {
                 return 1
             }
             return 0
@@ -123,9 +123,11 @@ const AccountRecord = ({data}) => {
        <input type='search' name='filterAccountName' placeholder='Search Account Name' onChange={handleFilterAccountName} className='text-center border border-black m-2'></input>
        <input type='button' name='sortByName' value={"Sort by Account name"} onClick={handleSortByName} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
        <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer bg-lightBlue p-1 shadow-2xl'></input>
+       <div className='w-full overflow-auto'>
        <table className='border border-black sm:min-w-full m-auto' ref={tableRef}>
            <thead>
            <tr>
+                <th className='border border-black'>Account ID</th>
                <th className='border border-black'>Customer Number</th>
                <th className='border border-black'>Account Name</th>
                <th className='border border-black'>Location</th>
@@ -133,18 +135,20 @@ const AccountRecord = ({data}) => {
            </tr>
            </thead>
            <tbody>
-               {accountRecordsShown.map(({Customer_Number, Account_Name, Location, DSP}, i) => {
+               {accountRecordsShown.map(({account_id, customer_number, account_name, location, dsp}, i) => {
                    return (
                        <tr key={i}>
-                       <td className='border border-black text-center'>{Customer_Number}</td>
-                       <td className='border border-black'>{Account_Name}</td>
-                       <td className='border border-black'>{Location}</td>
-                       <td className='border border-black text-center'>{DSP}</td>
+                        <td className='border border-black text-center'>{account_id}</td>
+                       <td className='border border-black text-center'>{customer_number}</td>
+                       <td className='border border-black'>{account_name}</td>
+                       <td className='border border-black'>{location}</td>
+                       <td className='border border-black text-center'>{dsp}</td>
                    </tr>
                    )
                })}
            </tbody>
        </table>
+       </div>
        <Toaster></Toaster>
    </div></>}</>
     }</> 

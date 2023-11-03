@@ -1,28 +1,24 @@
 "use client"
 
-import React, { useEffect, useLayoutEffect,  useState } from 'react';
+import React, { useLayoutEffect,  useState } from 'react';
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 import useStore from '@/stateManagement/store';
 import { useRouter } from 'next/navigation';
 import toast, {Toaster} from "react-hot-toast";
 import ReactLoading from "react-loading";
-import ProductData from '@/data/ProductData';
-import Outlet from "@/data/OutletNameData";
-import DspAddresses from '@/data/DspAddresses';
 import DspData from '@/data/DspData';
 import TermsData from '@/data/TermsData';
 import Modal from './Modal';
 
-const OrderForm = () => {
+const OrderForm = ({data}) => {
 
   const token = useStore((state) => state.token)
-  const decodeToken = useStore((state) => state.decodeToken)
-  const decodedToken = useStore((state) => state.decodedToken)
   // const decodedToken = useStore((state) => state.decodedToken)
    
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
+
   // ORDER DATE -----------------------------------------------------
   //getting the date today
   let defaultDate = new Date()
@@ -37,9 +33,10 @@ const OrderForm = () => {
 
   // OUTLET NAME -----------------------------------------------------
   //state for the initial array of outlet names
-  const [outletArray, setOutletArray] = useState(Outlet) //do not remove
-  //state for outlet name selected
-
+  const [outletArray, setOutletArray] = useState([]) //do not remove
+  const [outletArrayToSearchAgainstWith, setOutletArrayToSearchAgainstWith] = useState()
+  const [accountSelected, setAccountSelected] = useState("")//do not remove
+ 
   // ADDRESS --------------------------------------------------------
   //state for array of address shown based on DSP assigned
   const [arrayOfAddressShown, setArrayOfAddressShown] = useState() //do not remove
@@ -49,12 +46,13 @@ const OrderForm = () => {
   // PRODUCTS -------------------------------------------------------------
   //state for single product
   const [product, setProduct] = useState({
-  product: "",
+    product: "",
+    productId: "",
     quantity: "",
     price: ""
   }) //do not remove
   //state for the initial array of products
-  const [initialProductArray, setInitialProductArray] = useState(ProductData) //do not remove
+  const [initialProductArray, setInitialProductArray] = useState(data.data) //do not remove
   //state for array of products added
   const [arrayProducts, setArrayProducts] = useState([]) //do not remove
 
@@ -62,10 +60,8 @@ const OrderForm = () => {
   //state for whole form complete with all the fields
   const [form, setForm] = useState({
     orderDate: defaultDate,
-    dspAssigned: "",
-    outlet: "",
+    accountId: "",   
     customerName: "",
-    address: "",
     tinNumber: "",
     contactNumber: "",
     term: "",
@@ -74,19 +70,14 @@ const OrderForm = () => {
     deliveryDate: ""
   })
 
-  // console.log(form)
+  console.log(form)
 
   // MODAL TOGGLE ------------------------------------------------------------------
   //state for toggling the modal
   const [toggle, setToggle] = useState(false)
     
-
-    //function for filling in the fields of a single product
-    const handleProduct = (e) => {
-      e.preventDefault();
-      setProduct({...product, [e.target.name]: e.target.value})
-    }
-    
+    // console.log(form)
+      
     //function for removing a product in the array of added products
     const handleRemoveProductOnArray = (e, prod) => {
       e.preventDefault();
@@ -99,13 +90,13 @@ const OrderForm = () => {
 
     //function for searching products in the lists of products
     const handleSearchProduct = (e) => {
-      const newArr = ProductData.filter((prod) => prod.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
+      const newArr = data.data.filter((prod) => prod.mat_description.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
       setInitialProductArray(newArr)
     }
     
     //function for searching products in the lists of products
     const handleSearchOutletName = (e) => {
-      const newArr = Outlet.filter((outlet) => outlet.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
+      const newArr = outletArrayToSearchAgainstWith.filter((outlet) => outlet.account_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
       setOutletArray(newArr)
     }
     
@@ -121,13 +112,25 @@ const OrderForm = () => {
       setArrayOfAddressShown(newArr)
     }
 
+    //function for fetching account records based on dsp
+    const handleFetchAccountBasedOnDsp = async (e) => {
+        e.preventDefault()
+        try {
+          const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/account/${e.target.value}`)
+          setOutletArray(data.data)
+          setOutletArrayToSearchAgainstWith(data.data)
+          console.log(data.data)
+        } catch (error) {
+          console.log(error)
+        }
+    }
+
     //function for submitting the form
     const handleSubmit = async (e) => {
       e.preventDefault();
-      if(form.dspAssigned !== "" 
-      && form.outlet !== "" 
-      && form.customerName !== "" 
-      && form.address !== "" 
+      if(
+      form.customerName !== "" 
+      && form.accountId !== ""
       && form.tinNumber !== "" 
       && form.contactNumber !== "" 
       && form.term !== "" 
@@ -144,6 +147,21 @@ const OrderForm = () => {
             duration: 3000,
             className: "text-2xl"
           })
+          setDspAssigned("")
+          setArrayOfAddressShown([])
+          setArrayProducts([])
+          setForm({
+          orderDate: defaultDate,
+          accountId: "",
+          customerName: "",
+          tinNumber: "",
+          contactNumber: "",
+          term: "",
+          products: "",
+          remarksFreebiesConcern: "",
+          deliveryDate: ""
+      })
+      e.target.reset()  
         } catch (error) {
           toast.error("Something went wrong, Please try again", {
             duration: 3000,
@@ -156,23 +174,6 @@ const OrderForm = () => {
           className: "text-2xl"
         })
       }
-      setDspAssigned("")
-      setArrayOfAddressShown([])
-      setArrayProducts([])
-      setForm({
-        orderDate: defaultDate,
-        dspAssigned: "",
-        outlet: "",
-        customerName: "",
-        address: "",
-        tinNumber: "",
-        contactNumber: "",
-        term: "",
-        products: "",
-        remarksFreebiesConcern: "",
-        deliveryDate: ""
-      })
-      e.target.reset()  
     }
 
     useLayoutEffect(() => {
@@ -184,27 +185,6 @@ const OrderForm = () => {
         setIsLoading(false)
       }
     }, [])
-
-    //function for showing addresses based on DSP assigned
-    useEffect(() => {
-      switch (dspAssigned) {
-        case "DSP 1": setArrayOfAddressShown(DspAddresses.dsp1)
-        setArrayOfAddressToSearchAgainst(DspAddresses.dsp1)
-        break;
-        case "DSP 2": setArrayOfAddressShown(DspAddresses.dsp2)
-        setArrayOfAddressToSearchAgainst(DspAddresses.dsp2)
-        break;
-        case "DSP 3": setArrayOfAddressShown(DspAddresses.dsp3)
-        setArrayOfAddressToSearchAgainst(DspAddresses.dsp3)
-        break;
-        case "DSP 4": setArrayOfAddressShown(DspAddresses.dsp4)
-        setArrayOfAddressToSearchAgainst(DspAddresses.dsp4)
-        break;
-        case "DSP 5": setArrayOfAddressShown(DspAddresses.dsp5)
-        setArrayOfAddressToSearchAgainst(DspAddresses.dsp5)
-        break;
-      }
-    }, [dspAssigned])
  
   return (
     <>
@@ -223,7 +203,7 @@ const OrderForm = () => {
           <div className='m-1 flex flex-col' key={i}>
           <input onClick={(e) => {
             setDspAssigned(e.target.value)
-            setForm({...form, dspAssigned: e.target.value})
+            handleFetchAccountBasedOnDsp(e)
           }} type='button' value={dsp} className={`text-xl md:text-2xl ${dspAssigned === dsp ? "bg-[#FFD580]" : "bg-transparent"} rounded p-1 mb-1 hover:cursor-pointer`}></input>
         </div>
         )
@@ -231,12 +211,15 @@ const OrderForm = () => {
     </div>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#CBC3E3] p-1 rounded font-semibold'>OUTLET NAME</h1>
-    <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#CBC3E3] rounded shadow p-2'>{form?.outlet}</h1>
+    <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#CBC3E3] rounded shadow p-2'>{accountSelected}</h1>
     <input type='search' onChange={handleSearchOutletName} placeholder='Search Outlet Name' className='text-lg md:text-2xl mt-5 text-center border border-black rounded'></input>
     <div className='w-[95%] flex m-5 flex-wrap text-lg md:text-2xl border border-black rounded-xl h-[20vh] overflow-auto'>
     {outletArray.map((val, i) => {
       return (
-          <input className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-[#CBC3E3] rounded p-1 shadow hover:scale-110' key={i} name="outlet" type='button' value={val} onClick={(e) => setForm({...form, outlet: e.target.value})}>
+          <input className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-[#CBC3E3] rounded p-1 shadow hover:scale-110' key={i} name="outlet" type='button' value={`${val.account_name}  ${val.location}`} onClick={(e) => {
+            setAccountSelected(e.target.value)
+            setForm({...form, accountId: val.account_id})
+          }}>
           </input>
       )
     })}
@@ -246,16 +229,6 @@ const OrderForm = () => {
     <h1 className='text-lg md:text-2xl text-center mb-2 bg-[#ADD8E6] rounded shadow p-2'>{form.customerName}</h1>
     <input type='text' placeholder='Enter Customer name' name='customerName' val={form.customerName} className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setForm({...form, customerName: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
-    {/* <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#C4A484] p-1 rounded font-semibold'>ADDRESS</h1>
-    <h1 className='text-lg md:text-2xl text-center mb-2 shadow bg-[#C4A484] p-2 rounded'>{form.address}</h1>
-    <input type='search' onChange={handleSearchAddress} placeholder='Search Address' className='text-lg md:text-2xl mt-5 text-center border border-black rounded'></input>
-    <div className='w-[95%] flex m-5 flex-wrap text-lg md:text-2xl border border-black rounded-xl h-[20vh] overflow-auto'>
-    {arrayOfAddressShown && arrayOfAddressShown.map((address, i) => {
-      return (
-        <input type='button' className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-[#C4A484] rounded p-1 shadow hover:scale-110' name='address' value={address} onClick={(e) => setForm({...form, address: e.target.value})} key={i}></input>
-      )
-    })}
-    </div> */}
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-[#D3D3D3] p-1 rounded font-semibold'>TIN NUMBER AND CONTACT NUMBER</h1>
     <div className='text-center flex flex-col lg:flex-row mb-3'>
@@ -290,9 +263,12 @@ const OrderForm = () => {
     <div className='w-[95%] flex m-5 flex-wrap text-lg md:text-2xl border border-black rounded-xl h-[20vh] overflow-auto'>
     {initialProductArray.map((val, i) => {
       return (
-          <input className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-lightGreen shadow hover:scale-110 p-1 rounded' key={i} name="product" type='button' value={val} onClick={(e) => {
+          <input className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-lightGreen shadow hover:scale-110 p-1 rounded' key={i} name="product" type='button' value={val.mat_description} onClick={(e) => {
           setToggle(!toggle);
-          handleProduct(e)
+          setProduct({
+            product: val.mat_description,
+            productId: val.product_id
+          })
           }}>
           </input>
       )
@@ -307,7 +283,7 @@ const OrderForm = () => {
     <input className='shadow bg-whiteSmoke mb-5 text-xl md:text-2xl' type='date' name='deliveryDate' onChange={(e) => setForm({...form, deliveryDate: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <button type='submit' className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-lightBlue font-semibold'>Submit Form</button>
-    {toggle && <Modal setToggle={setToggle} toggle={toggle} product={product} handleProduct={handleProduct} setProduct={setProduct} setArrayProducts={setArrayProducts} arrayProducts={arrayProducts} form={form} setForm={setForm}></Modal>}
+    {toggle && <Modal setToggle={setToggle} toggle={toggle} product={product} setProduct={setProduct} setArrayProducts={setArrayProducts} arrayProducts={arrayProducts} form={form} setForm={setForm}></Modal>}
     </form>
     <Toaster></Toaster>
     </>}
