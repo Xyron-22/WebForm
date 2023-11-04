@@ -56,6 +56,15 @@ const OrderRecord = ({data}) => {
         setOrderRecordsShown(arrayOfFilteredCustomerName)
     }
 
+    //function for filtering order date
+    const handleFilterByOrderDate = (e) => {
+        e.preventDefault()
+        const arrayOfFilteredOrderDate = data.data.filter((order) => {
+            return new Date(order.order_date).toLocaleDateString().indexOf(e.target.value) !== -1
+        })
+        setOrderRecordsShown(arrayOfFilteredOrderDate)
+    }
+
     //function for fetching all and latest order records
     const fetchAllOrderRecords = async (e) => {
         e.preventDefault()
@@ -136,6 +145,8 @@ const OrderRecord = ({data}) => {
         <h1 className='md:text-3xl font-bold mx-3 mb-2'>Order Records</h1>
         <h1>Number of records: {orderRecordsShown.length}</h1>
         <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table</button>
+        <label htmlFor='filterOrderDate' className='text-center bg-blue text-white p-1 shadow-2xl m-2 rounded'>Filter Date:</label>
+        <input type='text' name='filterOrderDate' placeholder='MM/DD/YY' className='bg-whiteSmoke text-center border-2 rounded border-blue' onChange={handleFilterByOrderDate}></input>
         <hr></hr>
         <input type='button' value={"Reload"} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded' onClick={fetchAllOrderRecords}></input>
         <input type='search' placeholder='Search DSP' onChange={handleFilterDSP} className='text-center border border-black m-2'></input>

@@ -2,10 +2,12 @@
 
 import React, { useLayoutEffect,  useState } from 'react';
 import axios from "axios";
+import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import useStore from '@/stateManagement/store';
 import { useRouter } from 'next/navigation';
 import toast, {Toaster} from "react-hot-toast";
+import Link from 'next/link';
 import ReactLoading from "react-loading";
 import DspData from '@/data/DspData';
 import TermsData from '@/data/TermsData';
@@ -14,18 +16,11 @@ import Modal from './Modal';
 const OrderForm = ({data}) => {
 
   const token = useStore((state) => state.token)
-  // const decodedToken = useStore((state) => state.decodedToken)
-   
+  const setTokenToNull = useStore((state) => state.setTokenToNull)
+     
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
-
-  // ORDER DATE -----------------------------------------------------
-  //getting the date today
-  let defaultDate = new Date()
-  defaultDate.setDate(defaultDate.getDate()) //do not rmeove
-
-  //state for initial order date value 
-  const [date, setDate] = useState(defaultDate) //do not remove
+  const [isOutletArrayLoading, setIsOutletArrayLoading] = useState(false)
 
   // DSP ASSIGNED -----------------------------------------------------
   //state for DSP Assigned
@@ -37,12 +32,6 @@ const OrderForm = ({data}) => {
   const [outletArrayToSearchAgainstWith, setOutletArrayToSearchAgainstWith] = useState()
   const [accountSelected, setAccountSelected] = useState("")//do not remove
  
-  // ADDRESS --------------------------------------------------------
-  //state for array of address shown based on DSP assigned
-  const [arrayOfAddressShown, setArrayOfAddressShown] = useState() //do not remove
-  //state for array of address to search against, initial array of address based on dsp
-  const [arrayOfAddressToSearchAgainst, setArrayOfAddressToSearchAgainst] = useState() //do not remove
-
   // PRODUCTS -------------------------------------------------------------
   //state for single product
   const [product, setProduct] = useState({
@@ -59,7 +48,7 @@ const OrderForm = ({data}) => {
   // FORM
   //state for whole form complete with all the fields
   const [form, setForm] = useState({
-    orderDate: defaultDate,
+    orderDate: "",
     accountId: "",   
     customerName: "",
     tinNumber: "",
@@ -70,14 +59,10 @@ const OrderForm = ({data}) => {
     deliveryDate: ""
   })
 
-  console.log(form)
-
   // MODAL TOGGLE ------------------------------------------------------------------
   //state for toggling the modal
   const [toggle, setToggle] = useState(false)
-    
-    // console.log(form)
-      
+        
     //function for removing a product in the array of added products
     const handleRemoveProductOnArray = (e, prod) => {
       e.preventDefault();
@@ -100,26 +85,22 @@ const OrderForm = ({data}) => {
       setOutletArray(newArr)
     }
     
-    //function for setting the date
-    const onSetDate = (event) => {
-      setDate(new Date(event.target.value))
-      setForm({...form, orderDate: new Date(event.target.value)})
+    //function for logging out
+    const handleLogout = () => {
+      Cookies.remove("jwt")
+      setTokenToNull()
+      router.replace("/auth/login")
   }
-
-    //function for searching address
-    const handleSearchAddress = (e) => {
-      const newArr = arrayOfAddressToSearchAgainst.filter((prod) => prod.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
-      setArrayOfAddressShown(newArr)
-    }
 
     //function for fetching account records based on dsp
     const handleFetchAccountBasedOnDsp = async (e) => {
         e.preventDefault()
         try {
+          setIsOutletArrayLoading(true)
           const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/account/${e.target.value}`)
           setOutletArray(data.data)
           setOutletArrayToSearchAgainstWith(data.data)
-          console.log(data.data)
+          setIsOutletArrayLoading(false)
         } catch (error) {
           console.log(error)
         }
@@ -130,6 +111,7 @@ const OrderForm = ({data}) => {
       e.preventDefault();
       if(
       form.customerName !== "" 
+      && form.orderDate !== ""
       && form.accountId !== ""
       && form.tinNumber !== "" 
       && form.contactNumber !== "" 
@@ -140,18 +122,16 @@ const OrderForm = ({data}) => {
         try {
           await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`, form, {
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
             }
           })
-          toast.success("Form submitted", {
-            duration: 3000,
-            className: "text-2xl"
-          })
           setDspAssigned("")
-          setArrayOfAddressShown([])
+          setAccountSelected("")
+          setOutletArray([])
           setArrayProducts([])
           setForm({
-          orderDate: defaultDate,
+          orderDate: "",
           accountId: "",
           customerName: "",
           tinNumber: "",
@@ -161,9 +141,14 @@ const OrderForm = ({data}) => {
           remarksFreebiesConcern: "",
           deliveryDate: ""
       })
-      e.target.reset()  
+      e.target.reset()
+      toast.success("Form submitted", {
+        duration: 3000,
+        className: "text-2xl"
+      })  
         } catch (error) {
-          toast.error("Something went wrong, Please try again", {
+          // console.log(error)
+          toast.error(error.response.data.message, {
             duration: 3000,
             className: "text-2xl"
           })
@@ -189,12 +174,13 @@ const OrderForm = ({data}) => {
   return (
     <>
     {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-    <form className='flex-col flex items-center lg:w-[80%] bg-white shadow-2xl' onSubmit={handleSubmit}>
+    <form className='flex-col flex items-center w-screen lg:w-[80%] bg-white shadow-2xl relative' onSubmit={handleSubmit}>
+    <Link href={"/"} className='absolute left-1 top-1 text-sm sm:left-3 sm:top-3 bg-blue text-white p-1 m-1 rounded md:text-xl'>Home</Link>
       <h1 className='m-7 md:m-10 text-xl text-center md:text-4xl font-extrabold'>ORDER FORM</h1>
       <h3 className='mb-5 text-lg text-center md:text-2xl font-bold'>DISTRIBUTOR SALES PERSONNEL ORDER FORM</h3>
       <hr className='border-[1px] border-black w-[90%] my-3'/>
     <label htmlFor='orderDate' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold'>ORDER DATE</label>
-    <input className='shadow bg-whiteSmoke text-xl md:text-2xl mb-3' type='date' name='orderDate' value={date.toLocaleDateString("en-CA")} onChange={onSetDate}></input>
+    <input className='shadow bg-whiteSmoke text-xl md:text-2xl mb-3' type='date' name='orderDate' onChange={(e) => setForm({...form, orderDate: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-red text-white p-1 rounded font-semibold'>DSP ASSIGNED</h1>
     <div className='text-center flex'>
@@ -214,15 +200,16 @@ const OrderForm = ({data}) => {
     <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{accountSelected}</h1>
     <input type='search' onChange={handleSearchOutletName} placeholder='Search Outlet Name' className='text-lg md:text-2xl mt-5 text-center border border-black rounded'></input>
     <div className='w-[95%] flex m-5 flex-wrap text-lg md:text-2xl border border-black rounded-xl h-[20vh] overflow-auto'>
-    {outletArray.map((val, i) => {
-      return (
+      {isOutletArrayLoading ? <ReactLoading type={"spin"} color={"#000000"} height={"5%"} width={"5%"} className="m-auto"></ReactLoading> : 
+      outletArray.map((val, i) => {
+        return (
           <input className='h-[25%] m-1 md:m-2 hover:cursor-pointer bg-blue text-white rounded p-1 shadow hover:scale-110' key={i} name="outlet" type='button' value={`${val.account_name}  ${val.location}`} onClick={(e) => {
             setAccountSelected(e.target.value)
             setForm({...form, accountId: val.account_id})
           }}>
           </input>
-      )
-    })}
+        )
+      })}
     </div>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mb-2 bg-red text-white p-1 rounded font-semibold'>CUSTOMER NAME</h1>
@@ -253,8 +240,8 @@ const OrderForm = ({data}) => {
     <div>
     {arrayProducts.map(({product, quantity, price}, i) => {
       return (
-        <div className='text-lg md:text-2xl text-center p-2 rounded flex'>
-          <li className='bg-blue text-white p-2 rounded' key={i}>Product: {product} | Quantity: {quantity} | Price: &#x20B1;{price}</li><button className='ml-3 bg-[#FF0000] text-white p-2 rounded' type='button' onClick={(e) => handleRemoveProductOnArray(e, product)}>Remove</button>
+        <div className='text-lg md:text-2xl text-center p-2 rounded flex' key={i}>
+          <li className='bg-blue text-white p-2 rounded'>Product: {product} | Quantity: {quantity} | Price: &#x20B1;{price}</li><button className='ml-3 bg-[#FF0000] text-white p-2 rounded' type='button' onClick={(e) => handleRemoveProductOnArray(e, product)}>Remove</button>
         </div>
       )
     })}
@@ -283,6 +270,7 @@ const OrderForm = ({data}) => {
     <input className='shadow bg-whiteSmoke mb-5 text-xl md:text-2xl' type='date' name='deliveryDate' onChange={(e) => setForm({...form, deliveryDate: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <button type='submit' className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
+    <button type='button' onClick={handleLogout} className='m-5 font-bold md:text-xl rounded bg-blue text-white p-2 hover:scale-110'>Logout</button>
     {toggle && <Modal setToggle={setToggle} toggle={toggle} product={product} setProduct={setProduct} setArrayProducts={setArrayProducts} arrayProducts={arrayProducts} form={form} setForm={setForm}></Modal>}
     </form>
     <Toaster></Toaster>
