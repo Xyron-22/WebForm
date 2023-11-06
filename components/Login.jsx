@@ -53,8 +53,8 @@ const LoginForm = () => {
 
   return (
     <div className='w-full min-h-full flex justify-center items-center'>
-    <form className='flex flex-wrap items-center flex-col w-[90%] lg:w-[50%] min-h-[50vh] bg-opacity-80 bg-white shadow-2xl rounded justify-center' ref={form} onSubmit={handleSubmit}>
-      <h1 className='text-2xl font-bold m-5 h-auto'>{isRegistered ? "Login" : "Register"}</h1>
+    <form className='flex flex-wrap items-center flex-col w-[90%] lg:w-[50%] bg-white shadow-2xl rounded justify-center' ref={form} onSubmit={handleSubmit}>
+      <h1 className='text-lg md:text-3xl lg:text-4xl font-bold text-center py-5 h-auto w-full bg-gradient-to-r from-darkRed via-red to-darkRed text-white'>{isRegistered ? "Login" : "Register"}</h1>
       <div className='flex items-center flex-wrap justify-center flex-col w-full min-h-[30vh] text-lg'>
         <div className='flex flex-col w-[80%]'>
         <label htmlFor='email' className='ml-1'>Email</label>
@@ -81,7 +81,7 @@ const LoginForm = () => {
         </div>
         </>}
         </div>
-        <button type='submit' className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white'>{isRegistered ? "Login" : "Register"}</button>
+        <button type='submit' className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white font-bold md:text-xl hover:scale-110'>{isRegistered ? "Login" : "Register"}</button>
         <button type='button' onClick={() => setIsRegistered(!isRegistered)} className='mx-auto'>{isRegistered ? "Not registered yet? Click here" : "Already have an account? Click here"}</button>
         <Link className='mx-auto my-5' href={"/auth/forgotpassword"}>Forgot password?</Link>
         <Toaster></Toaster>

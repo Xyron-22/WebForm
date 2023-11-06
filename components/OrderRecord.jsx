@@ -9,6 +9,7 @@ import { useDownloadExcel } from 'react-export-table-to-excel';
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
 import Link from 'next/link';
+import ModalForDelete from './ModalForDelete';
 
 const OrderRecord = ({data}) => {
 
@@ -20,6 +21,14 @@ const OrderRecord = ({data}) => {
    
     const [isLoading, setIsLoading] = useState(true)
     const [orderRecordsShown, setOrderRecordsShown] = useState(data.data)
+
+    //state for toggling the delete modal
+    const [toggleModal, setToggleModal] = useState(false)
+    //state for the record object containing the record id and what table it is from
+    const [recordToDelete, setRecordToDelete] = useState({
+        recordId: null,
+        table: ""
+    })
 
     //function for filtering the order record base on DSP
     const handleFilterDSP = (e) => {
@@ -140,7 +149,7 @@ const OrderRecord = ({data}) => {
     {data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
     <>
      {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-     <div className=' bg-white p-2 text-center my-5 w-screen xl:w-[90%] md:text-xl relative'>
+     <div className={`bg-white text-center w-screen ${toggleModal ? "w-full p-0" : "xl:w-[90%] my-5 p-2"} md:text-xl relative`}>
         <Link href={"/"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Home</Link>
         <h1 className='md:text-3xl font-bold mx-3 mb-2'>Order Records</h1>
         <h1>Number of records: {orderRecordsShown.length}</h1>
@@ -177,9 +186,15 @@ const OrderRecord = ({data}) => {
             </tr>
             </thead>
             <tbody>
-                {orderRecordsShown.map(({order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price}, i) => {
+                {orderRecordsShown.map(({order_id, order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price}, i) => {
                     return (
-                        <tr key={i}>
+                    <tr key={i} onClick={(e) => {
+                        setRecordToDelete({
+                            recordId: order_id,
+                            table: "order"
+                        })
+                        setToggleModal(true)
+                    }}>
                         <td className='border border-black text-center'>{new Date(order_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{new Date(delivery_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{customer_name}</td>
@@ -199,7 +214,8 @@ const OrderRecord = ({data}) => {
                 })}
             </tbody>
         </table>
-        </div>  
+        </div>
+            {toggleModal && <ModalForDelete setToggleModal={setToggleModal} recordToDelete={recordToDelete} arrayOfRecords={orderRecordsShown} setArrayOfRecords={setOrderRecordsShown}></ModalForDelete>}
     </div></>}
     </>
     }

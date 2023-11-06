@@ -30,6 +30,15 @@ const ProductRecord = ({data}) => {
         setProductRecordsShown(arrayOfFilteredProductName)
     }
 
+    //function for filtering product by product family
+    const handleFilterByProductFamily = (e) => {
+        e.preventDefault()
+        const arrayOfFilteredProductFamily = data.data.filter((product) => {
+            return product.product_family?.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+        })
+        setProductRecordsShown(arrayOfFilteredProductFamily)
+    }
+
     //function for fetching all the product records
     const fetchAllProductRecords = async (e) => {
         e.preventDefault()
@@ -73,6 +82,7 @@ const ProductRecord = ({data}) => {
        <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table</button>
        <hr></hr>
         <input type='search' name='filterProductName' placeholder='Search Product Name' onChange={handleFilterByProductName} className='text-center border border-black m-2'></input>
+        <input type='search' name='filterProductFamily' placeholder='Search Product Family' onChange={handleFilterByProductFamily} className='text-center border border-black m-2'></input>
        <table className='border border-black min-w-full m-auto' ref={tableRef}>
            <thead>
            <tr>

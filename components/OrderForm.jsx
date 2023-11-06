@@ -84,6 +84,12 @@ const OrderForm = ({data}) => {
       const newArr = outletArrayToSearchAgainstWith.filter((outlet) => outlet.account_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
       setOutletArray(newArr)
     }
+
+    //function for searching outlet by location
+    const handleSearchLocation = (e) => {
+      const newArr = outletArrayToSearchAgainstWith.filter((outlet) => outlet.location.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
+      setOutletArray(newArr)
+    }
     
     //function for logging out
     const handleLogout = () => {
@@ -198,7 +204,10 @@ const OrderForm = ({data}) => {
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-red text-white p-1 rounded font-semibold'>OUTLET NAME</h1>
     <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{accountSelected}</h1>
-    <input type='search' onChange={handleSearchOutletName} placeholder='Search Outlet Name' className='text-lg md:text-2xl mt-5 text-center border border-black rounded'></input>
+    <div className='flex flex-wrap justify-center items-center'>
+    <input type='search' onChange={handleSearchOutletName} placeholder='Search Outlet Name' className='text-lg md:text-2xl mt-5 text-center border border-black rounded mx-1'></input>
+    <input type='search' onChange={handleSearchLocation} placeholder='Search Location' className='text-lg md:text-2xl mt-5 text-center border border-black rounded mx-1'></input>
+    </div>
     <div className='w-[95%] flex m-5 flex-wrap text-lg md:text-2xl border border-black rounded-xl h-[20vh] overflow-auto'>
       {isOutletArrayLoading ? <ReactLoading type={"spin"} color={"#000000"} height={"5%"} width={"5%"} className="m-auto"></ReactLoading> : 
       outletArray.map((val, i) => {
