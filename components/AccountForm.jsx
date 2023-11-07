@@ -53,15 +53,13 @@ const AccountForm = () => {
             })
         }
     }
-
+    
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
-        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) {
-          router.replace("/auth/login")
-        } else {
-          setIsLoading(false)
-        }
+        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
+        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
+        setIsLoading(false)
       }, [])
 
   return (

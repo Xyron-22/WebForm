@@ -9,6 +9,8 @@ import { useDownloadExcel } from 'react-export-table-to-excel';
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
 import Link from 'next/link';
+import ModalForDelete from './ModalForDelete';
+import {IoMdInformationCircleOutline} from "react-icons/io"
 
 const ProductRecord = ({data}) => {
 
@@ -20,6 +22,14 @@ const ProductRecord = ({data}) => {
  
     const [isLoading, setIsLoading] = useState(true)
     const [productRecordsShown, setProductRecordsShown] = useState(data.data)
+
+    const [toggleModal, setToggleModal] = useState(false)
+
+    const [recordToDelete, setRecordToDelete] = useState({
+        recordId: null,
+        table: "",
+        index: null
+    })
 
     //function for filtering records by product name
     const handleFilterByProductName = (e) => {
@@ -64,25 +74,28 @@ const ProductRecord = ({data}) => {
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
-        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) {
-          router.replace("/auth/login")
-        } else {
-          setIsLoading(false)
-        }
+        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
+        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
+        setIsLoading(false)
     },[])
 
   return (
     <>{data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
     <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-    <div className=' bg-white p-2 text-center my-5 md:text-xl relative w-screen lg:w-[90%]'>
+    <div className={`bg-white text-center w-full ${toggleModal ? "p-0" : "xl:w-[90%] my-5 p-2"} md:text-xl relative z-[999999999999]`}>
     <Link href={"/"} className='absolute left-3 bg-blue text-white rounded p-1 m-1'>Home</Link>
        <h1 className='md:text-3xl font-bold mx-3 mb-2'>Product Records</h1>
        <h1>Number of records: {productRecordsShown.length}</h1>
        <input type='button' value={"Reload"} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded' onClick={fetchAllProductRecords}></input>
        <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table</button>
+       <div className='flex w-full justify-center items-center'>
+        <IoMdInformationCircleOutline className='text-red'></IoMdInformationCircleOutline>
+        <p>Click a record to delete</p>
+        </div>
        <hr></hr>
         <input type='search' name='filterProductName' placeholder='Search Product Name' onChange={handleFilterByProductName} className='text-center border border-black m-2'></input>
         <input type='search' name='filterProductFamily' placeholder='Search Product Family' onChange={handleFilterByProductFamily} className='text-center border border-black m-2'></input>
+        <div className='overflow-auto w-full'>
        <table className='border border-black min-w-full m-auto' ref={tableRef}>
            <thead>
            <tr>
@@ -95,7 +108,14 @@ const ProductRecord = ({data}) => {
            <tbody>
                {productRecordsShown.map(({product_id, mat_code, mat_description, product_family}, i) => {
                    return (
-                       <tr key={i}>
+                       <tr key={i} className='cursor-pointer' onClick={() => {
+                        setRecordToDelete({
+                        recordId: product_id,
+                        table: "product",
+                        index: i
+                       })
+                        setToggleModal(true)
+                       }}>
                        <td className='border border-black text-center'>{product_id}</td>
                        <td className='border border-black'>{mat_code}</td>
                        <td className='border border-black'>{mat_description}</td>
@@ -105,6 +125,8 @@ const ProductRecord = ({data}) => {
                })}
            </tbody>
        </table>
+       </div>
+       {toggleModal && <ModalForDelete setToggleModal={setToggleModal} recordToDelete={recordToDelete} arrayOfRecordsShown={productRecordsShown} setArrayOfRecordsShown={setProductRecordsShown}></ModalForDelete>}
        <Toaster></Toaster>
    </div></>}</>
     }</>

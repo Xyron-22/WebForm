@@ -8,6 +8,7 @@ import axios from "axios"
 import { useRouter } from 'next/navigation'
 import useStore from '@/stateManagement/store'
 import toast, {Toaster} from 'react-hot-toast'
+import { jwtDecode } from 'jwt-decode'
 
 const LoginForm = () => {
 
@@ -37,7 +38,9 @@ const LoginForm = () => {
           duration: 3000,
           className: "text-2xl"
         })
-        router.replace("/")
+        const decodedToken = jwtDecode(data.token)
+        if(decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/")
+        if(decodedToken.role === process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/form/order")
     } catch (error) {
       console.log(error)
         toast.error(error?.response?.data?.message, {

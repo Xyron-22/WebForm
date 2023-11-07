@@ -22,6 +22,8 @@ const OrderForm = ({data}) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isOutletArrayLoading, setIsOutletArrayLoading] = useState(false)
 
+  const [decodedToken, setDecodedToken] = useState(null)
+
   // DSP ASSIGNED -----------------------------------------------------
   //state for DSP Assigned
   const [dspAssigned, setDspAssigned] = useState("") //do not remove
@@ -169,10 +171,11 @@ const OrderForm = ({data}) => {
 
     useLayoutEffect(() => {
       if (!token) return router.replace("/auth/login")
-      const decodedToken = jwtDecode(token)
-      if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) {
-        router.replace("/auth/login")
-      } else {
+      const decodeToken = jwtDecode(token)
+    if (decodeToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodeToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) {
+      router.replace("/auth/login")
+    } else {
+        setDecodedToken(decodeToken)
         setIsLoading(false)
       }
     }, [])
@@ -181,7 +184,7 @@ const OrderForm = ({data}) => {
     <>
     {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
     <form className='flex-col flex items-center w-screen lg:w-[80%] bg-white shadow-2xl relative' onSubmit={handleSubmit}>
-    <Link href={"/"} className='absolute left-1 top-1 text-sm sm:left-3 sm:top-3 bg-blue text-white p-1 m-1 rounded md:text-xl'>Home</Link>
+    {decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && <Link href={"/"} className='absolute left-1 top-1 text-sm sm:left-3 sm:top-3 bg-blue text-white p-1 m-1 rounded md:text-xl'>Home</Link>}
       <h1 className='m-7 md:m-10 text-xl text-center md:text-4xl font-extrabold'>ORDER FORM</h1>
       <h3 className='mb-5 text-lg text-center md:text-2xl font-bold'>DISTRIBUTOR SALES PERSONNEL ORDER FORM</h3>
       <hr className='border-[1px] border-black w-[90%] my-3'/>

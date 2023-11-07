@@ -9,6 +9,8 @@ import { useDownloadExcel } from 'react-export-table-to-excel';
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
 import Link from 'next/link';
+import ModalForDelete from './ModalForDelete';
+import {IoMdInformationCircleOutline} from "react-icons/io"
 
 const AccountRecord = ({data}) => {
     const router = useRouter()
@@ -19,6 +21,14 @@ const AccountRecord = ({data}) => {
 
     const [isLoading, setIsLoading] = useState(true)
     const [accountRecordsShown, setAccountRecordsShown] = useState(data.data)
+
+    const [toggleModal, setToggleModal] = useState(false)
+
+    const [recordToDelete, setRecordToDelete] = useState({
+        recordId: null,
+        table: "",
+        index: null,
+    })
 
     //function for filtering the account record base on DSP
     const handleFilterDSP = (e) => {
@@ -103,21 +113,23 @@ const AccountRecord = ({data}) => {
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
-        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) {
-          router.replace("/auth/login")
-        } else {
-          setIsLoading(false)
-        }
+        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
+        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
+        setIsLoading(false)
     },[])
 
   return (
     <>{data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
     <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-    <div className=' bg-white p-2 text-center my-5 md:text-xl w-screen lg:w-[90%] relative'>
+    <div className={`bg-white text-center w-full ${toggleModal ? "p-0" : "xl:w-[90%] my-5 p-2"} md:text-xl relative z-[999999999999]`}>
     <Link href={"/"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Home</Link>
        <h1 className='md:text-3xl font-bold mx-3 mb-2'>Account Records</h1>
        <h1>Number of records: {accountRecordsShown.length}</h1>
        <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table</button>
+       <div className='flex w-full justify-center items-center'>
+        <IoMdInformationCircleOutline className='text-red'></IoMdInformationCircleOutline>
+        <p>Click a record to delete</p>
+        </div>
        <hr></hr>
        <input type='button' value={"Reload"} onClick={fetchAllAccountRecords} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
        <input type='search' placeholder='Search DSP' onChange={handleFilterDSP} className='text-center border border-black m-2'></input>
@@ -139,7 +151,14 @@ const AccountRecord = ({data}) => {
            <tbody>
                {accountRecordsShown.map(({account_id, customer_number, account_name, location, dsp}, i) => {
                    return (
-                       <tr key={i}>
+                       <tr key={i} className='cursor-pointer' onClick={() => {
+                        setRecordToDelete({
+                            recordId: account_id,
+                            table: "account",
+                            index: i
+                        })
+                        setToggleModal(true)
+                       }}>
                         <td className='border border-black text-center'>{account_id}</td>
                        <td className='border border-black text-center'>{customer_number}</td>
                        <td className='border border-black'>{account_name}</td>
@@ -151,6 +170,7 @@ const AccountRecord = ({data}) => {
            </tbody>
        </table>
        </div>
+       {toggleModal && <ModalForDelete setToggleModal={setToggleModal} recordToDelete={recordToDelete} arrayOfRecordsShown={accountRecordsShown} setArrayOfRecordsShown={setAccountRecordsShown}></ModalForDelete>}
        <Toaster></Toaster>
    </div></>}</>
     }</> 
