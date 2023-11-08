@@ -127,8 +127,9 @@ const ProductRecord = ({data}) => {
        </table>
        </div>
        {toggleModal && <ModalForDelete setToggleModal={setToggleModal} recordToDelete={recordToDelete} arrayOfRecordsShown={productRecordsShown} setArrayOfRecordsShown={setProductRecordsShown}></ModalForDelete>}
-       <Toaster></Toaster>
-   </div></>}</>
+   </div>
+   <Toaster></Toaster>
+   </>}</>
     }</>
   )
 }

@@ -3,7 +3,9 @@ import ResetPasswordForm from '@/components/ResetPassword'
 
 const ResetPasswordPage = ({params}) => {
   return (
-   <ResetPasswordForm params={params}></ResetPasswordForm>
+    <div className="flex flex-col min-h-[86vh] justify-center items-center">
+      <ResetPasswordForm params={params}></ResetPasswordForm>
+    </div>
 )
 }
 

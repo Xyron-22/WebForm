@@ -42,7 +42,6 @@ const LoginForm = () => {
         if(decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/")
         if(decodedToken.role === process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/form/order")
     } catch (error) {
-      console.log(error)
         toast.error(error?.response?.data?.message, {
           duration: 3000,
           className: "text-2xl"

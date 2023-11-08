@@ -46,8 +46,8 @@ const ModalForDelete = ({setToggleModal, recordToDelete, arrayOfRecordsShown, se
         </div>
         <div className='overflow-auto w-[98%]'>
         {arrayOfRecordsShown.map((record, i) => {
-            if (record.record_id) {
-                if (record.record_id === recordToDelete?.recordId)
+            if (record.order_id) {
+                if (record.order_id === recordToDelete?.recordId)
                 return (
                     <table className='border border-black m-auto lg:text-base min-w-full text-sm'>
                         <thead>

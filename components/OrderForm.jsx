@@ -234,7 +234,7 @@ const OrderForm = ({data}) => {
       <label htmlFor='TIN' className='text-lg md:text-2xl text-center m-1'>TIN NUMBER:</label>
       <input name='TIN' val={form.tinNumber} type='text' className='text-lg md:text-2xl text-center border border-black rounded' placeholder='Enter TIN' onChange={(e) => setForm({...form, tinNumber: e.target.value})}></input>
       <label htmlFor='Contact' className='text-lg md:text-2xl text-center m-1'>CONTACT NUMBER:</label>
-      <input name='Contact' val={form.contactNumber} type='text' className='text-lg md:text-2xl text-center border border-black rounded' placeholder='Enter Contact' onChange={(e) => setForm({...form, contactNumber: e.target.value})}></input>
+      <input name='Contact' val={form.contactNumber} type='number' className='text-lg md:text-2xl text-center border border-black rounded' placeholder='Enter Contact' onChange={(e) => setForm({...form, contactNumber: e.target.value})}></input>
     </div>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-red text-white p-1 rounded font-semibold'>TERMS</h1>

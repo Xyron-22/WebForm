@@ -171,8 +171,9 @@ const AccountRecord = ({data}) => {
        </table>
        </div>
        {toggleModal && <ModalForDelete setToggleModal={setToggleModal} recordToDelete={recordToDelete} arrayOfRecordsShown={accountRecordsShown} setArrayOfRecordsShown={setAccountRecordsShown}></ModalForDelete>}
-       <Toaster></Toaster>
-   </div></>}</>
+   </div>
+   <Toaster></Toaster>
+   </>}</>
     }</> 
   )
 }

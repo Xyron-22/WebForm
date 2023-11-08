@@ -1,8 +1,11 @@
 import React from 'react'
+import ForgotPassword from '@/components/ForgotPassword'
 
 const forgotPasswordPage = () => {
   return (
-    <div>forgotPasswordPage</div>
+    <div className="flex flex-col min-h-[86vh] justify-center items-center">
+      <ForgotPassword></ForgotPassword>
+    </div>
   )
 }
 

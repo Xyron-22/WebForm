@@ -221,8 +221,8 @@ const OrderRecord = ({data}) => {
         </table>
         </div>
             {toggleModal && <ModalForDelete setToggleModal={setToggleModal} recordToDelete={recordToDelete} arrayOfRecordsShown={orderRecordsShown} setArrayOfRecordsShown={setOrderRecordsShown}></ModalForDelete>}
-            <Toaster></Toaster>
     </div>
+    <Toaster></Toaster>
     </>}
     </>
     }
