@@ -37,8 +37,8 @@ const ModalForDelete = ({setToggleModal, recordToDelete, arrayOfRecordsShown, se
     }
 
   return (
-    <div className='bg-black opacity-100 z-40 sticky bottom-0 w-full h-screen flex justify-center items-center '>
-        <div className='w-full md:w-[60%] min-h-[40%] rounded-xl bg-white opacity-100 flex justify-center items-center flex-col z-50'>
+    <div className='bg-black bg-opacity-70 z-40 sticky bottom-0 w-full h-screen flex justify-center items-center '>
+        <div className='w-full md:w-[60%] min-h-[40%] rounded-xl bg-white flex justify-center items-center flex-col z-50'>
         <p>Are you sure you want to delete this record?</p>
         <div className='flex w-full justify-center items-center m-3 flex-col'>
         <AiFillWarning className='text-red text-3xl'></AiFillWarning>

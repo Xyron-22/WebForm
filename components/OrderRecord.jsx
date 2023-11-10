@@ -11,6 +11,7 @@ import useStore from '@/stateManagement/store';
 import Link from 'next/link';
 import ModalForDelete from './ModalForDelete';
 import {IoMdInformationCircleOutline} from "react-icons/io"
+import {AiOutlineDownload} from "react-icons/ai"
 
 const OrderRecord = ({data}) => {
 
@@ -153,7 +154,7 @@ const OrderRecord = ({data}) => {
         <Link href={"/"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Home</Link>
         <h1 className='md:text-3xl font-bold mx-3 mb-2'>Order Records</h1>
         <h1>Number of records: {orderRecordsShown.length}</h1>
-        <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table</button>
+        <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
         <label htmlFor='filterOrderDate' className='text-center bg-blue text-white p-1 shadow-2xl m-2 rounded'>Filter Date:</label>
         <input type='text' name='filterOrderDate' placeholder='MM/DD/YY' className='bg-whiteSmoke text-center border-2 rounded border-blue' onChange={handleFilterByOrderDate}></input>
         <div className='flex w-full justify-center items-center'>

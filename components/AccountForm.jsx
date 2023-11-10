@@ -70,7 +70,7 @@ const AccountForm = () => {
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <label htmlFor='customerNumber' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold relative'>CUSTOMER NUMBER</label>
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{account.customerNumber}</h1>
-        <input type='number' name='customerNumber' placeholder='Enter Number' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setAccount({...account, customerNumber: e.target.value})} required></input>
+        <input type='text' name='customerNumber' placeholder='Enter Number' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setAccount({...account, customerNumber: e.target.value})} required></input>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <label htmlFor='accountName' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold'>ACCOUNT NAME</label>
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{account.accountName}</h1>

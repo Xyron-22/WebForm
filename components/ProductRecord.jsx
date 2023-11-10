@@ -11,6 +11,7 @@ import useStore from '@/stateManagement/store';
 import Link from 'next/link';
 import ModalForDelete from './ModalForDelete';
 import {IoMdInformationCircleOutline} from "react-icons/io"
+import {AiOutlineDownload} from "react-icons/ai"
 
 const ProductRecord = ({data}) => {
 
@@ -87,7 +88,7 @@ const ProductRecord = ({data}) => {
        <h1 className='md:text-3xl font-bold mx-3 mb-2'>Product Records</h1>
        <h1>Number of records: {productRecordsShown.length}</h1>
        <input type='button' value={"Reload"} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded' onClick={fetchAllProductRecords}></input>
-       <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table</button>
+       <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
        <div className='flex w-full justify-center items-center'>
         <IoMdInformationCircleOutline className='text-red'></IoMdInformationCircleOutline>
         <p>Click a record to delete</p>
