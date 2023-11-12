@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useState, useRef, useLayoutEffect, useEffect} from 'react'
+import React, {useState, useRef, useLayoutEffect} from 'react'
 import Cookies from 'js-cookie'
 import Link from 'next/link'
 import {AiFillEyeInvisible, AiFillEye, AiOutlineLogin, AiOutlineMail} from "react-icons/ai"
@@ -26,9 +26,12 @@ const LoginForm = () => {
   const [toggleHidePassword, setToggleHidePassword] = useState(false)
   const [toggleHideConfirmPassword, setToggleHideConfirmPassword] = useState(false)
 
+  const [disableButton, setDisableButton] = useState(false)
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      setDisableButton(true)
       const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${isRegistered ? "signin" : "signup"}`, form.current, {
         headers: {
           "Content-Type": "application/json"
@@ -44,6 +47,8 @@ const LoginForm = () => {
         if(decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/")
         if(decodedToken.role === process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/form/order")
     } catch (error) {
+      setDisableButton(false)
+      console.log(error)
         toast.error(error?.response?.data?.message, {
           duration: 3000,
           className: "text-2xl"
@@ -86,7 +91,7 @@ const LoginForm = () => {
         </div>
         </>}
         </div>
-        <button type='submit' className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white font-bold sm:text-xl md:text-2xl hover:scale-110'>{isRegistered ? "Login" : "Register"}</button>
+        <button type='submit' disabled={disableButton} className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white font-bold sm:text-xl md:text-2xl hover:scale-110'>{isRegistered ? "Login" : "Register"}</button>
         <button type='button' onClick={() => setIsRegistered(!isRegistered)} className='mx-auto'>{isRegistered ? "Not registered yet? Click here" : "Already have an account? Click here"}</button>
         <Link className='mx-auto my-5' href={"/auth/forgotpassword"}>Forgot password?</Link>
         <Toaster></Toaster>

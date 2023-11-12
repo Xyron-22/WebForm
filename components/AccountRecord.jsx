@@ -31,6 +31,8 @@ const AccountRecord = ({data}) => {
         index: null,
     })
 
+    const [disableButton, setDisableButton] = useState(false)
+
     //function for filtering the account record base on DSP
     const handleFilterDSP = (e) => {
         e.preventDefault()
@@ -61,12 +63,15 @@ const AccountRecord = ({data}) => {
     //function for fetching all and latest account records
     const fetchAllAccountRecords = async (e) => {
         e.preventDefault()
+        setDisableButton(true)
         try {
             setIsLoading(true)
             const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/account`)
             setAccountRecordsShown(data.data)
             setIsLoading(false)
+            setDisableButton(false)
         } catch (error) {
+            setDisableButton(false)
             toast.error("Error occurred, please try again", {
                 duration: 3000,
                 className: "text-2xl"
@@ -132,7 +137,7 @@ const AccountRecord = ({data}) => {
         <p>Click a record to delete</p>
         </div>
        <hr></hr>
-       <input type='button' value={"Reload"} onClick={fetchAllAccountRecords} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
+       <input type='button' value={"Reload"} disabled={disableButton} onClick={fetchAllAccountRecords} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
        <input type='search' placeholder='Search DSP' onChange={handleFilterDSP} className='text-center border border-black m-2'></input>
        <input type='search' name='filterLocation' placeholder='Search Location' onChange={handleFilterLocation} className='text-center border border-black m-2'></input>
        <input type='search' name='filterAccountName' placeholder='Search Account Name' onChange={handleFilterAccountName} className='text-center border border-black m-2'></input>

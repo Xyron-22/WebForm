@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, {useState} from 'react'
 import axios from "axios"
 import toast from 'react-hot-toast'
 import useStore from '@/stateManagement/store'
@@ -9,11 +9,14 @@ import {AiFillWarning} from "react-icons/ai"
 const ModalForDelete = ({setToggleModal, recordToDelete, arrayOfRecordsShown, setArrayOfRecordsShown}) => {
 
     const token = useStore((state) => state.token)
+
+    const [disableButton, setDisableButton] = useState(false)
     
     //create a function for sending a delete method
     //this component functionalities is not finished yet, goal is to make this component reusable in different routes
     const handleSubmitDelete = async (e) => {
         e.preventDefault()
+        setDisableButton(true)
         try {
             await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/${recordToDelete?.table}/${recordToDelete?.recordId}`, {
                 headers: {
@@ -28,7 +31,9 @@ const ModalForDelete = ({setToggleModal, recordToDelete, arrayOfRecordsShown, se
                 duration: 3000,
                 className: "text-2xl"
             })
+            setDisableButton(false)
         } catch (error) {
+            setDisableButton(false)
             toast.error(error.response.data.message, {
                 duration: 3000,
                 className: "text-2xl"
@@ -138,7 +143,7 @@ const ModalForDelete = ({setToggleModal, recordToDelete, arrayOfRecordsShown, se
         })}
         </div>
         <div className='w-[40%] flex justify-evenly'>
-                <button type='button' className='text-lg md:text-2xl shadow-xl text-center mb-2 mt-5 bg-red text-white px-4 rounded' onClick={handleSubmitDelete}>Yes</button>
+                <button type='button' disabled={disableButton} className='text-lg md:text-2xl shadow-xl text-center mb-2 mt-5 bg-red text-white px-4 rounded' onClick={handleSubmitDelete}>Yes</button>
                 <button type='button' className='text-lg md:text-2xl shadow-xl text-center mb-2 mt-5 bg-red text-white px-4 rounded' onClick={() => setToggleModal(false)}>No</button>
             </div>
         </div>

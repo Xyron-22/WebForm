@@ -64,6 +64,8 @@ const OrderForm = ({data}) => {
   // MODAL TOGGLE ------------------------------------------------------------------
   //state for toggling the modal
   const [toggle, setToggle] = useState(false)
+
+  const [disableButton, setDisableButton] = useState(false)
         
     //function for removing a product in the array of added products
     const handleRemoveProductOnArray = (e, prod) => {
@@ -103,20 +105,27 @@ const OrderForm = ({data}) => {
     //function for fetching account records based on dsp
     const handleFetchAccountBasedOnDsp = async (e) => {
         e.preventDefault()
+        setDisableButton(true)
         try {
           setIsOutletArrayLoading(true)
           const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/account/${e.target.value}`)
           setOutletArray(data.data)
           setOutletArrayToSearchAgainstWith(data.data)
           setIsOutletArrayLoading(false)
+          setDisableButton(false)
         } catch (error) {
-          console.log(error)
+          setDisableButton(false)
+          toast.error(error?.response?.data?.message, {
+            duration: 3000,
+            className: "text-2xl"
+          })
         }
     }
 
     //function for submitting the form
     const handleSubmit = async (e) => {
       e.preventDefault();
+      setDisableButton(true)
       if(
       form.customerName !== "" 
       && form.orderDate !== ""
@@ -153,9 +162,10 @@ const OrderForm = ({data}) => {
       toast.success("Form submitted", {
         duration: 3000,
         className: "text-2xl"
-      })  
+      })
+      setDisableButton(false)
         } catch (error) {
-          // console.log(error)
+          setDisableButton(false)
           toast.error(error.response.data.message, {
             duration: 3000,
             className: "text-2xl"
@@ -199,7 +209,7 @@ const OrderForm = ({data}) => {
           <input onClick={(e) => {
             setDspAssigned(e.target.value)
             handleFetchAccountBasedOnDsp(e)
-          }} type='button' value={dsp} className={`text-xl md:text-2xl ${dspAssigned === dsp ? "bg-blue text-white" : "bg-transparent"} rounded p-1 mb-1 hover:cursor-pointer`}></input>
+          }} type='button' value={dsp} disabled={disableButton} className={`text-xl md:text-2xl ${dspAssigned === dsp ? "bg-blue text-white" : "bg-transparent"} rounded p-1 mb-1 hover:cursor-pointer`}></input>
         </div>
         )
       })}
@@ -281,7 +291,7 @@ const OrderForm = ({data}) => {
     <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-red text-white p-1 rounded font-semibold'>DELIVERY DATE</h1>
     <input className='shadow bg-whiteSmoke mb-5 text-xl md:text-2xl' type='date' name='deliveryDate' onChange={(e) => setForm({...form, deliveryDate: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
-    <button type='submit' className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
+    <button type='submit' disabled={disableButton} className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
     <button type='button' onClick={handleLogout} className='m-5 font-bold md:text-xl rounded bg-blue text-white p-2 hover:scale-110'>Logout</button>
     {toggle && <Modal setToggle={setToggle} toggle={toggle} product={product} setProduct={setProduct} setArrayProducts={setArrayProducts} arrayProducts={arrayProducts} form={form} setForm={setForm}></Modal>}
     </form>

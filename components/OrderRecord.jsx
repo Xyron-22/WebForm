@@ -33,6 +33,8 @@ const OrderRecord = ({data}) => {
         index: null
     })
 
+    const [disableButton, setDisableButton] = useState(false)
+
     //function for filtering the order record base on DSP
     const handleFilterDSP = (e) => {
         e.preventDefault()
@@ -80,12 +82,15 @@ const OrderRecord = ({data}) => {
     //function for fetching all and latest order records
     const fetchAllOrderRecords = async (e) => {
         e.preventDefault()
+        setDisableButton(true)
         try {
             setIsLoading(true)
             const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`)
             setOrderRecordsShown(data.data)
             setIsLoading(false)
+            setDisableButton(false)
         } catch (error) {
+            setDisableButton(false)
             toast.error("Error occurred, please try again", {
                 duration: 3000,
                 className: "text-2xl"
@@ -162,7 +167,7 @@ const OrderRecord = ({data}) => {
         <p>Click a record to delete</p>
         </div>
         <hr></hr>
-        <input type='button' value={"Reload"} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded' onClick={fetchAllOrderRecords}></input>
+        <input type='button' value={"Reload"} disabled={disableButton} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded' onClick={fetchAllOrderRecords}></input>
         <input type='search' placeholder='Search DSP' onChange={handleFilterDSP} className='text-center border border-black m-2'></input>
         <input type='search' name='filterLocation' placeholder='Search Location' onChange={handleFilterLocation} className='text-center border border-black m-2'></input>
         <input type='search' name='filterAccountName' placeholder='Search Account Name' onChange={handleFilterAccountName} className='text-center border border-black m-2'></input>

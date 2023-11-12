@@ -23,8 +23,11 @@ const [product, setProduct] = useState({
     productFamily: null
 })
 
+const [disableButton, setDisableButton] = useState(false)
+
 const handleSubmit = async (e) => {
     e.preventDefault()
+    setDisableButton(true)
     try {
         await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/product`, form.current, {
             headers: {
@@ -42,8 +45,9 @@ const handleSubmit = async (e) => {
             duration: 3000,
             className: "text-2xl"
         })
+        setDisableButton(false)
     } catch (error) {
-        console.log(error)
+        setDisableButton(false)
         toast.error(error.response.data.message, {
             duration: 3000,
             className: "text-2xl"
@@ -77,7 +81,7 @@ useLayoutEffect(() => {
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{product.productFamily}</h1>
         <input type='text' placeholder='Enter Product Family' name='productFamily' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' defaultValue={null} onChange={(e) => setProduct({...product, productFamily: e.target.value})}></input>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
-        <button type='submit' className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
+        <button type='submit' disabled={disableButton} className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
     </form>
     <Toaster></Toaster>   
     </>}</>

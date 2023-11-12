@@ -11,9 +11,12 @@ const ForgotPassword = () => {
 
     const [isConfirmed, setIsConfirmed] = useState(false)
 
+    const [disableButton, setDisableButton] = useState(false)
+
     //function for sending email to backend
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setDisableButton(true)
         try {
             await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/forgotpassword`, form.current, {
                 headers: {
@@ -25,7 +28,9 @@ const ForgotPassword = () => {
                 className: "text-2xl"
               })
             setIsConfirmed(true)
+            setDisableButton(false)
         } catch (error) {
+          setDisableButton(false)
             toast.error(error?.response?.data?.message, {
                 duration: 3000,
                 className: "text-2xl"
@@ -42,7 +47,7 @@ const ForgotPassword = () => {
         <label htmlFor='email' className='m-3'>Enter your email:</label>
         <input type='email' name='email' required placeholder='Email' className='text-center border-black border rounded'></input>
         </div>
-        <button type='submit' className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white font-bold md:text-xl hover:scale-110'>Confirm</button>
+        <button type='submit' disabled={disableButton} className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white font-bold md:text-xl hover:scale-110'>Confirm</button>
         <Link href={"/auth/login"} >Go back to login page</Link>
         </div>
         {isConfirmed && <h1>A password reset link has been sent to your email!</h1>}

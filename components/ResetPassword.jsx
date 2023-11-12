@@ -13,8 +13,11 @@ const ResetPasswordForm = ({params}) => {
     const [toggleHidePassword, setToggleHidePassword] = useState(false)
     const [isConfirmed, setIsConfirmed] = useState(false)
 
+    const [disableButton, setDisableButton] = useState(false)
+
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setDisableButton(true)
         try {
             await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/resetpassword/${params.token}`, form.current, {
                 headers: {
@@ -26,7 +29,9 @@ const ResetPasswordForm = ({params}) => {
                 duration: 3000,
                 className: "text-2xl"
               })
-        } catch (error) {   
+              setDisableButton(false)
+        } catch (error) {  
+          setDisableButton(false) 
             toast.error(error?.response?.data?.message, {
                 duration: 3000,
                 className: "text-2xl"
@@ -52,7 +57,7 @@ const ResetPasswordForm = ({params}) => {
         : <AiFillEyeInvisible className='absolute right-[3%] top-[55%] text-2xl cursor-pointer' onClick={() => setToggleHideConfirmPassword(!toggleHideConfirmPassword)}></AiFillEyeInvisible>  
         }
         </div>
-            <button type='submit' className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white font-bold md:text-xl hover:scale-110'>Confirm</button>
+            <button type='submit' disabled={disableButton} className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white font-bold md:text-xl hover:scale-110'>Confirm</button>
             <Link href={"/auth/login"} >Go back to login page</Link>
         </div>
         {isConfirmed && <h1 className='text-center'>Your password has been changed, login with your new password</h1>}

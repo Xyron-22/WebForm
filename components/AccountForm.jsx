@@ -25,9 +25,12 @@ const AccountForm = () => {
         dsp: null
     })
 
+    const [disableButton, setDisableButton] = useState(false)
+
     //function for submitting the form
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setDisableButton(true)
         try {
             await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/account`, form.current, {
                 headers: {
@@ -46,7 +49,9 @@ const AccountForm = () => {
                 duration: 3000,
                 className: "text-2xl"
             })
+            setDisableButton(false)
         } catch (error) {
+            setDisableButton(false)
             toast.error(error.response.data.message, {
                 duration: 3000,
                 className: "text-2xl"
@@ -93,7 +98,7 @@ const AccountForm = () => {
         })}
         </div>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
-        <button type='submit' className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
+        <button type='submit' disabled={disableButton} className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
         </form>
         <Toaster></Toaster>
     </>}</>
