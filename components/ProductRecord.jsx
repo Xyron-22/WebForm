@@ -91,7 +91,7 @@ const ProductRecord = ({data}) => {
     <div className={`bg-white text-center w-full ${toggleModal ? "p-0" : "xl:w-[90%] my-5 p-2"} md:text-xl relative z-[999999999999]`}>
     <Link href={"/"} className='absolute left-3 bg-blue text-white rounded p-1 m-1'>Home</Link>
        <h1 className='md:text-3xl font-bold mx-3 mb-2'>Product Records</h1>
-       <h1>Number of records: {productRecordsShown.length}</h1>
+       <h1>Number of records: {productRecordsShown?.length}</h1>
        <input type='button' value={"Reload"} disabled={disableButton} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded' onClick={fetchAllProductRecords}></input>
        <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
        <div className='flex w-full justify-center items-center'>

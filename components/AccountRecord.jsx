@@ -83,7 +83,7 @@ const AccountRecord = ({data}) => {
     const handleSortByName = () => {
         let tempArr = [...accountRecordsShown]
         tempArr.sort((a, b) => {
-            if(a.account_name.trim() < b.account_name.trim()) { //trim the account name first so it can be sort correctly
+            if(a.account_name.trim() < b.account_name.trim()) {
                 return -1
             } 
             if(a.account_name.trim() > b.account_name.trim()) {

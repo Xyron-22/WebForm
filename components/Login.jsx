@@ -19,7 +19,7 @@ const LoginForm = () => {
   const router = useRouter()
 
   const setToken = useStore((state) => state.setToken)
-  // const extractJwtFromStorage = useStore((state) => state.extractJwtFromStorage)
+ 
   const token = useStore((state) => state.token)
    
   const [isRegistered, setIsRegistered] = useState(true)

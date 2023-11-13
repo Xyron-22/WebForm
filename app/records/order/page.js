@@ -1,7 +1,6 @@
 import React from 'react'
 import OrderRecord from '@/components/OrderRecord'
 
-//function for fetching all the account records (runs on the server before sending files and data to client)
 async function getOrderRecords () {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`, {cache: 'no-store'})
     return res.json()  

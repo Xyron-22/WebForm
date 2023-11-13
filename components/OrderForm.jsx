@@ -41,11 +41,11 @@ const OrderForm = ({data}) => {
     productId: "",
     quantity: "",
     price: ""
-  }) //do not remove
+  })
   //state for the initial array of products
-  const [initialProductArray, setInitialProductArray] = useState(data.data) //do not remove
+  const [initialProductArray, setInitialProductArray] = useState(data.data)
   //state for array of products added
-  const [arrayProducts, setArrayProducts] = useState([]) //do not remove
+  const [arrayProducts, setArrayProducts] = useState([])
 
   // FORM
   //state for whole form complete with all the fields
@@ -192,6 +192,8 @@ const OrderForm = ({data}) => {
  
   return (
     <>
+    {data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
+    <>
     {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
     <form className='flex-col flex items-center w-screen lg:w-[80%] bg-white shadow-2xl relative' onSubmit={handleSubmit}>
     {decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && <Link href={"/"} className='absolute left-1 top-1 text-sm sm:left-3 sm:top-3 bg-blue text-white p-1 m-1 rounded md:text-xl'>Home</Link>}
@@ -298,6 +300,8 @@ const OrderForm = ({data}) => {
     <Toaster></Toaster>
     </>}
     </>
+  }</>
+    
   )
 }
 
