@@ -43,7 +43,7 @@ const OrderForm = ({data}) => {
     price: ""
   })
   //state for the initial array of products
-  const [initialProductArray, setInitialProductArray] = useState(data.data)
+  const [initialProductArray, setInitialProductArray] = useState(data.data || [])
   //state for array of products added
   const [arrayProducts, setArrayProducts] = useState([])
 

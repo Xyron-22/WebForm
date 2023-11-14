@@ -22,7 +22,7 @@ const OrderRecord = ({data}) => {
     const token = useStore((state) => state.token)
    
     const [isLoading, setIsLoading] = useState(true)
-    const [orderRecordsShown, setOrderRecordsShown] = useState(data.data)
+    const [orderRecordsShown, setOrderRecordsShown] = useState(data.data || [])
 
     //state for toggling the delete modal
     const [toggleModal, setToggleModal] = useState(false)
@@ -158,7 +158,7 @@ const OrderRecord = ({data}) => {
      <div className={`bg-white text-center ${toggleModal ? "w-full p-0" : "w-screen xl:w-[90%] my-5 p-2"} md:text-xl relative z-[999999999999]`}>
         <Link href={"/"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Home</Link>
         <h1 className='md:text-3xl font-bold mx-3 mb-2'>Order Records</h1>
-        <h1>Number of records: {orderRecordsShown.length}</h1>
+        <h1>Number of records: {orderRecordsShown?.length}</h1>
         <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
         <label htmlFor='filterOrderDate' className='text-center bg-blue text-white p-1 shadow-2xl m-2 rounded'>Filter Date:</label>
         <input type='text' name='filterOrderDate' placeholder='MM/DD/YY' className='bg-whiteSmoke text-center border-2 rounded border-blue' onChange={handleFilterByOrderDate}></input>

@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import useStore from '@/stateManagement/store'
 import toast, {Toaster} from 'react-hot-toast'
 import { jwtDecode } from 'jwt-decode'
+import ReactLoading from "react-loading";
 
 const LoginForm = () => {
 
@@ -26,11 +27,19 @@ const LoginForm = () => {
   const [toggleHidePassword, setToggleHidePassword] = useState(false)
   const [toggleHideConfirmPassword, setToggleHideConfirmPassword] = useState(false)
 
+  //
+  const [isLoading, setIsLoading] = useState(<><h1>Connecting...</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"5%"} width={"5%"} className="m-auto"></ReactLoading></>)
+  const [isConnecting, setIsConnecting] = useState(false)
+
   const [disableButton, setDisableButton] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      setIsConnecting(true)
+      setTimeout(() => {
+        setIsLoading(<><h1>Restoring Connection...</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"2%"} width={"5%"} className="m-auto"></ReactLoading></>)
+      }, 3000)
       setDisableButton(true)
       const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${isRegistered ? "signin" : "signup"}`, form.current, {
         headers: {
@@ -65,6 +74,7 @@ const LoginForm = () => {
     <form className='flex flex-wrap items-center flex-col w-[90%] lg:w-[50%] bg-white shadow-2xl rounded justify-center' ref={form} onSubmit={handleSubmit}>
       <div className='text-lg md:text-3xl lg:text-4xl font-bold text-center py-5 h-auto w-full bg-gradient-to-r from-darkRed via-red to-darkRed text-white'>
         {isRegistered ? <h1 className='flex justify-center items-center'>Login<AiOutlineLogin></AiOutlineLogin></h1> : <h1 className='flex justify-center items-center'>Register<BiRegistered></BiRegistered></h1>}</div>
+        {isConnecting && <div className='w-full text-center mt-5 mb-[-7%]'>{isLoading}</div>}
       <div className='flex items-center flex-wrap justify-center flex-col w-full min-h-[30vh] text-lg font-semibold'>
         <div className='flex flex-col w-[80%]'>
         <label htmlFor='email' className='ml-1 flex items-center'>Email<AiOutlineMail className='m-1'></AiOutlineMail></label>

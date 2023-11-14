@@ -22,7 +22,7 @@ const ProductRecord = ({data}) => {
     const token = useStore((state) => state.token)
  
     const [isLoading, setIsLoading] = useState(true)
-    const [productRecordsShown, setProductRecordsShown] = useState(data.data)
+    const [productRecordsShown, setProductRecordsShown] = useState(data.data || [])
 
     const [toggleModal, setToggleModal] = useState(false)
 
