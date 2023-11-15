@@ -56,6 +56,8 @@ const LoginForm = () => {
         if(decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/")
         if(decodedToken.role === process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/form/order")
     } catch (error) {
+      setIsConnecting(false)
+      setIsLoading(<><h1>Connecting...</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"5%"} width={"5%"} className="m-auto"></ReactLoading></>)
       setDisableButton(false)
       console.log(error)
         toast.error(error?.response?.data?.message, {
