@@ -23,23 +23,31 @@ const LoginForm = () => {
  
   const token = useStore((state) => state.token)
    
+  //state if registered or not
   const [isRegistered, setIsRegistered] = useState(true)
+  //state for toggling the hide password
   const [toggleHidePassword, setToggleHidePassword] = useState(false)
+  //state for toggling the hide confirm password
   const [toggleHideConfirmPassword, setToggleHideConfirmPassword] = useState(false)
 
-  //
-  const [isLoading, setIsLoading] = useState(<><h1>Connecting...</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"5%"} width={"5%"} className="m-auto"></ReactLoading></>)
+  //state set to true if currently sending a request
   const [isConnecting, setIsConnecting] = useState(false)
 
+  //state if the connection and response takes too long
+  const [connectLost, setConnectionLost] = useState(false)
+
+  //state for disabling buttons after sending a request
   const [disableButton, setDisableButton] = useState(false)
+
+  let timeOut;
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       setIsConnecting(true)
-      setTimeout(() => {
-        setIsLoading(<><h1>Restoring Connection...</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"2%"} width={"5%"} className="m-auto"></ReactLoading></>)
-      }, 3000)
+      timeOut = setTimeout(() => {
+        setConnectionLost(true)
+      }, 10000)
       setDisableButton(true)
       const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${isRegistered ? "signin" : "signup"}`, form.current, {
         headers: {
@@ -57,9 +65,9 @@ const LoginForm = () => {
         if(decodedToken.role === process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/form/order")
     } catch (error) {
       setIsConnecting(false)
-      setIsLoading(<><h1>Connecting...</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"5%"} width={"5%"} className="m-auto"></ReactLoading></>)
+      clearTimeout(timeOut)
+      setConnectionLost(false)
       setDisableButton(false)
-      console.log(error)
         toast.error(error?.response?.data?.message, {
           duration: 3000,
           className: "text-2xl"
@@ -76,7 +84,11 @@ const LoginForm = () => {
     <form className='flex flex-wrap items-center flex-col w-[90%] lg:w-[50%] bg-white shadow-2xl rounded justify-center' ref={form} onSubmit={handleSubmit}>
       <div className='text-lg md:text-3xl lg:text-4xl font-bold text-center py-5 h-auto w-full bg-gradient-to-r from-darkRed via-red to-darkRed text-white'>
         {isRegistered ? <h1 className='flex justify-center items-center'>Login<AiOutlineLogin></AiOutlineLogin></h1> : <h1 className='flex justify-center items-center'>Register<BiRegistered></BiRegistered></h1>}</div>
-        {isConnecting && <div className='w-full text-center mt-5 mb-[-7%]'>{isLoading}</div>}
+        {isConnecting && 
+          <div className='w-full text-center mt-5 mb-[-7%]'>
+            {connectLost ? 
+              <><h1>Restoring Connection...</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"2%"} width={"5%"} className="m-auto"></ReactLoading></> : <><h1>{isRegistered ? "Logging in..." : "Signing up..."}</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"2%"} width={"5%"} className="m-auto"></ReactLoading></>}
+          </div>}
       <div className='flex items-center flex-wrap justify-center flex-col w-full min-h-[30vh] text-lg font-semibold'>
         <div className='flex flex-col w-[80%]'>
         <label htmlFor='email' className='ml-1 flex items-center'>Email<AiOutlineMail className='m-1'></AiOutlineMail></label>
@@ -104,8 +116,8 @@ const LoginForm = () => {
         </>}
         </div>
         <button type='submit' disabled={disableButton} className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white font-bold sm:text-xl md:text-2xl hover:scale-110'>{isRegistered ? "Login" : "Register"}</button>
-        <button type='button' onClick={() => setIsRegistered(!isRegistered)} className='mx-auto'>{isRegistered ? "Not registered yet? Click here" : "Already have an account? Click here"}</button>
-        <Link className='mx-auto my-5' href={"/auth/forgotpassword"}>Forgot password?</Link>
+        <button disabled={disableButton} type='button' onClick={() => setIsRegistered(!isRegistered)} className='mx-auto'>{isRegistered ? "Not registered yet? Click here" : "Already have an account? Click here"}</button>
+        <Link className="mx-auto my-5" href={"/auth/forgotpassword"}>Forgot password?</Link>
         <Toaster></Toaster>
     </form>
     </div>
