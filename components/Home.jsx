@@ -122,16 +122,9 @@ const Home = () => {
     const router = useRouter()
 
     const token = useStore((state) => state.token)
-    const setTokenToNull = useStore((state) => state.setTokenToNull)
-
+    
     const [isLoading, setIsLoading] = useState(true)
-
-    const handleLogout = () => {
-        Cookies.remove("jwt")
-        setTokenToNull()
-        router.replace("/auth/login")
-    }
-
+  
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
