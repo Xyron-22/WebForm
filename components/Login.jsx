@@ -73,8 +73,8 @@ const LoginForm = () => {
 
   return (
     <div className='w-full min-h-full flex justify-center items-center'>
-    <form className='flex flex-wrap items-center flex-col w-[90%] lg:w-[50%] bg-white shadow-2xl rounded justify-center' ref={form} onSubmit={handleSubmit}>
-      <div className='text-lg md:text-3xl lg:text-4xl font-bold text-center py-5 h-auto w-full bg-gradient-to-r from-darkRed via-red to-darkRed text-white'>
+    <form className='flex flex-wrap items-center flex-col w-[90%] lg:w-[50%] bg-white shadow-2xl rounded justify-center rounded-t-lg' ref={form} onSubmit={handleSubmit}>
+      <div className='text-lg md:text-3xl lg:text-4xl font-bold text-center py-5 h-auto w-full bg-gradient-to-r from-dark via-light to-dark rounded-t text-white'>
         {isRegistered ? <h1 className='flex justify-center items-center'>Login<AiOutlineLogin></AiOutlineLogin></h1> : <h1 className='flex justify-center items-center'>Register<BiRegistered></BiRegistered></h1>}</div>
         {isConnecting && <div className='w-full text-center mt-5 mb-[-7%]'>{isLoading}</div>}
       <div className='flex items-center flex-wrap justify-center flex-col w-full min-h-[30vh] text-lg font-semibold'>
@@ -103,7 +103,7 @@ const LoginForm = () => {
         </div>
         </>}
         </div>
-        <button type='submit' disabled={disableButton} className='mx-auto m-3 p-1 px-3 rounded bg-blue text-white font-bold sm:text-xl md:text-2xl hover:scale-110'>{isRegistered ? "Login" : "Register"}</button>
+        <button type='submit' disabled={disableButton} className='mx-auto m-3 p-1 px-10 rounded-full bg-medium text-white font-bold sm:text-xl md:text-2xl hover:scale-110'>{isRegistered ? "Login" : "Register"}</button>
         <button type='button' onClick={() => setIsRegistered(!isRegistered)} className='mx-auto'>{isRegistered ? "Not registered yet? Click here" : "Already have an account? Click here"}</button>
         <Link className='mx-auto my-5' href={"/auth/forgotpassword"}>Forgot password?</Link>
         <Toaster></Toaster>
