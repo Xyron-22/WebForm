@@ -12,7 +12,7 @@ import {GrTableAdd, GrTable} from "react-icons/gr"
 import {IoMdOpen} from "react-icons/io"
 import {MdAdminPanelSettings} from "react-icons/md"
 import Navbar from './Navbar'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart, Line } from 'recharts';
 
 const data = [
   {
@@ -89,6 +89,45 @@ const data = [
   },
 ];
 
+const data2 = [
+  {
+    name: 'Page A',
+    uv: 590,
+    pv: 800,
+    amt: 1400,
+  },
+  {
+    name: 'Page B',
+    uv: 868,
+    pv: 967,
+    amt: 1506,
+  },
+  {
+    name: 'Page C',
+    uv: 1397,
+    pv: 1098,
+    amt: 989,
+  },
+  {
+    name: 'Page D',
+    uv: 1480,
+    pv: 1200,
+    amt: 1228,
+  },
+  {
+    name: 'Page E',
+    uv: 1520,
+    pv: 1108,
+    amt: 1100,
+  },
+  {
+    name: 'Page F',
+    uv: 1400,
+    pv: 680,
+    amt: 1700,
+  },
+];
+
 const monthTickFormatter = (tick) => {
   const date = new Date(tick);
 
@@ -135,74 +174,45 @@ const Home = () => {
 
   return (<>{
     isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-     <div className='w-full h-[86vh] bg-petron rounded flex flex-wrap'>
+     <div className='w-full h-[86vh] bg-petron rounded flex flex-wrap overflow-auto'>
       <Navbar></Navbar>
-      <div className='bg-dark w-[85%] h-full flex flex-col justify-evenly overflow-auto'>
-        <div className='w-full h-[40%] flex overflow-auto flex-wrap justify-evenly'>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
+      <div className='bg-dark w-full md:w-[85%] min-h-full flex flex-col justify-evenly'>
+        <div className='w-full min-h-[40%] flex flex-wrap justify-evenly'>
+          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
             <h1>TOTAL ORDERS</h1>
             <p className='m-auto text-5xl font-bold'>2254</p>
           </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightGreen font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>JANUARY</h1>
+          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightGreen font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1>DSP 1</h1>
             <p className='m-auto text-5xl font-bold'>254</p>
           </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-red font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>FEBRUARY</h1>
-            <p className='m-auto text-5xl font-bold'>12132232354</p>
+          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-red font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1>DSP 2</h1>
+            <p className='m-auto text-5xl font-bold'>154</p>
           </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
+          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1>DSP 3</h1>
             <p className='m-auto text-5xl font-bold'>2254</p>
           </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
+          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1>DSP 4</h1>
             <p className='m-auto text-5xl font-bold'>2254</p>
           </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
+          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1>DSP 5</h1>
             <p className='m-auto text-5xl font-bold'>2254</p>
           </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
-          </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
-          </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
-          </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
-          </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
-          </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
-          </div>
-          <div className='min-w-[10%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded'>
-            <h1>TOTAL ORDERS</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
-          </div>
-          
-         
         </div>
-      <ResponsiveContainer className="bg-medium border-[1px] border-light rounded m-2" width="60%" height="60%">
+        <div className='w-full h-[30%] text-xs'>
+      <ResponsiveContainer>
         <BarChart
           width={500}
           height={300}
           data={data}
           margin={{
-            top: 5,
-            right: 30,
-            left: 20,
+            top: 10,
+            right: 5,
+            left: -25,
             bottom: 5,
           }}
         >
@@ -228,6 +238,30 @@ const Home = () => {
           <Bar dataKey="uv" fill="#82ca9d" /> */}
         </BarChart>
       </ResponsiveContainer>
+      </div>
+      <div className='w-full h-[30%] text-xs'>
+      <ResponsiveContainer>
+        <ComposedChart
+          width={500}
+          height={400}
+          data={data2}
+          margin={{
+            top: 10,
+            right: 5,
+            bottom: 5,
+            left: -25,
+          }}
+        >
+          <CartesianGrid stroke="#f5f5f5" />
+          <XAxis dataKey="name" scale="band" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="uv" barSize={20} fill="#413ea0" />
+          <Line type="monotone" dataKey="uv" stroke="#ff7300" />
+        </ComposedChart>
+      </ResponsiveContainer>
+      </div>
       </div>
         {/* <h1 className='py-5 text-lg md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-darkRed via-red to-darkRed text-white w-full flex justify-center items-center'>Admin Controls<MdAdminPanelSettings></MdAdminPanelSettings></h1>
         <h1 className='font-bold md:text-3xl lg:text-4xl m-2 relative'>See Records<GrTable className='absolute bottom-[10%] left-[103%] text-base font-semibold md:text-2xl lg:text-3xl text-center'></GrTable></h1>
