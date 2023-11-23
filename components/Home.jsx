@@ -89,45 +89,6 @@ const data = [
   },
 ];
 
-const data2 = [
-  {
-    name: 'Page A',
-    uv: 590,
-    pv: 800,
-    amt: 1400,
-  },
-  {
-    name: 'Page B',
-    uv: 868,
-    pv: 967,
-    amt: 1506,
-  },
-  {
-    name: 'Page C',
-    uv: 1397,
-    pv: 1098,
-    amt: 989,
-  },
-  {
-    name: 'Page D',
-    uv: 1480,
-    pv: 1200,
-    amt: 1228,
-  },
-  {
-    name: 'Page E',
-    uv: 1520,
-    pv: 1108,
-    amt: 1100,
-  },
-  {
-    name: 'Page F',
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-  },
-];
-
 const monthTickFormatter = (tick) => {
   const date = new Date(tick);
 
@@ -174,36 +135,32 @@ const Home = () => {
 
   return (<>{
     isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-     <div className='w-full h-[86vh] bg-petron rounded flex flex-wrap overflow-auto'>
+     <div className='w-full bg-petron rounded flex flex-wrap'>
       <Navbar></Navbar>
-      <div className='bg-dark w-full md:w-[85%] min-h-full flex flex-col justify-evenly'>
-        <div className='w-full min-h-[40%] flex flex-wrap justify-evenly'>
-          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
-            <h1>TOTAL ORDERS</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
+      <div className='bg-dark w-full md:w-[85%] min-h-[86vh] flex flex-col justify-evenly'>
+        <div className='w-full min-h-[20vh] flex flex-wrap justify-evenly'>
+          <div className='min-w-[95%] md:min-w-[95%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <p className='m-auto md:text-xl font-bold'>ORDERS AND PRODUCTS</p>
           </div>
-          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightGreen font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
-            <h1>DSP 1</h1>
-            <p className='m-auto text-5xl font-bold'>254</p>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base'>TOTAL ORDERS</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>2254</p>
           </div>
-          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-red font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
-            <h1>DSP 2</h1>
-            <p className='m-auto text-5xl font-bold'>154</p>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base'>CURRENT MONTH ORDERS</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>P2,254</p>
           </div>
-          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
-            <h1>DSP 3</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base'>TOTAL PRODUCTS SOLD</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>2254</p>
           </div>
-          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
-            <h1>DSP 4</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
-          </div>
-          <div className='min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
-            <h1>DSP 5</h1>
-            <p className='m-auto text-5xl font-bold'>2254</p>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base'>CURR. MONTH PRODUCTS SOLD</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>P2,254</p>
           </div>
         </div>
-        <div className='w-full h-[30%] text-xs'>
+        <h1 className='m-auto text-lightText font-bold text-center'>PRODUCTS AND ORDERS EVERY MONTH</h1>
+        <div className='w-full min-h-[30vh] text-xs xs:m-auto xs:max-w-[95%] lg:max-w-[88%] lg:min-h-[30%]'>
       <ResponsiveContainer>
         <BarChart
           width={500}
@@ -216,7 +173,7 @@ const Home = () => {
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="5 5" />
           <XAxis dataKey="date" tickFormatter={monthTickFormatter} />
           <XAxis
             dataKey="date"
@@ -231,52 +188,69 @@ const Home = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="pv" fill="#8884d8" />
+          <Bar dataKey="pv" fill="#82ca9d" />
+          <Bar dataKey="uv" fill="#FF8042" />
+          {/* <Bar dataKey="uv" fill="#82ca9d" /> */}
           {/* <Bar dataKey="uv" fill="#82ca9d" />
-          <Bar dataKey="uv" fill="#82ca9d" />
           <Bar dataKey="uv" fill="#82ca9d" />
           <Bar dataKey="uv" fill="#82ca9d" /> */}
         </BarChart>
       </ResponsiveContainer>
       </div>
-      <div className='w-full h-[30%] text-xs'>
+        
+      <div className='w-full min-h-[20vh] flex flex-wrap justify-evenly'>
+          <div className='min-w-[95%] md:min-w-[95%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            {/* <h1 className='text-xs md:text-base'>TOTAL ORDERS</h1> */}
+            <p className='m-auto md:text-xl font-bold'>SALES</p>
+          </div>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base'>TOTAL SALES</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>142</p>
+          </div>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base'>CURRENT MONTH SALES</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>P2,254</p>
+          </div>
+        </div>
+        <h1 className='m-auto text-lightText font-bold text-center'>SALES EVERY MONTH</h1>
+        <div className='w-full min-h-[30vh] text-xs xs:m-auto xs:max-w-[95%] lg:max-w-[88%] lg:min-h-[30%]'>
       <ResponsiveContainer>
-        <ComposedChart
+        <BarChart
           width={500}
-          height={400}
-          data={data2}
+          height={300}
+          data={data}
           margin={{
             top: 10,
             right: 5,
-            bottom: 5,
             left: -25,
+            bottom: 5,
           }}
         >
-          <CartesianGrid stroke="#f5f5f5" />
-          <XAxis dataKey="name" scale="band" />
+          <CartesianGrid strokeDasharray="5 5" />
+          <XAxis dataKey="date" tickFormatter={monthTickFormatter} />
+          <XAxis
+            dataKey="date"
+            axisLine={false}
+            tickLine={false}
+            interval={0}
+            tick={renderQuarterTick}
+            height={1}
+            scale="band"
+            xAxisId="quarter"
+          />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="uv" barSize={20} fill="#413ea0" />
-          <Line type="monotone" dataKey="uv" stroke="#ff7300" />
-        </ComposedChart>
+          <Bar dataKey="uv" fill="#8884d8" />
+          {/* <Bar dataKey="pv" fill="#8884d8" /> */}
+          {/* <Bar dataKey="uv" fill="#82ca9d" /> */}
+          {/* <Bar dataKey="uv" fill="#82ca9d" />
+          <Bar dataKey="uv" fill="#82ca9d" />
+          <Bar dataKey="uv" fill="#82ca9d" /> */}
+        </BarChart>
       </ResponsiveContainer>
       </div>
       </div>
-        {/* <h1 className='py-5 text-lg md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-darkRed via-red to-darkRed text-white w-full flex justify-center items-center'>Admin Controls<MdAdminPanelSettings></MdAdminPanelSettings></h1>
-        <h1 className='font-bold md:text-3xl lg:text-4xl m-2 relative'>See Records<GrTable className='absolute bottom-[10%] left-[103%] text-base font-semibold md:text-2xl lg:text-3xl text-center'></GrTable></h1>
-        <div className='w-full flex justify-center sm:text-xl md:text-2xl'>
-        <Link href={"/records/order"} className='bg-blue text-white p-1 m-2 hover:scale-110 rounded relative font-bold'>Order Records<IoMdOpen className='absolute top-0 right-0 text-sm'></IoMdOpen></Link>
-        <Link href={"/records/product"} className='bg-blue text-white p-1 m-2 hover:scale-110 rounded relative font-bold'>Product Records<IoMdOpen className='absolute top-0 right-0 text-sm'></IoMdOpen></Link>
-        <Link href={"/records/account"} className='bg-blue text-white p-1 m-2 hover:scale-110 rounded relative font-bold'>Account Records<IoMdOpen className='absolute top-0 right-0 text-sm'></IoMdOpen></Link>
-        </div>
-        <h1 className='font-bold md:text-3xl lg:text-4xl m-2 relative'>Insert Records<GrTableAdd className='absolute bottom-[10%] left-[103%] text-base font-semibold md:text-2xl lg:text-3xl text-center'></GrTableAdd></h1>
-        <div className='w-full flex justify-center sm:text-xl md:text-2xl'>
-        <Link href={"/form/order"} className='bg-blue text-white p-1 m-2 hover:scale-110 rounded relative font-bold'>Order<IoMdOpen className='absolute top-0 right-0 text-sm'></IoMdOpen></Link>
-        <Link href={"/form/product"} className='bg-blue text-white p-1 m-2 hover:scale-110 rounded relative font-bold'>Product<IoMdOpen className='absolute top-0 right-0 text-sm'></IoMdOpen></Link>
-        <Link href={"/form/account"} className='bg-blue text-white p-1 m-2 hover:scale-110 rounded relative font-bold'>Account<IoMdOpen className='absolute top-0 right-0 text-sm'></IoMdOpen></Link>
-        </div>
-        <button type='button' onClick={handleLogout} className='m-5 font-bold sm:text-xl md:text-2xl rounded bg-blue text-white p-2 hover:scale-110'>Logout</button> */}
     </div>
     <Toaster></Toaster>
     </>
