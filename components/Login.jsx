@@ -35,12 +35,12 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setDisableButton(true)
     try {
       setIsConnecting(true)
       setTimeout(() => {
         setIsLoading(<><h1>Restoring Connection...</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"2%"} width={"5%"} className="m-auto"></ReactLoading></>)
       }, 3000)
-      setDisableButton(true)
       const {data} = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${isRegistered ? "signin" : "signup"}`, form.current, {
         headers: {
           "Content-Type": "application/json"
@@ -58,13 +58,12 @@ const LoginForm = () => {
     } catch (error) {
       setIsConnecting(false)
       setIsLoading(<><h1>Connecting...</h1><ReactLoading type={"bubbles"} color={"#000000"} height={"5%"} width={"5%"} className="m-auto"></ReactLoading></>)
-      setDisableButton(false)
-      console.log(error)
-        toast.error(error?.response?.data?.message, {
-          duration: 3000,
-          className: "text-2xl"
-        })
+      toast.error(error?.response?.data?.message, {
+        duration: 3000,
+        className: "text-2xl"
+      })
     }
+    setDisableButton(false)
   }
 
   useLayoutEffect(() => {

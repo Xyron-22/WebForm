@@ -2,92 +2,13 @@
 
 import React, { useLayoutEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Cookies from 'js-cookie'
 import useStore from '@/stateManagement/store'
 import ReactLoading from "react-loading"
+import axios from "axios"
 import { jwtDecode } from 'jwt-decode'
 import {Toaster} from "react-hot-toast"
-import Link from 'next/link'
-import {GrTableAdd, GrTable} from "react-icons/gr"
-import {IoMdOpen} from "react-icons/io"
-import {MdAdminPanelSettings} from "react-icons/md"
 import Navbar from './Navbar'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart, Line } from 'recharts';
-
-const data = [
-  {
-    date: '2000-01',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    date: '2000-02',
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    date: '2000-03',
-    uv: 2000,
-    pv: 800,
-    amt: 2290,
-  },
-  {
-    date: '2000-04',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    date: '2000-05',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    date: '2000-06',
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    date: '2000-07',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-  {
-    date: '2000-08',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    date: '2000-09',
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    date: '2000-10',
-    uv: 2000,
-    pv: 800,
-    amt: 2290,
-  },
-  {
-    date: '2000-11',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    date: '2000-12',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-];
 
 const monthTickFormatter = (tick) => {
   const date = new Date(tick);
@@ -124,13 +45,33 @@ const Home = () => {
     const token = useStore((state) => state.token)
     
     const [isLoading, setIsLoading] = useState(true)
+
+    const [arrayOfMonth, setArrayOfMonth] = useState("")
+    const [fullYearData, setFullYearData] = useState("")
+    const [currentMonth, setCurrentMonth] = useState("")
+
+    const fetchAllOrderData = async () => {
+        try {
+          const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order/data`)
+          setArrayOfMonth(data.data.months)
+          setFullYearData(data.data.year)
+          setCurrentMonth(data.data.currentMonth)
+        } catch (error) {
+          console.log(error)
+        }
+    }
+
+    console.log(fullYearData)
+    console.log(arrayOfMonth)
   
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
-        setIsLoading(false)
+        
+        fetchAllOrderData()
+        setIsLoading(false)        
     },[])
 
   return (<>{
@@ -144,37 +85,41 @@ const Home = () => {
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
             <h1 className='text-xs md:text-base'>TOTAL ORDERS</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold'>2254</p>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(arrayOfMonth[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>{fullYearData?.orders}</p>
           </div>
-          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
-            <h1 className='text-xs md:text-base'>CURRENT MONTH ORDERS</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold'>P2,254</p>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base font-semibold'>CURRENT MONTH ORDERS</h1>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(currentMonth?.year_date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>{currentMonth?.total_orders}</p>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
             <h1 className='text-xs md:text-base'>TOTAL PRODUCTS SOLD</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold'>2254</p>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(arrayOfMonth[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>{fullYearData?.products}</p>
           </div>
-          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
-            <h1 className='text-xs md:text-base'>CURR. MONTH PRODUCTS SOLD</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold'>P2,254</p>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base font-semibold'>CURR. MONTH PRODUCTS SOLD</h1>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(currentMonth?.year_date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>{currentMonth?.total_products}</p>
           </div>
         </div>
         <h1 className='m-auto text-lightText font-bold text-center'>PRODUCTS AND ORDERS EVERY MONTH</h1>
-        <div className='w-full min-h-[30vh] text-xs xs:m-auto xs:max-w-[95%] lg:max-w-[88%] lg:min-h-[30%]'>
-      <ResponsiveContainer>
+        <div className='w-full min-h-[30vh] text-xs xs:m-auto xs:max-w-[95%] lg:max-w-[88%] lg:min-h-[33%] border-[1px] border-light bg-medium rounded'>
+      <ResponsiveContainer style={{fill: "white"}}>
         <BarChart
           width={500}
           height={300}
-          data={data}
+          data={arrayOfMonth}
           margin={{
             top: 10,
             right: 5,
-            left: -25,
+            left: -5,
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="5 5" />
-          <XAxis dataKey="date" tickFormatter={monthTickFormatter} />
+          <CartesianGrid strokeDasharray="0" vertical={false}/>
+          <XAxis dataKey="date" tickFormatter={monthTickFormatter} tick={{fill: "white"}}/>
           <XAxis
             dataKey="date"
             axisLine={false}
@@ -185,11 +130,11 @@ const Home = () => {
             scale="band"
             xAxisId="quarter"
           />
-          <YAxis />
+          <YAxis tick={{fill: "white"}}/>
           <Tooltip />
           <Legend />
-          <Bar dataKey="pv" fill="#82ca9d" />
-          <Bar dataKey="uv" fill="#FF8042" />
+          <Bar dataKey="orders" fill="#82ca9d" />
+          <Bar dataKey="products" fill="#FF8042" />
           {/* <Bar dataKey="uv" fill="#82ca9d" /> */}
           {/* <Bar dataKey="uv" fill="#82ca9d" />
           <Bar dataKey="uv" fill="#82ca9d" />
@@ -205,29 +150,32 @@ const Home = () => {
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
             <h1 className='text-xs md:text-base'>TOTAL SALES</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold'>142</p>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(arrayOfMonth[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>{fullYearData?.sales}</p>
           </div>
-          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
-            <h1 className='text-xs md:text-base'>CURRENT MONTH SALES</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold'>P2,254</p>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText m-2 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base font-semibold'>CURRENT MONTH SALES</h1>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(currentMonth?.year_date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold'>{currentMonth?.total_sales}</p>
           </div>
         </div>
         <h1 className='m-auto text-lightText font-bold text-center'>SALES EVERY MONTH</h1>
-        <div className='w-full min-h-[30vh] text-xs xs:m-auto xs:max-w-[95%] lg:max-w-[88%] lg:min-h-[30%]'>
-      <ResponsiveContainer>
+        <div className='w-full min-h-[30vh] text-xs xs:m-auto xs:max-w-[95%] lg:max-w-[88%] lg:min-h-[33%] border-[1px] border-light rounded bg-medium'>
+      <ResponsiveContainer style={{fill: "white"}}>
         <BarChart
           width={500}
           height={300}
-          data={data}
+          data={arrayOfMonth}
+          // data={arrayOfMonth}
           margin={{
             top: 10,
             right: 5,
-            left: -25,
+            left: -5,
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="5 5" />
-          <XAxis dataKey="date" tickFormatter={monthTickFormatter} />
+          <CartesianGrid strokeDasharray="0" vertical={false}/>
+          <XAxis dataKey="date" tickFormatter={monthTickFormatter} tick={{fill: "white"}}/>
           <XAxis
             dataKey="date"
             axisLine={false}
@@ -238,10 +186,10 @@ const Home = () => {
             scale="band"
             xAxisId="quarter"
           />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="uv" fill="#8884d8" />
+          <YAxis tick={{fill: "white"}}/>
+          <Tooltip/>
+          <Legend/>
+          <Bar dataKey="sales" fill="#8884d8" />
           {/* <Bar dataKey="pv" fill="#8884d8" /> */}
           {/* <Bar dataKey="uv" fill="#82ca9d" /> */}
           {/* <Bar dataKey="uv" fill="#82ca9d" />

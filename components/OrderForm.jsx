@@ -112,14 +112,13 @@ const OrderForm = ({data}) => {
           setOutletArray(data.data)
           setOutletArrayToSearchAgainstWith(data.data)
           setIsOutletArrayLoading(false)
-          setDisableButton(false)
         } catch (error) {
-          setDisableButton(false)
           toast.error(error?.response?.data?.message, {
             duration: 3000,
             className: "text-2xl"
           })
         }
+        setDisableButton(false)
     }
 
     //function for submitting the form
@@ -158,14 +157,11 @@ const OrderForm = ({data}) => {
           remarksFreebiesConcern: "",
           deliveryDate: ""
       })
-      e.target.reset()
       toast.success("Form submitted", {
         duration: 3000,
         className: "text-2xl"
       })
-      setDisableButton(false)
         } catch (error) {
-          setDisableButton(false)
           toast.error(error.response.data.message, {
             duration: 3000,
             className: "text-2xl"
@@ -177,7 +173,10 @@ const OrderForm = ({data}) => {
           className: "text-2xl"
         })
       }
+      setDisableButton(false)
     }
+
+    console.log(form)
 
     useLayoutEffect(() => {
       if (!token) return router.replace("/auth/login")
@@ -201,7 +200,7 @@ const OrderForm = ({data}) => {
       <h3 className='mb-5 text-lg text-center md:text-2xl font-bold'>DISTRIBUTOR SALES PERSONNEL ORDER FORM</h3>
       <hr className='border-[1px] border-black w-[90%] my-3'/>
     <label htmlFor='orderDate' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold'>ORDER DATE</label>
-    <input className='shadow bg-whiteSmoke text-xl md:text-2xl mb-3' type='date' name='orderDate' onChange={(e) => setForm({...form, orderDate: e.target.value})}></input>
+    <input className='shadow bg-whiteSmoke text-xl md:text-2xl mb-3' type='date' name='orderDate' value={form.orderDate} onChange={(e) => setForm({...form, orderDate: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-red text-white p-1 rounded font-semibold'>DSP ASSIGNED</h1>
     <div className='text-center flex'>
@@ -238,15 +237,15 @@ const OrderForm = ({data}) => {
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mb-2 bg-red text-white p-1 rounded font-semibold'>CUSTOMER NAME</h1>
     <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{form.customerName}</h1>
-    <input type='text' placeholder='Enter Customer name' name='customerName' val={form.customerName} className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setForm({...form, customerName: e.target.value})}></input>
+    <input type='text' placeholder='Enter Customer name' name='customerName' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' value={form.customerName} onChange={(e) => setForm({...form, customerName: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-red text-white p-1 rounded font-semibold'>TIN NUMBER AND CONTACT NUMBER</h1>
     <div className='text-center flex flex-col lg:flex-row mb-3'>
       <label htmlFor='TIN' className='text-lg md:text-2xl text-center m-1'>TIN NUMBER:</label>
-      <input name='TIN' val={form.tinNumber} type='text' className='text-lg md:text-2xl text-center border border-black rounded' placeholder='Enter TIN' onChange={(e) => setForm({...form, tinNumber: e.target.value})}></input>
+      <input name='TIN' type='text' className='text-lg md:text-2xl text-center border border-black rounded' placeholder='Enter TIN' value={form.tinNumber} onChange={(e) => setForm({...form, tinNumber: e.target.value})}></input>
       <label htmlFor='Contact' className='text-lg md:text-2xl text-center m-1'>CONTACT NUMBER:</label>
-      <input name='Contact' val={form.contactNumber} type='number' className='text-lg md:text-2xl text-center border border-black rounded' placeholder='Enter Contact' onChange={(e) => setForm({...form, contactNumber: e.target.value})}></input>
+      <input name='Contact' type='number' className='text-lg md:text-2xl text-center border border-black rounded' placeholder='Enter Contact' value={form.contactNumber} onChange={(e) => setForm({...form, contactNumber: e.target.value})}></input>
     </div>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-red text-white p-1 rounded font-semibold'>TERMS</h1>
@@ -288,10 +287,10 @@ const OrderForm = ({data}) => {
     <hr className='border-[1px] border-black w-[90%] my-3'/>
      <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-red text-white p-1 rounded font-semibold'>REMARKS/FREEBIES/CONCERN</h1>
     <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{form?.remarksFreebiesConcern}</h1>
-    <textarea type='text' placeholder='Enter Text' name='remarksFreebiesConcern' className='w-[50%] text-lg md:text-2xl mt-5 text-center border border-black rounded mb-3' onChange={(e) => setForm({...form, remarksFreebiesConcern: e.target.value})}></textarea>
+    <textarea type='text' placeholder='Enter Text' name='remarksFreebiesConcern' className='w-[50%] text-lg md:text-2xl mt-5 text-center border border-black rounded mb-3' value={form.remarksFreebiesConcern} onChange={(e) => setForm({...form, remarksFreebiesConcern: e.target.value})}></textarea>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <h1 className='text-lg md:text-2xl text-center mb-2 mt-5 bg-red text-white p-1 rounded font-semibold'>DELIVERY DATE</h1>
-    <input className='shadow bg-whiteSmoke mb-5 text-xl md:text-2xl' type='date' name='deliveryDate' onChange={(e) => setForm({...form, deliveryDate: e.target.value})}></input>
+    <input className='shadow bg-whiteSmoke mb-5 text-xl md:text-2xl' type='date' name='deliveryDate' value={form.deliveryDate} onChange={(e) => setForm({...form, deliveryDate: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
     <button type='submit' disabled={disableButton} className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
     <button type='button' onClick={handleLogout} className='m-5 font-bold md:text-xl rounded bg-blue text-white p-2 hover:scale-110'>Logout</button>

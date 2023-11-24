@@ -18,9 +18,9 @@ const router = useRouter()
 const [isLoading, setIsLoading] = useState(true)
 
 const [product, setProduct] = useState({
-    matCode: null,
-    matDescription: null,
-    productFamily: null
+    matCode: "",
+    matDescription: "",
+    productFamily: ""
 })
 
 const [disableButton, setDisableButton] = useState(false)
@@ -36,23 +36,21 @@ const handleSubmit = async (e) => {
             }
         })
         setProduct({
-            matCode: null,
-            matDescription: null,
-            productFamily: null
+            matCode: "",
+            matDescription: "",
+            productFamily: ""
         })
-        e.target.reset()
         toast.success("Form Submitted", {
             duration: 3000,
             className: "text-2xl"
         })
-        setDisableButton(false)
     } catch (error) {
-        setDisableButton(false)
         toast.error(error.response.data.message, {
             duration: 3000,
             className: "text-2xl"
         })
     }
+    setDisableButton(false)
 }
 
 useLayoutEffect(() => {
@@ -71,15 +69,15 @@ useLayoutEffect(() => {
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <label htmlFor='orderDate' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold relative'>MATERIAL CODE</label>
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{product.matCode}</h1>
-        <input type='number' name='matCode' placeholder='Enter Number' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setProduct({...product, matCode: e.target.value})} required></input>
+        <input type='number' name='matCode' placeholder='Enter Number' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' value={product.matCode} onChange={(e) => setProduct({...product, matCode: e.target.value})} required></input>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <label htmlFor='orderDate' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold'>MATERIAL DESCRIPTION</label>
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{product.matDescription}</h1>
-        <textarea type='text' placeholder='Enter Description' name='matDescription' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setProduct({...product, matDescription: e.target.value})} required></textarea>
+        <textarea type='text' placeholder='Enter Description' name='matDescription' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' value={product.matDescription} onChange={(e) => setProduct({...product, matDescription: e.target.value})} required></textarea>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <label htmlFor='orderDate' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold'>PRODUCT FAMILY</label>
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{product.productFamily}</h1>
-        <input type='text' placeholder='Enter Product Family' name='productFamily' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' defaultValue={null} onChange={(e) => setProduct({...product, productFamily: e.target.value})}></input>
+        <input type='text' placeholder='Enter Product Family' name='productFamily' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' defaultValue={null} value={product.productFamily} onChange={(e) => setProduct({...product, productFamily: e.target.value})}></input>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <button type='submit' disabled={disableButton} className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
     </form>
