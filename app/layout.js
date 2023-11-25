@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
           <Header></Header>
         </header>
         <div className='h-full min-w-full bg-petron bg-cover bg-center'>
-        <main className="min-h-[86vh] bg-black bg-opacity-50">
+        <main className="min-h-[86vh] bg-black bg-opacity-50 relative">
           {children}
         </main>
         </div>
