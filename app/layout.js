@@ -12,13 +12,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className='scroll-smooth'>
         <body className='min-h-screen min-w-screen'>
         <header className='min-h-[7vh] bg-whiteSmoke flex flex-wrap justify-center items-center'>
           <Header></Header>
         </header>
         <div className='h-full min-w-full bg-petron bg-cover bg-center'>
-        <main className="min-h-[86vh] bg-black bg-opacity-50">
+        <main className="min-h-[86vh] bg-black bg-opacity-50 relative">
           {children}
         </main>
         </div>

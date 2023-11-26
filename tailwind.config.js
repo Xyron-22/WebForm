@@ -15,6 +15,7 @@ module.exports = {
      },
     },
     screens: {
+      xs: '430px',
       sm: '480px',
       md: '768px',
       lg: '976px',
@@ -30,7 +31,11 @@ module.exports = {
       "standardBlue": "#0000FF",
       "blue": "#00008B",
       "red": "#FF0000",
-      "darkRed": "#8B0000"
+      "darkRed": "#8B0000",
+      "light": "#384256",
+      "medium": "#2a3447",
+      "dark": "#222b3c",
+      "lightText": "#ddd"
     }
   },
   plugins: [],

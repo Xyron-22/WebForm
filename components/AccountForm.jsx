@@ -19,10 +19,10 @@ const AccountForm = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     const [account, setAccount] = useState({
-        customerNumber: null,
-        accountName: null,
-        location: null,
-        dsp: null
+        customerNumber: "",
+        accountName: "",
+        location: "",
+        dsp: ""
     })
 
     const [disableButton, setDisableButton] = useState(false)
@@ -39,25 +39,24 @@ const AccountForm = () => {
                 } 
             })
             setAccount({
-                customerNumber: null,
-                accountName: null,
-                location: null,
-                dsp: null
+                customerNumber: "",
+                accountName: "",
+                location: "",
+                dsp: ""
             })
-            e.target.reset()
             toast.success("Form Submitted", {
                 duration: 3000,
                 className: "text-2xl"
             })
-            setDisableButton(false)
+            
         } catch (error) {
-            setDisableButton(false)
             toast.error(error.response.data.message, {
                 duration: 3000,
                 className: "text-2xl"
             })
         }
-    }
+        setDisableButton(false)
+}
     
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
@@ -75,25 +74,23 @@ const AccountForm = () => {
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <label htmlFor='customerNumber' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold relative'>CUSTOMER NUMBER</label>
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{account.customerNumber}</h1>
-        <input type='text' name='customerNumber' placeholder='Enter Number' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setAccount({...account, customerNumber: e.target.value})} required></input>
+        <input type='text' name='customerNumber' placeholder='Enter Number' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' value={account.customerNumber} onChange={(e) => setAccount({...account, customerNumber: e.target.value})} required></input>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <label htmlFor='accountName' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold'>ACCOUNT NAME</label>
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{account.accountName}</h1>
-        <textarea type='text' placeholder='Enter Account Name' name='accountName' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setAccount({...account, accountName: e.target.value})} required></textarea>
+        <textarea type='text' placeholder='Enter Account Name' name='accountName' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' value={account.accountName} onChange={(e) => setAccount({...account, accountName: e.target.value})} required></textarea>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <label htmlFor='location' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold'>LOCATION</label>
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{account.location}</h1>
-        <input type='text' placeholder='Enter Location' name='location' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' onChange={(e) => setAccount({...account, location: e.target.value})} required></input>
+        <input type='text' placeholder='Enter Location' name='location' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' value={account.location} onChange={(e) => setAccount({...account, location: e.target.value})} required></input>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <div className='flex'>
         {DspData.map((dsp, i) => {
             return (
-                <>
                 <div className='flex flex-col font-semibold px-2' key={i}>
                 <label htmlFor='dsp' className='text-lg md:text-2xl'>{dsp}</label>
-                <input type="radio" name='dsp' checked={account.dsp === dsp} value={dsp} onClick={(e) => setAccount({...account, dsp: e.target.value})} required></input>
+                <input type="radio" name='dsp' checked={account.dsp === dsp} value={dsp} onChange={(e) => setAccount({...account, dsp: e.target.value})} required></input>
                 </div>
-                </>
             )
         })}
         </div>

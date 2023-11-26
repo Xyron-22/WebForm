@@ -26,7 +26,7 @@ const Modal = ({setToggle, toggle, product, setProduct, arrayProducts, setArrayP
     //function for adding a product in the array of added products
     const handleAddProduct = (e) => {
         e.preventDefault();
-        if(product.quantity !== "" && product.price !== "") {
+        if(product.quantity !== undefined && product.price !== undefined) {
             toast.success("Product Added", {
                 duration: 3000,
                 className: "text-2xl"

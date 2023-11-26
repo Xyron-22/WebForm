@@ -155,7 +155,7 @@ const OrderRecord = ({data}) => {
     {data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
     <>
      {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-     <div className={`bg-white text-center ${toggleModal ? "w-full p-0" : "w-screen xl:w-[90%] my-5 p-2"} md:text-xl relative z-[999999999999]`}>
+     <div className={`bg-white text-center ${toggleModal ? "p-0 w-full" : "w-screen xl:w-[90%] my-5 p-2"} md:text-xl relative z-[999999999999]`}>
         <Link href={"/"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Home</Link>
         <h1 className='md:text-3xl font-bold mx-3 mb-2'>Order Records</h1>
         <h1>Number of records: {orderRecordsShown?.length}</h1>
