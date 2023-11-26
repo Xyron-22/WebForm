@@ -6,7 +6,7 @@ import useStore from '@/stateManagement/store'
 import ReactLoading from "react-loading"
 import axios from "axios"
 import { jwtDecode } from 'jwt-decode'
-import {Toaster} from "react-hot-toast"
+import toast, {Toaster} from "react-hot-toast"
 import Navbar from './Navbar'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 import {Tooltip as ReactToolTip} from 'react-tooltip'
@@ -79,7 +79,10 @@ const Home = () => {
           const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order/data`)
           setOrderData(data.data)
         } catch (error) {
-          console.log(error)
+          toast.error(error?.response?.data?.message, {
+            duration: 3000,
+            className: "text-2xl"
+          })
         }
     }
 
