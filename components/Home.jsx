@@ -88,11 +88,12 @@ const Home = () => {
 
     //function for calculating the percentage of changes from previos month
     const compareToPreviousMonth = (currentMonthData, previousMonthData) => {
+      console.log(orderData.previousMonth)
       if (orderData.previousMonth) {
-        if (((currentMonthData * 100) / previousMonthData - 100) !== 0) {
-          return ((currentMonthData * 100) / previousMonthData - 100)
+        if (previousMonthData === 0) {
+          return 100
         } else {
-          return -100
+          return (currentMonthData * 100) / previousMonthData - 100
         }
       } else {
         return 100
