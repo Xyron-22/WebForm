@@ -113,7 +113,7 @@ const Home = () => {
       <div className={`bg-dark w-full md:w-[85%] min-h-[86vh] flex flex-col justify-evenly ${toggleNavbar ? "hidden" : "inline"}`}>
         <div className='w-full min-h-[20vh] flex flex-wrap justify-evenly'>
           <GiHamburgerMenu className='font-bold m-auto min-w-[12%] min-h-[10%] rounded bg-medium border-[1px] border-light text-lightText md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}/>          
-          <div className='min-w-[80%] md:min-w-[95%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold my-2 mr-2 md:m-2 flex flex-col flex-wrap rounded p-2'>
+          <div id='orders' className='min-w-[80%] md:min-w-[95%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold my-2 mr-2 md:m-2 flex flex-col flex-wrap rounded p-2'>
             <p className='m-auto md:text-xl font-bold'>ORDERS AND PRODUCTS</p>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
@@ -127,7 +127,7 @@ const Home = () => {
             <p className='m-auto text-3xl md:text-5xl font-bold text-[#0088FE]'>{orderData?.currentMonth?.total_orders}</p>
             <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders)) !== -1 ? "text-lightGreen": "text-red"}`}>
                 {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
-                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders).toFixed(2))}%
+                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders).toFixed(2)) || 0}%
               </span>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
@@ -141,7 +141,7 @@ const Home = () => {
             <p className='m-auto text-3xl md:text-5xl font-bold text-[#FF8042]'>{orderData?.currentMonth?.total_products}</p>
             <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products)) !== -1 ? "text-lightGreen": "text-red"}`}>
                 {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
-                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products).toFixed(2))}%
+                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products).toFixed(2)) || 0}%
               </span>
           </div>
         </div>
@@ -181,7 +181,7 @@ const Home = () => {
       </div>
         
       <div className='w-full min-h-[20vh] flex flex-wrap justify-evenly'>
-          <div className='min-w-[95%] md:min-w-[95%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
+          <div id='sales' className='min-w-[95%] md:min-w-[95%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
             <p className='m-auto md:text-xl font-bold'>SALES</p>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-2 flex flex-col flex-wrap rounded p-2'>
@@ -195,7 +195,7 @@ const Home = () => {
             <p className='m-auto text-3xl md:text-5xl font-bold text-[#8884d8]'>{orderData?.currentMonth?.total_sales}</p>
             <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_sales, orderData?.previousMonth?.sales)) !== -1 ? "text-lightGreen": "text-red"}`}>
                 {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_sales, orderData?.previousMonth?.sales)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
-                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_sales, orderData?.previousMonth?.sales).toFixed(2))}%
+                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_sales, orderData?.previousMonth?.sales).toFixed(2)) || 0}%
               </span>
           </div>
         </div>

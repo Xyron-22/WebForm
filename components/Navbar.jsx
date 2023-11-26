@@ -47,8 +47,10 @@ const Navbar = ({toggleNavbar, setToggleNavbar}) => {
         <hr className='w-[90%] text-light m-auto'></hr>
         <div className='w-full min-h-[10%] text-black flex flex-col justify-between flex-wrap bg-dark p-5'>
             <h1 className='lg:p-2 lg:pl-2 xl:pl-5 text-sm text-lightText'>ANALYTICS</h1>
-            <Link href={"/form/order"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold'>Charts</Link>
-            <Link href={"/form/account"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold'>Logs</Link>
+            <Link href={"#orders"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>Orders</Link>
+            <Link href={"#sales"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>Sales</Link>
+            <Link href={"#orders"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold hidden md:inline'>Orders</Link>
+            <Link href={"#sales"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold hidden md:inline'>Sales</Link>
         </div>
         <div className='w-full text-center h-[7vh] flex justify-center items-center text-white bg-dark relative'>
         <button type='button' onClick={handleLogout} className='m-auto font-bold text-white p-2 hover:scale-110'>Logout</button>
