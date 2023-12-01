@@ -124,7 +124,7 @@ const Home = () => {
     isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
      <div className='w-full bg-petron rounded flex flex-wrap'>
       <Navbar toggleNavbar={toggleNavbar} setToggleNavbar={setToggleNavbar}></Navbar>
-      <div className={`bg-dark h-full w-full md:w-[85%] flex flex-col justify-evenly ${toggleNavbar ? "hidden" : "inline"}`}>
+      <div className={`bg-dark h-full w-full md:w-[85%] flex flex-col justify-evenly overflow-hidden ${toggleNavbar ? "hidden" : "inline"}`}>
         <div className='w-full flex flex-wrap justify-evenly'>
           <GiHamburgerMenu className='font-bold m-auto min-w-[12%] text-4xl rounded bg-medium border-[1px] border-light text-lightText md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}/>          
           <div id='orders' className='min-w-[80%] md:min-w-[95%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold my-2 mr-2 md:m-2 flex flex-col flex-wrap rounded p-2'>
