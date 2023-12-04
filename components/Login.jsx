@@ -58,10 +58,6 @@ const LoginForm = () => {
       })
         Cookies.set("jwt", data.token)
         setToken()
-        toast.success("Successfully Logged In", {
-          duration: 3000,
-          className: "text-2xl"
-        })
         const decodedToken = jwtDecode(data.token)
         if(decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/")
         if(decodedToken.role === process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/form/order")

@@ -176,8 +176,6 @@ const OrderForm = ({data}) => {
       setDisableButton(false)
     }
 
-    console.log(form)
-
     useLayoutEffect(() => {
       if (!token) return router.replace("/auth/login")
       const decodeToken = jwtDecode(token)

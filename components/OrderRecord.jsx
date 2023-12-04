@@ -26,6 +26,7 @@ const OrderRecord = ({data}) => {
 
     //state for toggling the delete modal
     const [toggleModal, setToggleModal] = useState(false)
+
     //state for the record object containing the record id and what table it is from
     const [recordToDelete, setRecordToDelete] = useState({
         recordId: null,
@@ -162,6 +163,14 @@ const OrderRecord = ({data}) => {
         <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
         <label htmlFor='filterOrderDate' className='text-center bg-blue text-white p-1 shadow-2xl m-2 rounded'>Filter Date:</label>
         <input type='text' name='filterOrderDate' placeholder='MM/DD/YY' className='bg-whiteSmoke text-center border-2 rounded border-blue' onChange={handleFilterByOrderDate}></input>
+        <button type='button'className='m-2 cursor-pointer bg-red text-white p-1 shadow-2xl rounded' onClick={() => {
+            setRecordToDelete({
+                recordId: null,
+                table: "order",
+                index: null
+            })
+            setToggleModal(true)
+        }}>Delete All Records</button>
         <div className='flex w-full justify-center items-center'>
         <IoMdInformationCircleOutline className='text-red'></IoMdInformationCircleOutline>
         <p>Click a record to delete</p>
@@ -226,7 +235,7 @@ const OrderRecord = ({data}) => {
             </tbody>
         </table>
         </div>
-            {toggleModal && <ModalForDelete setToggleModal={setToggleModal} recordToDelete={recordToDelete} arrayOfRecordsShown={orderRecordsShown} setArrayOfRecordsShown={setOrderRecordsShown}></ModalForDelete>}
+            {toggleModal && <ModalForDelete setToggleModal={setToggleModal} recordToDelete={recordToDelete} setRecordToDelete={setRecordToDelete} arrayOfRecordsShown={orderRecordsShown} setArrayOfRecordsShown={setOrderRecordsShown}></ModalForDelete>}
     </div>
     <Toaster></Toaster>
     </>}

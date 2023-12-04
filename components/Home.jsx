@@ -253,7 +253,7 @@ const Home = () => {
           <div className='flex flex-col w-full md:min-w-[67%] lg:min-w-[57%] border-[1px] border-light rounded bg-medium my-1'>
         <h1 className=' text-lightText font-bold text-center mt-2 mx-2 flex justify-between'>TOTAL ORDERS AND SALES PER DSP<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="DSP stats for whole year"/></h1>
         <h1 className='text-[0.7rem] md:text-xs mx-2 text-lightText'>{new Date(orderData?.months[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
-        <div className='h-[42vh] xs:h-[38vh] text-[0.6rem] lg:text-base lg:max-w-[100%] md:h-[27vh] lg:h-full'>
+        <div className='h-[42vh] xs:h-[38vh] text-[0.6rem] lg:text-base lg:max-w-[100%] md:h-[27vh] lg:h-[40vh]'>
         <ResponsiveContainer>
         <PieChart width={400} height={400}>
           <Pie
