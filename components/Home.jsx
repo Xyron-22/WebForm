@@ -8,7 +8,7 @@ import axios from "axios"
 import { jwtDecode } from 'jwt-decode'
 import toast, {Toaster} from "react-hot-toast"
 import Navbar from './Navbar'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Sector, Cell} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell} from 'recharts';
 import {renderActiveShapeOrders, renderActiveShapeSales, monthTickFormatter, renderQuarterTick} from "../utils/chartFunctions"
 import {Tooltip as ReactToolTip} from 'react-tooltip'
 import {RiArrowUpDoubleFill, RiArrowDownDoubleFill} from "react-icons/ri"
@@ -200,12 +200,12 @@ const Home = () => {
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-1 flex flex-col flex-wrap rounded p-2'>
             <h1 className='text-xs md:text-base w-full flex justify-between'>TOTAL SALES<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total sales this year"/></h1>
             <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.months[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold text-[#8884d8]'>{orderData?.year?.sales}</p>
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#8884d8]'>&#x20B1;{orderData?.year?.sales}</p>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText m-1 flex flex-col flex-wrap rounded p-2'>
             <h1 className='text-xs md:text-base font-semibold w-full flex justify-between'>CURRENT MONTH SALES<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total sales this month"/></h1>
             <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.currentMonth?.year_date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold text-[#8884d8]'>{orderData?.currentMonth?.total_sales}</p>
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#8884d8]'>&#x20B1;{orderData?.currentMonth?.total_sales}</p>
             <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_sales, orderData?.previousMonth?.sales)) !== -1 ? "text-lightGreen": "text-red"}`}>
                 {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_sales, orderData?.previousMonth?.sales)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
                 {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_sales, orderData?.previousMonth?.sales).toFixed(2)) || 0}%
@@ -291,7 +291,7 @@ const Home = () => {
                 <div key={i} className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold flex flex-col flex-wrap rounded p-2'>
                   <h1 className='text-xs md:text-base w-full flex justify-between'>{dsp.name}<p className='text-[0.7rem] md:text-xs text-lightText'>{new Date(orderData?.months[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</p></h1>
                   <p className='mx-2 text-xs md:text-base xl:text-xl font-bold text-lightText'>Orders: <span className='text-[#0088FE]'>{dsp?.total_orders}</span></p>
-                  <p className='mx-2 text-xs md:text-base xl:text-xl font-bold text-lightText'>Sales: <span className='text-[#8884d8]'>{dsp?.total_sales}</span></p>
+                  <p className='mx-2 text-xs md:text-base xl:text-xl font-bold text-lightText'>Sales: <span className='text-[#8884d8]'>&#x20B1;{dsp?.total_sales}</span></p>
                 </div>
               )
             })}
@@ -320,7 +320,7 @@ const Home = () => {
                       <td className={`border border-light text-white`}>{i + 1}</td>
                       <td className={`border border-light text-white`}>{product?.name}</td>
                       <td className='border border-light text-white'>{product?.total_orders}</td>
-                      <td className='border border-light text-white'>{product?.total_sales}</td>
+                      <td className='border border-light text-white'>&#x20B1;{product?.total_sales}</td>
                     </tr>
                   )
                 })}            
@@ -370,7 +370,7 @@ const Home = () => {
                   <td className='border border-light text-white'>{i + 1}</td>
                   <td className='border border-light text-white'>{account?.name}</td>
                   <td className='border border-light text-white'>{account?.total_orders}</td>
-                  <td className='border border-light text-white'>{account?.total_sales}</td>
+                  <td className='border border-light text-white'>&#x20B1;{account?.total_sales}</td>
                 </tr>
                   )
                 })}

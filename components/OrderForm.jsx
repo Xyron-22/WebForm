@@ -58,7 +58,8 @@ const OrderForm = ({data}) => {
     term: "",
     products: "",
     remarksFreebiesConcern: "",
-    deliveryDate: ""
+    deliveryDate: "",
+    auth_id: null
   })
 
   // MODAL TOGGLE ------------------------------------------------------------------
@@ -134,7 +135,8 @@ const OrderForm = ({data}) => {
       && form.term !== "" 
       && form.products !== "" 
       && form.remarksFreebiesConcern !== "" 
-      && form.deliveryDate !== "") {
+      && form.deliveryDate !== ""
+      && form.auth_id !== null) {
         try {
           await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`, form, {
             headers: {
@@ -155,7 +157,8 @@ const OrderForm = ({data}) => {
           term: "",
           products: "",
           remarksFreebiesConcern: "",
-          deliveryDate: ""
+          deliveryDate: "",
+          auth_id: null
       })
       toast.success("Form submitted", {
         duration: 3000,
@@ -183,6 +186,7 @@ const OrderForm = ({data}) => {
       router.replace("/auth/login")
     } else {
         setDecodedToken(decodeToken)
+        setForm({...form, auth_id: decodeToken.id})
         setIsLoading(false)
       }
     }, [])
@@ -193,7 +197,8 @@ const OrderForm = ({data}) => {
     <>
     {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
     <form className='flex-col flex items-center w-screen lg:w-[80%] bg-white shadow-2xl relative' onSubmit={handleSubmit}>
-    {decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && <Link href={"/"} className='absolute left-1 top-1 text-sm sm:left-3 sm:top-3 bg-blue text-white p-1 m-1 rounded md:text-xl'>Home</Link>}
+    {decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE ? <Link href={"/"} className='absolute left-1 top-1 text-sm sm:left-3 sm:top-3 bg-blue text-white p-1 m-1 rounded md:text-xl'>Home</Link>
+    : <Link href={"/records/order"} className='absolute left-1 top-1 text-sm sm:left-3 sm:top-3 bg-blue text-white p-1 m-1 rounded md:text-xl'>Orders</Link>}
       <h1 className='m-7 md:m-10 text-xl text-center md:text-4xl font-extrabold'>ORDER FORM</h1>
       <h3 className='mb-5 text-lg text-center md:text-2xl font-bold'>DISTRIBUTOR SALES PERSONNEL ORDER FORM</h3>
       <hr className='border-[1px] border-black w-[90%] my-3'/>

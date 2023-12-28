@@ -86,17 +86,15 @@ const ModalForDelete = ({setToggleModal, recordToDelete, setRecordToDelete, arra
                                 <th className='border border-black bg-red text-white'>Order Date</th>
                                 <th className='border border-black bg-red text-white'>Delivery Date</th>
                                 <th className='border border-black bg-red text-white'>Customer Name</th>
-                                <th className='border border-black bg-red text-white'>Contact Number</th>
-                                <th className='border border-black bg-red text-white'>TIN</th>
-                                <th className='border border-black bg-red text-white'>Product</th>
-                                <th className='border border-black bg-red text-white'>Price</th>
-                                <th className='border border-black bg-red text-white'>Quantity</th>
-                                <th className='border border-black bg-red text-white'>Total Price</th>
-                                <th className='border border-black bg-red text-white'>Term</th>
                                 <th className='border border-black bg-red text-white'>Account Name</th>
+                                <th className='border border-black bg-red text-white'>Product</th>
+                                <th className='border border-black bg-red text-white'>Quantity</th>
+                                <th className='border border-black bg-red text-white'>Price</th>
+                                <th className='border border-black bg-red text-white'>Term</th>
                                 <th className='border border-black bg-red text-white'>Location</th>
                                 <th className='border border-black bg-red text-white'>DSP</th>
                                 <th className='border border-black bg-red text-white'>Freebies/Remarks/Concern</th>
+                                <th className='border border-black bg-red text-white'>Time Stamp</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,17 +102,15 @@ const ModalForDelete = ({setToggleModal, recordToDelete, setRecordToDelete, arra
                             <td className='border border-black text-center'>{new Date(record.order_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{new Date(record.delivery_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{record.customer_name}</td>
-                        <td className='border border-black text-center'>{record.contact}</td>
-                        <td className='border border-black text-center'>{record.tin}</td>
-                        <td className='border border-black text-center'>{record.mat_description}</td>
-                        <td className='border border-black text-center'>{record.price}</td>
-                        <td className='border border-black text-center'>{record.quantity}</td>
-                        <td className='border border-black text-center'>{record.total_price}</td>
-                        <td className='border border-black text-center'>{record.terms}</td>
                         <td className='border border-black text-center'>{record.account_name}</td>
+                        <td className='border border-black text-center'>{record.mat_description}</td>
+                        <td className='border border-black text-center'>{record.quantity}</td>
+                        <td className='border border-black text-center'>{record.price}</td>
+                        <td className='border border-black text-center'>{record.terms}</td>
                         <td className='border border-black text-center'>{record.location}</td>
                         <td className='border border-black text-center'>{record.dsp}</td>
                         <td className='border border-black text-center'>{record.remarks_freebies_concern}</td>
+                        <td className='border border-black text-center'>{new Date(Number(record.time_stamp)).toLocaleTimeString()}</td>
                             </tr>
                         </tbody>
                     </table>

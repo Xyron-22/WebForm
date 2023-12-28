@@ -13,16 +13,21 @@ import ModalForDelete from './ModalForDelete';
 import {IoMdInformationCircleOutline} from "react-icons/io"
 import {AiOutlineDownload} from "react-icons/ai"
 
-const OrderRecord = ({data}) => {
+const OrderRecord = () => {
 
     const router = useRouter()
 
     const tableRef = useRef(null)
 
     const token = useStore((state) => state.token)
-   
+
+    const [decodedJWTToken, setDecodedJWTToken] = useState("")
+  
     const [isLoading, setIsLoading] = useState(true)
-    const [orderRecordsShown, setOrderRecordsShown] = useState(data.data || [])
+    const [orderRecordsShown, setOrderRecordsShown] = useState([])
+    const [initialOrderRecordsShown, setInitialOrderRecordsShown] = useState([])
+
+    const [errorInformation, setErrorInformation] = useState("")
 
     //state for toggling the delete modal
     const [toggleModal, setToggleModal] = useState(false)
@@ -39,7 +44,7 @@ const OrderRecord = ({data}) => {
     //function for filtering the order record base on DSP
     const handleFilterDSP = (e) => {
         e.preventDefault()
-        const arrayOfFilteredDSP = data.data.filter((order) => {
+        const arrayOfFilteredDSP = initialOrderRecordsShown.filter((order) => {
             return order.dsp.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setOrderRecordsShown(arrayOfFilteredDSP)
@@ -47,7 +52,7 @@ const OrderRecord = ({data}) => {
      //function for filtering the order record base on the location
      const handleFilterLocation = (e) => {
         e.preventDefault()
-        const arrayOfFilteredLocation = data.data.filter((order) => {
+        const arrayOfFilteredLocation = initialOrderRecordsShown.filter((order) => {
             return order.location.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setOrderRecordsShown(arrayOfFilteredLocation)
@@ -56,7 +61,7 @@ const OrderRecord = ({data}) => {
     //function for filtering the order record base on the account name
     const handleFilterAccountName = (e) => {
         e.preventDefault()
-        const arrayOfFilteredAccountName = data.data.filter((order) => {
+        const arrayOfFilteredAccountName = initialOrderRecordsShown.filter((order) => {
             return order.account_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setOrderRecordsShown(arrayOfFilteredAccountName)
@@ -65,7 +70,7 @@ const OrderRecord = ({data}) => {
     //function for filtering the order record by customer name
     const handleFilterCustomerName = (e) => {
         e.preventDefault()
-        const arrayOfFilteredCustomerName = data.data.filter((order) => {
+        const arrayOfFilteredCustomerName = initialOrderRecordsShown.filter((order) => {
             return order.customer_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
         })
         setOrderRecordsShown(arrayOfFilteredCustomerName)
@@ -74,29 +79,38 @@ const OrderRecord = ({data}) => {
     //function for filtering order date
     const handleFilterByOrderDate = (e) => {
         e.preventDefault()
-        const arrayOfFilteredOrderDate = data.data.filter((order) => {
+        const arrayOfFilteredOrderDate = initialOrderRecordsShown.filter((order) => {
             return new Date(order.order_date).toLocaleDateString().indexOf(e.target.value) !== -1
         })
         setOrderRecordsShown(arrayOfFilteredOrderDate)
     }
 
     //function for fetching all and latest order records
-    const fetchAllOrderRecords = async (e) => {
-        e.preventDefault()
+    //this function checks first if the user is authorized or unauthorized, if authorized fetches all the records and if not, only the records that this auth_id specifically inserted will be fetched
+    const fetchAllOrderRecords = async (e, decodedToken) => {
+        e?.preventDefault()
         setDisableButton(true)
         try {
             setIsLoading(true)
-            const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`)
-            setOrderRecordsShown(data.data)
-            setIsLoading(false)
-            setDisableButton(false)
+            let response;
+            if (decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) {
+                const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`)
+                response = data
+            } else {
+                const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order/${decodedToken.id}`)
+                response = data
+            } 
+            setInitialOrderRecordsShown(response.data)
+            setOrderRecordsShown(response.data)
+            setIsLoading(false)           
         } catch (error) {
-            setDisableButton(false)
+            setErrorInformation(error.response.data)
             toast.error("Error occurred, please try again", {
                 duration: 3000,
                 className: "text-2xl"
             })
         }
+        setDisableButton(false)
     }
 
     //function for sorting the records by account name
@@ -147,17 +161,18 @@ const OrderRecord = ({data}) => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
-        if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
-        setIsLoading(false)
+        setDecodedJWTToken(decodedToken)
+        fetchAllOrderRecords(null, decodedToken)
     },[])
 
   return (
     <>
-    {data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
+    {errorInformation.status === "failed" || errorInformation.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{errorInformation.message}</div> : 
     <>
      {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
      <div className={`bg-white text-center ${toggleModal ? "p-0 w-full" : "w-screen xl:w-[90%] my-5 p-2"} md:text-xl relative z-[999999999999]`}>
-        <Link href={"/"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Home</Link>
+        {decodedJWTToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE ? <Link href={"/"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Home</Link>
+        : <Link href={"/form/order"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Back</Link>}
         <h1 className='md:text-3xl font-bold mx-3 mb-2'>Order Records</h1>
         <h1>Number of records: {orderRecordsShown?.length}</h1>
         <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
@@ -176,7 +191,7 @@ const OrderRecord = ({data}) => {
         <p>Click a record to delete</p>
         </div>
         <hr></hr>
-        <input type='button' value={"Reload"} disabled={disableButton} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded' onClick={fetchAllOrderRecords}></input>
+        <input type='button' value={"Reload"} disabled={disableButton} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded' onClick={(e) => fetchAllOrderRecords(e, decodedJWTToken)}></input>
         <input type='search' placeholder='Search DSP' onChange={handleFilterDSP} className='text-center border border-black m-2'></input>
         <input type='search' name='filterLocation' placeholder='Search Location' onChange={handleFilterLocation} className='text-center border border-black m-2'></input>
         <input type='search' name='filterAccountName' placeholder='Search Account Name' onChange={handleFilterAccountName} className='text-center border border-black m-2'></input>
@@ -191,21 +206,19 @@ const OrderRecord = ({data}) => {
                 <th className='border border-black bg-red text-white'>Order Date</th>
                 <th className='border border-black bg-red text-white'>Delivery Date</th>
                 <th className='border border-black bg-red text-white'>Customer Name</th>
-                <th className='border border-black bg-red text-white'>Contact Number</th>
-                <th className='border border-black bg-red text-white'>TIN</th>
-                <th className='border border-black bg-red text-white'>Product</th>
-                <th className='border border-black bg-red text-white'>Price</th>
-                <th className='border border-black bg-red text-white'>Quantity</th>
-                <th className='border border-black bg-red text-white'>Total Price</th>
-                <th className='border border-black bg-red text-white'>Term</th>
                 <th className='border border-black bg-red text-white'>Account Name</th>
+                <th className='border border-black bg-red text-white'>Product</th>
+                <th className='border border-black bg-red text-white'>Quantity</th>
+                <th className='border border-black bg-red text-white'>Price</th>
+                <th className='border border-black bg-red text-white'>Term</th>
                 <th className='border border-black bg-red text-white'>Location</th>
                 <th className='border border-black bg-red text-white'>DSP</th>
                 <th className='border border-black bg-red text-white'>Freebies/Remarks/Concern</th>
+                <th className='border border-black bg-red text-white'>Time Stamp</th>
             </tr>
             </thead>
             <tbody>
-                {orderRecordsShown.map(({order_id, order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price}, i) => {
+                {orderRecordsShown.map(({order_id, order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price, time_stamp}, i) => {
                     return (
                     <tr key={i} className='cursor-pointer' onClick={(e) => {
                         setRecordToDelete({
@@ -218,17 +231,15 @@ const OrderRecord = ({data}) => {
                         <td className='border border-black text-center'>{new Date(order_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{new Date(delivery_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{customer_name}</td>
-                        <td className='border border-black text-center'>{contact}</td>
-                        <td className='border border-black text-center'>{tin}</td>
-                        <td className='border border-black text-center'>{mat_description}</td>
-                        <td className='border border-black text-center'>{price}</td>
-                        <td className='border border-black text-center'>{quantity}</td>
-                        <td className='border border-black text-center'>{total_price}</td>
-                        <td className='border border-black text-center'>{terms}</td>
                         <td className='border border-black text-center'>{account_name}</td>
+                        <td className='border border-black text-center'>{mat_description}</td>
+                        <td className='border border-black text-center'>{quantity}</td>
+                        <td className='border border-black text-center'>{price}</td>
+                        <td className='border border-black text-center'>{terms}</td>
                         <td className='border border-black text-center'>{location}</td>
                         <td className='border border-black text-center'>{dsp}</td>
                         <td className='border border-black text-center'>{remarks_freebies_concern}</td>
+                        <td className='border border-black text-center'>{new Date(Number(time_stamp)).toLocaleTimeString()}</td>
                     </tr>
                     )
                 })}
