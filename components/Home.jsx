@@ -28,19 +28,22 @@ const Home = () => {
       year: {
         orders: 0,
         products: 0,
-        sales: 0
+        sales: 0,
+        outlets: 0
       },
       currentMonth: {
         year_date: "",
         total_orders: 0,
         total_products: 0,
-        total_sales: 0
+        total_sales: 0,
+        outlet_numbers: 0
       },
       previousMonth: {
         date: "",
         orders: 0,
         products: 0,
-        sales: 0
+        sales: 0,
+        outlets: 0
       },
       dspData: [],
       productData: [],
@@ -128,7 +131,7 @@ const Home = () => {
         <div className='w-full flex flex-wrap justify-evenly'>
           <GiHamburgerMenu className='font-bold m-auto min-w-[12%] text-4xl rounded bg-medium border-[1px] border-light text-lightText md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}/>          
           <div id='orders' className='min-w-[80%] md:min-w-[95%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold my-2 mr-2 md:m-2 flex flex-col flex-wrap rounded p-2'>
-            <p className='m-auto md:text-xl font-bold'>ORDERS AND PRODUCTS</p>
+            <p className='m-auto md:text-xl font-bold'>ORDERS AND OUTLETS</p>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold mx-1 mb-1 flex flex-col flex-wrap rounded p-2'>
             <h1 className='text-xs md:text-base w-full flex justify-between'>TOTAL ORDERS<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total orders this year"/></h1>
@@ -145,21 +148,21 @@ const Home = () => {
               </span>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-1 flex flex-col flex-wrap rounded p-2'>
-            <h1 className='text-xs md:text-base w-full flex justify-between'>TOTAL PRODUCTS<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total products sold this year"/></h1>
+            <h1 className='text-xs md:text-base w-full flex justify-between'>TOTAL OUTLETS<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total outlets ordered this year"/></h1>
             <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.months[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold text-[#FF8042]'>{orderData?.year?.products}</p>
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#FF8042]'>{orderData?.year?.outlets}</p>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText m-1 flex flex-col flex-wrap rounded p-2'>
-            <h1 className='text-xs md:text-base font-semibold w-full flex justify-between'>CURRENT MONTH PRODUCTS<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total products sold this month"/></h1>
+            <h1 className='text-xs md:text-base font-semibold w-full flex justify-between'>CURRENT MONTH OUTLETS<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total outlets ordered this month"/></h1>
             <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.currentMonth?.year_date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold text-[#FF8042]'>{orderData?.currentMonth?.total_products}</p>
-            <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products)) !== -1 ? "text-lightGreen": "text-red"}`}>
-                {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
-                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products).toFixed(2)) || 0}%
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#FF8042]'>{orderData?.currentMonth?.outlet_numbers}</p>
+            <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.outlet_numbers, orderData?.previousMonth?.outlets)) !== -1 ? "text-lightGreen": "text-red"}`}>
+                {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.outlet_numbers, orderData?.previousMonth?.outlets)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
+                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.outlet_numbers, orderData?.previousMonth?.outlets).toFixed(2)) || 0}%
               </span>
           </div>
-          <h1 className='m-auto w-full text-lightText font-bold text-center'>PRODUCTS AND ORDERS EVERY MONTH</h1>
-          <div className='w-full min-h-[30vh] text-xs xs:w-[95%] lg:max-w-[88%] lg:min-h-[25vh] xl:min-h-[35vh] border-[1px] border-light bg-medium rounded my-1'>
+          <h1 className='m-auto w-full text-lightText font-bold text-center'>ORDERS AND OUTLETS EVERY MONTH</h1>
+          <div className='w-full min-h-[35vh] text-xs xs:w-[95%] lg:max-w-[88%] lg:min-h-[45vh] xl:min-h-[45vh] border-[1px] border-light bg-medium rounded my-1'>
       <ResponsiveContainer style={{fill: "white"}}>
         <BarChart
           width={500}
@@ -188,7 +191,74 @@ const Home = () => {
           <Tooltip />
           <Legend />
           <Bar dataKey="orders" fill="#0088FE" />
-          <Bar dataKey="products" fill="#FF8042" />
+          <Bar dataKey="outlets" fill="#FF8042" />
+       </BarChart>
+      </ResponsiveContainer>
+      </div>
+        </div>
+        <div className='w-full flex flex-wrap justify-evenly'>        
+          <div id='volume' className='min-w-[95%] md:min-w-[95%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-1 mb-2 flex flex-col flex-wrap rounded p-2'>
+            <p className='m-auto md:text-xl font-bold'>VOLUME AND PRODUCTS</p>
+          </div>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold mx-1 mb-1 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base w-full flex justify-between'>TOTAL VOLUME<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total volume this year"/></h1>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.months[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#A4D8D8]'>{orderData?.year?.orders}</p>
+          </div>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText m-1 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base font-semibold w-full flex justify-between'>CURRENT MONTH VOLUME<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total volume this month"/></h1>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.currentMonth?.year_date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#A4D8D8]'>{orderData?.currentMonth?.total_orders}</p>
+            <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders)) !== -1 ? "text-lightGreen": "text-red"}`}>
+                {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
+                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders).toFixed(2)) || 0}%
+              </span>
+          </div>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-1 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base w-full flex justify-between'>TOTAL PRODUCTS<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total quantity of products ordered this year"/></h1>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.months[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#FF6961]'>{orderData?.year?.products}</p>
+          </div>
+          <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText m-1 flex flex-col flex-wrap rounded p-2'>
+            <h1 className='text-xs md:text-base font-semibold w-full flex justify-between'>CURRENT MONTH PRODUCTS<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total quantity of products ordered this month"/></h1>
+            <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.currentMonth?.year_date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#FF6961]'>{orderData?.currentMonth?.total_products}</p>
+            <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products)) !== -1 ? "text-lightGreen": "text-red"}`}>
+                {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
+                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_products, orderData?.previousMonth?.products).toFixed(2)) || 0}%
+              </span>
+          </div>
+          <h1 className='m-auto w-full text-lightText font-bold text-center'>VOLUME AND PRODUCTS EVERY MONTH</h1>
+          <div className='w-full min-h-[35vh] text-xs xs:w-[95%] lg:max-w-[88%] lg:min-h-[45vh] xl:min-h-[45vh] border-[1px] border-light bg-medium rounded my-1'>
+      <ResponsiveContainer style={{fill: "white"}}>
+        <BarChart
+          width={500}
+          height={300}
+          data={orderData?.months}
+          margin={{
+            top: 10,
+            right: 5,
+            left: -5,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="0" vertical={false}/>
+          <XAxis dataKey="date" tickFormatter={monthTickFormatter} tick={{fill: "white"}}/>
+          <XAxis
+            dataKey="date"
+            axisLine={false}
+            tickLine={false}
+            interval={0}
+            tick={renderQuarterTick}
+            height={1}
+            scale="band"
+            xAxisId="quarter"
+          />
+          <YAxis tick={{fill: "white"}}/>
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="orders" fill="#A4D8D8" />
+          <Bar dataKey="products" fill="#FF6961" />
        </BarChart>
       </ResponsiveContainer>
       </div>
@@ -212,7 +282,7 @@ const Home = () => {
               </span>
           </div>
           <h1 className='m-auto w-full text-lightText font-bold text-center'>SALES EVERY MONTH</h1>
-        <div className='w-full min-h-[30vh] text-xs xs:max-w-[95%] lg:max-w-[88%] lg:min-h-[25vh] xl:min-h-[35vh] border-[1px] border-light rounded bg-medium my-1'>
+        <div className='w-full min-h-[35vh] text-xs xs:max-w-[95%] lg:max-w-[88%] lg:min-h-[45vh] xl:min-h-[45vh] border-[1px] border-light rounded bg-medium my-1'>
       <ResponsiveContainer style={{fill: "white"}}>
         <BarChart
           width={500}

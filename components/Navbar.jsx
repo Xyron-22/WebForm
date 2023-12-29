@@ -48,11 +48,17 @@ const Navbar = ({toggleNavbar, setToggleNavbar}) => {
         <div className='w-full min-h-[10%] text-black flex flex-col justify-between flex-wrap bg-dark p-5'>
             <h1 className='lg:p-2 lg:pl-2 xl:pl-5 text-sm text-lightText'>ANALYTICS</h1>
             <Link href={"#orders"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>Orders</Link>
+            <Link href={"#orders"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>Outlets</Link>
+            <Link href={"#volume"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>Volume</Link>
+            <Link href={"#volume"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>Products</Link>
             <Link href={"#sales"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>Sales</Link>
             <Link href={"#dsp"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>DSP</Link>
             <Link href={"#products/accounts"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>Products</Link>
             <Link href={"#products/accounts"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold md:hidden' onClick={() => setToggleNavbar(!toggleNavbar)}>Accounts</Link>
             <Link href={"#orders"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold hidden md:inline'>Orders</Link>
+            <Link href={"#orders"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold hidden md:inline'>Outlets</Link>
+            <Link href={"#volume"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold hidden md:inline'>Volume</Link>
+            <Link href={"#volume"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold hidden md:inline'>Products</Link>
             <Link href={"#sales"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold hidden md:inline'>Sales</Link>
             <Link href={"#dsp"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold hidden md:inline'>DSP</Link>
             <Link href={"#products/accounts"} className='lg:ml-5 xl:ml-10 my-1 text-white font-semibold hidden md:inline'>Products</Link>
