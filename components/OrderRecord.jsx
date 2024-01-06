@@ -178,14 +178,14 @@ const OrderRecord = () => {
         <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
         <label htmlFor='filterOrderDate' className='text-center bg-blue text-white p-1 shadow-2xl m-2 rounded'>Filter Date:</label>
         <input type='text' name='filterOrderDate' placeholder='MM/DD/YY' className='bg-whiteSmoke text-center border-2 rounded border-blue' onChange={handleFilterByOrderDate}></input>
-        <button type='button'className='m-2 cursor-pointer bg-red text-white p-1 shadow-2xl rounded' onClick={() => {
+        {decodedJWTToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && <button type='button'className='m-2 cursor-pointer bg-red text-white p-1 shadow-2xl rounded' onClick={() => {
             setRecordToDelete({
                 recordId: null,
                 table: "order",
                 index: null
             })
             setToggleModal(true)
-        }}>Delete All Records</button>
+        }}>Delete All Records</button>}
         <div className='flex w-full justify-center items-center'>
         <IoMdInformationCircleOutline className='text-red'></IoMdInformationCircleOutline>
         <p>Click a record to delete</p>

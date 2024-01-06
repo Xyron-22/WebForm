@@ -29,21 +29,24 @@ const Home = () => {
         orders: 0,
         products: 0,
         sales: 0,
-        outlets: 0
+        outlets: 0,
+        volume: 0
       },
       currentMonth: {
         year_date: "",
         total_orders: 0,
         total_products: 0,
         total_sales: 0,
-        outlet_numbers: 0
+        outlet_numbers: 0,
+        volume: 0
       },
       previousMonth: {
         date: "",
         orders: 0,
         products: 0,
         sales: 0,
-        outlets: 0
+        outlets: 0,
+        volume: 0
       },
       dspData: [],
       productData: [],
@@ -203,15 +206,15 @@ const Home = () => {
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold mx-1 mb-1 flex flex-col flex-wrap rounded p-2'>
             <h1 className='text-xs md:text-base w-full flex justify-between'>TOTAL VOLUME<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total volume this year"/></h1>
             <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.months[0]?.date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold text-[#A4D8D8]'>{orderData?.year?.orders}</p>
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#A4D8D8]'>{orderData?.year?.volume}</p>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText m-1 flex flex-col flex-wrap rounded p-2'>
             <h1 className='text-xs md:text-base font-semibold w-full flex justify-between'>CURRENT MONTH VOLUME<HiMiniInformationCircle className='text-lg md:text-xl lg:text-2xl' data-tooltip-id="my-tooltip" data-tooltip-content="Total volume this month"/></h1>
             <h1 className='text-[0.7rem] md:text-xs'>{new Date(orderData?.currentMonth?.year_date).toLocaleDateString()} to {new Date(Date.now()).toLocaleDateString()}</h1>
-            <p className='m-auto text-3xl md:text-5xl font-bold text-[#A4D8D8]'>{orderData?.currentMonth?.total_orders}</p>
-            <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders)) !== -1 ? "text-lightGreen": "text-red"}`}>
-                {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
-                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.total_orders, orderData?.previousMonth?.orders).toFixed(2)) || 0}%
+            <p className='m-auto text-3xl md:text-5xl font-bold text-[#A4D8D8]'>{orderData?.currentMonth?.volume}</p>
+            <span className={`text-base md:text-xl lg:text-2xl flex font-bold ${Math.sign(compareToPreviousMonth(orderData?.currentMonth?.volume, orderData?.previousMonth?.volume)) !== -1 ? "text-lightGreen": "text-red"}`}>
+                {Math.sign(compareToPreviousMonth(orderData?.currentMonth?.volume, orderData?.previousMonth?.volume)) !== -1 ? <RiArrowUpDoubleFill/> : <RiArrowDownDoubleFill/>}
+                {Math.abs(compareToPreviousMonth(orderData?.currentMonth?.volume, orderData?.previousMonth?.volume).toFixed(2)) || 0}%
               </span>
           </div>
           <div className='min-w-[95%] xs:min-w-[45%] md:min-w-[40%] min-h-[10%] bg-medium border-[1px] border-light text-lightText font-semibold m-1 flex flex-col flex-wrap rounded p-2'>
@@ -257,7 +260,7 @@ const Home = () => {
           <YAxis tick={{fill: "white"}}/>
           <Tooltip />
           <Legend />
-          <Bar dataKey="orders" fill="#A4D8D8" />
+          <Bar dataKey="volume" fill="#A4D8D8" />
           <Bar dataKey="products" fill="#FF6961" />
        </BarChart>
       </ResponsiveContainer>

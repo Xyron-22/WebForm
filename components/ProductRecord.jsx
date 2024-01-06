@@ -113,10 +113,11 @@ const ProductRecord = () => {
                <th className='border border-black bg-red text-white'>Material Code</th>
                <th className='border border-black bg-red text-white'>Material Description</th>
                <th className='border border-black bg-red text-white'>Product Family</th>
+               <th className='border border-black bg-red text-white'>UOM</th>
            </tr>
            </thead>
            <tbody>
-               {productRecordsShown.map(({product_id, mat_code, mat_description, product_family}, i) => {
+               {productRecordsShown.map(({product_id, mat_code, mat_description, product_family, uom}, i) => {
                    return (
                        <tr key={i} className='cursor-pointer' onClick={() => {
                         setRecordToDelete({
@@ -130,6 +131,7 @@ const ProductRecord = () => {
                        <td className='border border-black'>{mat_code}</td>
                        <td className='border border-black'>{mat_description}</td>
                        <td className='border border-black'>{product_family}</td>
+                       <td className='border border-black'>{uom}</td>
                    </tr>
                    )
                })}
