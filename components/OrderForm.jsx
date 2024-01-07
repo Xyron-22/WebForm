@@ -130,8 +130,6 @@ const OrderForm = ({data}) => {
       form.customerName !== "" 
       && form.orderDate !== ""
       && form.accountId !== ""
-      && form.tinNumber !== "" 
-      && form.contactNumber !== "" 
       && form.term !== "" 
       && form.products !== "" 
       && form.remarksFreebiesConcern !== "" 
@@ -242,7 +240,8 @@ const OrderForm = ({data}) => {
     <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{form.customerName}</h1>
     <input type='text' placeholder='Enter Customer name' name='customerName' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' value={form.customerName} onChange={(e) => setForm({...form, customerName: e.target.value})}></input>
     <hr className='border-[1px] border-black w-[90%] my-3'/>
-    <hr className='border-[1px] border-black w-[90%] my-3'/>
+    <p className='font-bold'>&#40;OPTIONAL&#41;</p>
+    <p>Leave it blank if not applicable</p>
     <h1 className='text-lg md:text-2xl text-center mt-5 mb-2 bg-red text-white p-1 rounded font-semibold'>TIN NUMBER AND CONTACT NUMBER</h1>
     <div className='text-center flex flex-col lg:flex-row mb-3'>
       <label htmlFor='TIN' className='text-lg md:text-2xl text-center m-1'>TIN NUMBER:</label>
