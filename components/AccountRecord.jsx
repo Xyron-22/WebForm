@@ -16,7 +16,7 @@ import {AiOutlineDownload} from "react-icons/ai"
 const AccountRecord = () => {
     const router = useRouter()
 
-    const tableRef = useRef(null)
+    const accountTableRef = useRef(null)
 
     const token = useStore((state) => state.token)
 
@@ -115,7 +115,7 @@ const AccountRecord = () => {
 
 
     const {onDownload} = useDownloadExcel({
-        currentTableRef: tableRef.current,
+        currentTableRef: accountTableRef.current,
         filename: "Account Records Table",
         sheet: "Accounts"
     })
@@ -148,7 +148,7 @@ const AccountRecord = () => {
        <input type='button' name='sortByName' value={"Sort by Account name"} onClick={handleSortByName} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
        <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
        <div className='w-full overflow-auto'>
-       <table className='border border-black sm:min-w-full m-auto' ref={tableRef}>
+       <table className='border border-black sm:min-w-full m-auto' ref={accountTableRef}>
            <thead>
            <tr>
                 <th className='border border-black bg-red text-white'>Account ID</th>

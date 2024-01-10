@@ -17,7 +17,7 @@ const OrderRecord = () => {
 
     const router = useRouter()
 
-    const tableRef = useRef(null)
+    const orderTableRef = useRef(null)
 
     const token = useStore((state) => state.token)
 
@@ -152,7 +152,7 @@ const OrderRecord = () => {
 
 
     const {onDownload} = useDownloadExcel({
-        currentTableRef: tableRef.current,
+        currentTableRef: orderTableRef.current,
         filename: "Order Records Table",
         sheet: "Orders"
     })
@@ -200,7 +200,7 @@ const OrderRecord = () => {
         <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
         <input type='button' name='sortByOrderDate' value={"Sort by Order Date"} onClick={handleSortByOrderDate} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
         <div className='w-full overflow-auto'>
-        <table className='border border-black m-auto lg:text-base min-w-full' ref={tableRef}>
+        <table className='border border-black m-auto lg:text-base min-w-full' ref={orderTableRef}>
             <thead>
             <tr>
                 <th className='border border-black bg-red text-white'>Order Date</th>
@@ -239,7 +239,7 @@ const OrderRecord = () => {
                         <td className='border border-black text-center'>{location}</td>
                         <td className='border border-black text-center'>{dsp}</td>
                         <td className='border border-black text-center'>{remarks_freebies_concern}</td>
-                        <td className='border border-black text-center'>{new Date(Number(time_stamp)).toLocaleTimeString()}</td>
+                        <td className='border border-black text-center'>{new Date(Number(time_stamp)).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}</td>
                     </tr>
                     )
                 })}

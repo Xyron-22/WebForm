@@ -17,7 +17,7 @@ const ProductRecord = () => {
 
     const router = useRouter()
 
-    const tableRef = useRef(null)
+    const productTableRef = useRef(null)
 
     const token = useStore((state) => state.token)
  
@@ -76,7 +76,7 @@ const ProductRecord = () => {
     }
 
     const {onDownload} = useDownloadExcel({
-        currentTableRef: tableRef.current,
+        currentTableRef: productTableRef.current,
         filename: "Product Records Table",
         sheet: "Products"
     })
@@ -106,7 +106,7 @@ const ProductRecord = () => {
         <input type='search' name='filterProductName' placeholder='Search Product Name' onChange={handleFilterByProductName} className='text-center border border-black m-2'></input>
         <input type='search' name='filterProductFamily' placeholder='Search Product Family' onChange={handleFilterByProductFamily} className='text-center border border-black m-2'></input>
         <div className='overflow-auto w-full'>
-       <table className='border border-black min-w-full m-auto' ref={tableRef}>
+       <table className='border border-black min-w-full m-auto' ref={productTableRef}>
            <thead>
            <tr>
                <th className='border border-black bg-red text-white'>Product ID</th>
