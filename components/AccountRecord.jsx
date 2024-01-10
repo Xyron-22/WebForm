@@ -1,22 +1,19 @@
 "use client"
 
-import React, { useState, useLayoutEffect, useRef} from 'react';
+import React, { useState, useLayoutEffect} from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import toast, {Toaster} from "react-hot-toast";
-import { useDownloadExcel } from 'react-export-table-to-excel';
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
 import Link from 'next/link';
 import ModalForDelete from './ModalForDelete';
 import {IoMdInformationCircleOutline} from "react-icons/io"
-import {AiOutlineDownload} from "react-icons/ai"
 
 const AccountRecord = () => {
     const router = useRouter()
-
-    const accountTableRef = useRef(null)
 
     const token = useStore((state) => state.token)
 
@@ -114,12 +111,6 @@ const AccountRecord = () => {
     }
 
 
-    const {onDownload} = useDownloadExcel({
-        currentTableRef: accountTableRef.current,
-        filename: "Account Records Table",
-        sheet: "Accounts"
-    })
-
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
@@ -135,7 +126,14 @@ const AccountRecord = () => {
     <Link href={"/"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Home</Link>
        <h1 className='md:text-3xl font-bold mx-3 mb-2'>Account Records</h1>
        <h1>Number of records: {accountRecordsShown?.length}</h1>
-       <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
+       <ReactHTMLTableToExcel
+        id="export-accounts-button"
+        className="text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded"
+        table="export-account-table"
+        filename="Account records"
+        sheet="Accounts"
+        buttonText="Export to Excel"
+      />
        <div className='flex w-full justify-center items-center'>
         <IoMdInformationCircleOutline className='text-red'></IoMdInformationCircleOutline>
         <p>Click a record to delete</p>
@@ -148,7 +146,7 @@ const AccountRecord = () => {
        <input type='button' name='sortByName' value={"Sort by Account name"} onClick={handleSortByName} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
        <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
        <div className='w-full overflow-auto'>
-       <table className='border border-black sm:min-w-full m-auto' ref={accountTableRef}>
+       <table id='export-account-table' className='border border-black sm:min-w-full m-auto'>
            <thead>
            <tr>
                 <th className='border border-black bg-red text-white'>Account ID</th>

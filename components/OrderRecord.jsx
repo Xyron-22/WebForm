@@ -1,23 +1,20 @@
 "use client"
 
-import React, { useState, useRef, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import toast, {Toaster} from "react-hot-toast";
-import { useDownloadExcel } from 'react-export-table-to-excel';
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
 import Link from 'next/link';
 import ModalForDelete from './ModalForDelete';
 import {IoMdInformationCircleOutline} from "react-icons/io"
-import {AiOutlineDownload} from "react-icons/ai"
 
 const OrderRecord = () => {
 
     const router = useRouter()
-
-    const orderTableRef = useRef(null)
 
     const token = useStore((state) => state.token)
 
@@ -41,6 +38,7 @@ const OrderRecord = () => {
 
     const [disableButton, setDisableButton] = useState(false)
 
+    
     //function for filtering the order record base on DSP
     const handleFilterDSP = (e) => {
         e.preventDefault()
@@ -150,13 +148,6 @@ const OrderRecord = () => {
         setOrderRecordsShown(tempArr)
     }
 
-
-    const {onDownload} = useDownloadExcel({
-        currentTableRef: orderTableRef.current,
-        filename: "Order Records Table",
-        sheet: "Orders"
-    })
-
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
@@ -175,7 +166,14 @@ const OrderRecord = () => {
         : <Link href={"/form/order"} className='absolute left-3 bg-blue text-white p-1 m-1 rounded'>Back</Link>}
         <h1 className='md:text-3xl font-bold mx-3 mb-2'>Order Records</h1>
         <h1>Number of records: {orderRecordsShown?.length}</h1>
-        <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
+        <ReactHTMLTableToExcel
+        id="export-orders-button"
+        className="text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded"
+        table="export-order-table"
+        filename="Order records"
+        sheet="Orders"
+        buttonText="Export to Excel"
+      />
         <label htmlFor='filterOrderDate' className='text-center bg-blue text-white p-1 shadow-2xl m-2 rounded'>Filter Date:</label>
         <input type='text' name='filterOrderDate' placeholder='MM/DD/YY' className='bg-whiteSmoke text-center border-2 rounded border-blue' onChange={handleFilterByOrderDate}></input>
         {decodedJWTToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && <button type='button'className='m-2 cursor-pointer bg-red text-white p-1 shadow-2xl rounded' onClick={() => {
@@ -200,7 +198,7 @@ const OrderRecord = () => {
         <input type='button' name='sortByLocation' value={"Sort by Location"} onClick={handleSortByLocation} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
         <input type='button' name='sortByOrderDate' value={"Sort by Order Date"} onClick={handleSortByOrderDate} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded'></input>
         <div className='w-full overflow-auto'>
-        <table className='border border-black m-auto lg:text-base min-w-full' ref={orderTableRef}>
+        <table id='export-order-table' className='border border-black m-auto lg:text-base min-w-full'>
             <thead>
             <tr>
                 <th className='border border-black bg-red text-white'>Order Date</th>

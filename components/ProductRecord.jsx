@@ -1,23 +1,20 @@
 "use client"
 
-import React, { useState, useRef, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import toast, {Toaster} from "react-hot-toast";
-import { useDownloadExcel } from 'react-export-table-to-excel';
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
 import Link from 'next/link';
 import ModalForDelete from './ModalForDelete';
 import {IoMdInformationCircleOutline} from "react-icons/io"
-import {AiOutlineDownload} from "react-icons/ai"
 
 const ProductRecord = () => {
 
     const router = useRouter()
-
-    const productTableRef = useRef(null)
 
     const token = useStore((state) => state.token)
  
@@ -75,12 +72,6 @@ const ProductRecord = () => {
         setDisableButton(false)
     }
 
-    const {onDownload} = useDownloadExcel({
-        currentTableRef: productTableRef.current,
-        filename: "Product Records Table",
-        sheet: "Products"
-    })
-
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
@@ -97,7 +88,14 @@ const ProductRecord = () => {
        <h1 className='md:text-3xl font-bold mx-3 mb-2'>Product Records</h1>
        <h1>Number of records: {productRecordsShown?.length}</h1>
        <input type='button' value={"Reload"} disabled={disableButton} className='m-2 cursor-pointer bg-blue text-white p-1 shadow-2xl rounded' onClick={fetchAllProductRecords}></input>
-       <button type='button' onClick={onDownload} className='text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded'>Download Table<AiOutlineDownload className='mx-1 inline'></AiOutlineDownload></button>
+       <ReactHTMLTableToExcel
+        id="export-products-button"
+        className="text-center cursor-pointer bg-blue text-white p-1 shadow-2xl m-2 rounded"
+        table="export-product-table"
+        filename="Product records"
+        sheet="Products"
+        buttonText="Export to Excel"
+      />
        <div className='flex w-full justify-center items-center'>
         <IoMdInformationCircleOutline className='text-red'></IoMdInformationCircleOutline>
         <p>Click a record to delete</p>
@@ -106,7 +104,7 @@ const ProductRecord = () => {
         <input type='search' name='filterProductName' placeholder='Search Product Name' onChange={handleFilterByProductName} className='text-center border border-black m-2'></input>
         <input type='search' name='filterProductFamily' placeholder='Search Product Family' onChange={handleFilterByProductFamily} className='text-center border border-black m-2'></input>
         <div className='overflow-auto w-full'>
-       <table className='border border-black min-w-full m-auto' ref={productTableRef}>
+       <table id='export-product-table' className='border border-black min-w-full m-auto'>
            <thead>
            <tr>
                <th className='border border-black bg-red text-white'>Product ID</th>
