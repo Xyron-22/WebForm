@@ -149,7 +149,6 @@ const AccountRecord = () => {
        <table id='export-account-table' className='border border-black sm:min-w-full m-auto'>
            <thead>
            <tr>
-                <th className='border border-black bg-red text-white'>Account ID</th>
                <th className='border border-black bg-red text-white'>Customer Number</th>
                <th className='border border-black bg-red text-white'>Account Name</th>
                <th className='border border-black bg-red text-white'>Location</th>
@@ -167,7 +166,6 @@ const AccountRecord = () => {
                         })
                         setToggleModal(true)
                        }}>
-                        <td className='border border-black text-center'>{account_id}</td>
                        <td className='border border-black text-center'>{customer_number}</td>
                        <td className='border border-black'>{account_name}</td>
                        <td className='border border-black'>{location}</td>

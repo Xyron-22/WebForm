@@ -107,7 +107,6 @@ const ProductRecord = () => {
        <table id='export-product-table' className='border border-black min-w-full m-auto'>
            <thead>
            <tr>
-               <th className='border border-black bg-red text-white'>Product ID</th>
                <th className='border border-black bg-red text-white'>Material Code</th>
                <th className='border border-black bg-red text-white'>Material Description</th>
                <th className='border border-black bg-red text-white'>Product Family</th>
@@ -125,7 +124,6 @@ const ProductRecord = () => {
                        })
                         setToggleModal(true)
                        }}>
-                       <td className='border border-black text-center'>{product_id}</td>
                        <td className='border border-black'>{mat_code}</td>
                        <td className='border border-black'>{mat_description}</td>
                        <td className='border border-black'>{product_family}</td>
