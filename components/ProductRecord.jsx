@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
@@ -10,7 +10,10 @@ import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
 import Link from 'next/link';
 import ModalForDelete from './ModalForDelete';
-import {IoMdInformationCircleOutline} from "react-icons/io"
+import ModalForEdit from './ModalForEdit';
+import {IoMdInformationCircleOutline} from "react-icons/io";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { FaEdit } from "react-icons/fa";
 
 const ProductRecord = () => {
 
@@ -26,9 +29,16 @@ const ProductRecord = () => {
 
     const [toggleModal, setToggleModal] = useState(false)
 
+    const [toggleModalForEdit, setToggleModalForEdit] = useState(false)
+
     const [recordToDelete, setRecordToDelete] = useState({
         recordId: null,
         table: "",
+        index: null
+    })
+
+    const [recordToEdit, setRecordToEdit] = useState({
+        recordId: null,
         index: null
     })
 
@@ -63,7 +73,14 @@ const ProductRecord = () => {
             setProductRecordsShown(data.data)
             setIsLoading(false)
         } catch (error) {
-            setErrorInformation(error.response.data)
+            if (error?.response?.data) {
+                setErrorInformation(error.response.data)
+            } else {
+                setErrorInformation({
+                    status: "failed",
+                    message: "Cannot connect to server..."
+                })
+            }
             toast.error("Error occurred, please try again", {
                 duration: 3000,
                 className: "text-2xl"
@@ -83,7 +100,7 @@ const ProductRecord = () => {
   return (
     <>{errorInformation.status === "failed" || errorInformation.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{errorInformation.message}</div> : 
     <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-    <div className={`bg-white text-center w-full ${toggleModal ? "p-0" : "xl:w-[90%] my-5 p-2"} md:text-xl relative z-[999999999999]`}>
+    <div className={`bg-white text-center w-full ${toggleModal || toggleModalForEdit? "p-0" : "xl:w-[90%] my-5 p-2"} md:text-xl relative z-[999999999999]`}>
     <Link href={"/"} className='absolute left-3 bg-blue text-white rounded p-1 m-1'>Home</Link>
        <h1 className='md:text-3xl font-bold mx-3 mb-2'>Product Records</h1>
        <h1>Number of records: {productRecordsShown?.length}</h1>
@@ -111,23 +128,34 @@ const ProductRecord = () => {
                <th className='border border-black bg-red text-white'>Material Description</th>
                <th className='border border-black bg-red text-white'>Product Family</th>
                <th className='border border-black bg-red text-white'>UOM</th>
+               <th className='border border-black border-r-0 bg-red text-white'>Stocks</th>
+               <th className='border border-black border-x-0 bg-red text-white'></th>
            </tr>
            </thead>
            <tbody>
-               {productRecordsShown.map(({product_id, mat_code, mat_description, product_family, uom}, i) => {
+               {productRecordsShown.map(({product_id, mat_code, mat_description, product_family, uom, stocks}, i) => {
                    return (
-                       <tr key={i} className='cursor-pointer' onClick={() => {
+                       <tr key={i}>
+                       <td className='border border-black'>{mat_code}</td>
+                       <td className='border border-black'>{mat_description}</td>
+                       <td className='border border-black'>{product_family}</td>
+                       <td className='border border-black'>{uom}</td>
+                       <td className='border border-black w-24'><span className='flex justify-between items-center mx-3'>{stocks || 0}<FaEdit onClick={() => {
+                        setRecordToEdit({
+                            recordId: product_id,
+                            index: i
+                        })
+                        setToggleModalForEdit(true)
+                        }} className='text-[#008000] ml-5 cursor-pointer'/></span></td>
+                       <td className='border border-black text-red px-5' >
+                        <RiDeleteBin5Line onClick={() => {
                         setRecordToDelete({
                         recordId: product_id,
                         table: "product",
                         index: i
                        })
                         setToggleModal(true)
-                       }}>
-                       <td className='border border-black'>{mat_code}</td>
-                       <td className='border border-black'>{mat_description}</td>
-                       <td className='border border-black'>{product_family}</td>
-                       <td className='border border-black'>{uom}</td>
+                       }} className='m-auto cursor-pointer'/></td>
                    </tr>
                    )
                })}
@@ -135,6 +163,7 @@ const ProductRecord = () => {
        </table>
        </div>
        {toggleModal && <ModalForDelete setToggleModal={setToggleModal} recordToDelete={recordToDelete} setRecordToDelete={setRecordToDelete} arrayOfRecordsShown={productRecordsShown} setArrayOfRecordsShown={setProductRecordsShown}></ModalForDelete>}
+       {toggleModalForEdit && <ModalForEdit setToggleModalForEdit={setToggleModalForEdit} setProductRecordsShown={setProductRecordsShown} productRecordsShown={productRecordsShown} recordToEdit={recordToEdit} setRecordToEdit={setRecordToEdit}></ModalForEdit>}
    </div>
    <Toaster></Toaster>
    </>}</>

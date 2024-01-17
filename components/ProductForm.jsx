@@ -22,6 +22,7 @@ const [product, setProduct] = useState({
     matDescription: "",
     productFamily: "",
     volume: "",
+    stocks: ""
 })
 
 const [disableButton, setDisableButton] = useState(false)
@@ -41,6 +42,7 @@ const handleSubmit = async (e) => {
             matDescription: "",
             productFamily: "",
             volume: "",
+            stocks: ""
         })
         toast.success("Form Submitted", {
             duration: 3000,
@@ -84,6 +86,10 @@ useLayoutEffect(() => {
         <label htmlFor='volume' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold'>UOM</label>
         <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{product.volume}</h1>
         <input type='number' placeholder='Enter UOM' name='volume' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' value={product.volume} onChange={(e) => setProduct({...product, volume: e.target.value})} required></input>
+        <hr className='border-[1px] border-black w-[90%] my-3'/>
+        <label htmlFor='stocks' className='mt-5 mb-2 text-lg md:text-2xl text-center bg-red text-white p-1 rounded font-semibold'>STOCKS</label>
+        <h1 className='text-lg md:text-2xl text-center mb-2 bg-blue text-white rounded shadow p-2'>{product.stocks}</h1>
+        <input type='number' placeholder='Enter stocks' name='stocks' className='text-lg md:text-2xl mt-5 text-center border border-black rounded' value={product.stocks} onChange={(e) => setProduct({...product, stocks: e.target.value})} required></input>
         <hr className='border-[1px] border-black w-[90%] my-3'/>
         <button type='submit' disabled={disableButton} className='mb-5 m-2 text-lg md:text-2xl p-2 rounded bg-blue text-white font-semibold'>Submit Form</button>
     </form>

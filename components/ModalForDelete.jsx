@@ -110,7 +110,7 @@ const ModalForDelete = ({setToggleModal, recordToDelete, setRecordToDelete, arra
                         <td className='border border-black text-center'>{record.location}</td>
                         <td className='border border-black text-center'>{record.dsp}</td>
                         <td className='border border-black text-center'>{record.remarks_freebies_concern}</td>
-                        <td className='border border-black text-center'>{new Date(Number(record.time_stamp)).toLocaleTimeString()}</td>
+                        <td className='border border-black text-center'>{new Date(Number(record.time_stamp)).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -121,18 +121,20 @@ const ModalForDelete = ({setToggleModal, recordToDelete, setRecordToDelete, arra
                 <table key={i} className='border border-black m-auto lg:text-base min-w-full text-sm'>
                 <thead>
                 <tr>
-                    <th className='border border-black bg-red text-white'>Product ID</th>
                     <th className='border border-black bg-red text-white'>Material Code</th>
                     <th className='border border-black bg-red text-white'>Material Description</th>
                     <th className='border border-black bg-red text-white'>Product Family</th>
+                    <th className='border border-black bg-red text-white'>UOM</th>
+                    <th className='border border-black bg-red text-white'>Stocks</th>
                 </tr>
                 </thead>
                 <tbody>
                         <tr>
-                            <td className='border border-black text-center'>{record.product_id}</td>
                             <td className='border border-black'>{record.mat_code}</td>
                             <td className='border border-black'>{record.mat_description}</td>
                             <td className='border border-black'>{record.product_family}</td>
+                            <td className='border border-black'>{record.uom}</td>
+                            <td className='border border-black'>{record.stocks}</td>
                         </tr>
                 </tbody>
             </table>
@@ -143,7 +145,6 @@ const ModalForDelete = ({setToggleModal, recordToDelete, setRecordToDelete, arra
                 <table key={i} className='border border-black m-auto lg:text-base min-w-full text-sm'>
                 <thead>
                 <tr>
-                     <th className='border border-black bg-red text-white'>Account ID</th>
                     <th className='border border-black bg-red text-white'>Customer Number</th>
                     <th className='border border-black bg-red text-white'>Account Name</th>
                     <th className='border border-black bg-red text-white'>Location</th>
@@ -152,7 +153,6 @@ const ModalForDelete = ({setToggleModal, recordToDelete, setRecordToDelete, arra
                 </thead>
                 <tbody>
                         <tr>
-                             <td className='border border-black text-center'>{record.account_id}</td>
                             <td className='border border-black text-center'>{record.customer_number}</td>
                             <td className='border border-black'>{record.account_name}</td>
                             <td className='border border-black'>{record.location}</td>

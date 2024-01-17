@@ -338,7 +338,7 @@ const Home = () => {
             innerRadius={40}
             outerRadius={60}
             fill="#8884d8"
-            dataKey="total_orders"
+            dataKey="total_sales"
             onMouseEnter={onPieEnter}
           />
           <Pie
@@ -350,7 +350,7 @@ const Home = () => {
             innerRadius={70}
             outerRadius={85}
             fill="#0088FE"
-            dataKey="total_sales"
+            dataKey="total_orders"
             onMouseEnter={onPieEnter}
           />
         </PieChart>

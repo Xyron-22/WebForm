@@ -102,7 +102,14 @@ const OrderRecord = () => {
             setOrderRecordsShown(response.data)
             setIsLoading(false)           
         } catch (error) {
-            setErrorInformation(error.response.data)
+            if (error?.response?.data) {
+                setErrorInformation(error.response.data)
+            } else {
+                setErrorInformation({
+                    status: "failed",
+                    message: "Cannot connect to server..."
+                })
+            }
             toast.error("Error occurred, please try again", {
                 duration: 3000,
                 className: "text-2xl"
