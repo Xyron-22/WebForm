@@ -11,6 +11,7 @@ import useStore from '@/stateManagement/store';
 import Link from 'next/link';
 import ModalForDelete from './ModalForDelete';
 import {IoMdInformationCircleOutline} from "react-icons/io"
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 const OrderRecord = () => {
 
@@ -35,6 +36,9 @@ const OrderRecord = () => {
         table: "",
         index: null
     })
+
+    //state for objet containing information about the record to edit the order status
+    const [orderRecordToEdit, setOrderRecordToEdit] = useState(null)
 
     const [disableButton, setDisableButton] = useState(false)
 
@@ -114,6 +118,30 @@ const OrderRecord = () => {
                 duration: 3000,
                 className: "text-2xl"
             })
+        }
+        setDisableButton(false)
+    }
+
+    //this function is for updating the status of an order either pending or approved
+    const updateStatusOfAnOrder = async (newStatus, currentStatus, order_id, i) => {
+        setDisableButton(true)
+        if (newStatus !== currentStatus) {
+            try {
+                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`, {order_id, status: newStatus}, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                const tempArr = [...orderRecordsShown]
+                tempArr[i].status = newStatus
+                setOrderRecordsShown(tempArr)
+            } catch (error) {
+                toast.error(error.response.data.message, {
+                    duration: 3000,
+                    className: "text-2xl"
+                })
+            }
         }
         setDisableButton(false)
     }
@@ -220,19 +248,14 @@ const OrderRecord = () => {
                 <th className='border border-black bg-red text-white'>DSP</th>
                 <th className='border border-black bg-red text-white'>Freebies/Remarks/Concern</th>
                 <th className='border border-black bg-red text-white'>Time Stamp</th>
+                <th className='border border-black bg-red text-white'>Status</th>
+                <th className='border border-black border-x-0 bg-red text-white'></th>
             </tr>
             </thead>
             <tbody>
-                {orderRecordsShown.map(({order_id, order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price, time_stamp}, i) => {
+                {orderRecordsShown.map(({order_id, order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price, time_stamp, status}, i) => {
                     return (
-                    <tr key={i} className='cursor-pointer' onClick={(e) => {
-                        setRecordToDelete({
-                            recordId: order_id,
-                            table: "order",
-                            index: i
-                        })
-                        setToggleModal(true)
-                    }}>
+                    <tr key={i}>
                         <td className='border border-black text-center'>{new Date(order_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{new Date(delivery_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{customer_name}</td>
@@ -245,6 +268,30 @@ const OrderRecord = () => {
                         <td className='border border-black text-center'>{dsp}</td>
                         <td className='border border-black text-center'>{remarks_freebies_concern}</td>
                         <td className='border border-black text-center'>{new Date(Number(time_stamp)).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}</td>
+                        {decodedJWTToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE ? 
+                            <td className='border border-black text-center cursor-pointer'>
+                            {orderRecordToEdit === order_id ? 
+                                <select disabled={disableButton} value="" id='dropdown' onChange={(e) => {
+                                    updateStatusOfAnOrder(e.target.value, status, order_id, i)
+                                    setOrderRecordToEdit(null)
+                                }} >
+                                    <option disabled value="" className='hidden'>{status}</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Approved">Approved</option>
+                                </select> 
+                                : <p onClick={() => setOrderRecordToEdit(order_id)}>{status}</p>}
+                            </td> 
+                            : <td className='border border-black text-center'>{status}</td>
+                        }
+                        <td className='border border-black text-red px-5' >
+                        <RiDeleteBin5Line onClick={() => {
+                        setRecordToDelete({
+                            recordId: order_id,
+                            table: "order",
+                            index: i
+                        })
+                        setToggleModal(true)
+                       }} className='m-auto cursor-pointer'/></td>
                     </tr>
                     )
                 })}

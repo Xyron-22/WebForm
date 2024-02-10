@@ -174,6 +174,7 @@ const OrderForm = ({data}) => {
           className: "text-2xl"
         })
       }
+      router.replace("#order-form")
       setDisableButton(false)
     }
 
@@ -194,7 +195,7 @@ const OrderForm = ({data}) => {
     {data.status === "failed" || data.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{data.message}</div> : 
     <>
     {isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-    <form className='flex-col flex items-center w-screen lg:w-[80%] bg-white shadow-2xl relative' onSubmit={handleSubmit}>
+    <form className='flex-col flex items-center w-screen lg:w-[80%] bg-white shadow-2xl relative' id='order-form' onSubmit={handleSubmit}>
     {decodedToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE ? <Link href={"/"} className='absolute left-1 top-1 text-sm sm:left-3 sm:top-3 bg-blue text-white p-1 m-1 rounded md:text-xl'>Home</Link>
     : <Link href={"/records/order"} className='absolute left-1 top-1 text-sm sm:left-3 sm:top-3 bg-blue text-white p-1 m-1 rounded md:text-xl'>Orders</Link>}
       <h1 className='m-7 md:m-10 text-xl text-center md:text-4xl font-extrabold'>ORDER FORM</h1>
