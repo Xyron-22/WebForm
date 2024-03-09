@@ -254,8 +254,11 @@ const OrderRecord = () => {
             </thead>
             <tbody>
                 {orderRecordsShown.map(({order_id, order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price, time_stamp, status}, i) => {
+                    let pastOrderRecord = orderRecordsShown[i - 1]
+                    if (pastOrderRecord?.order_date === order_date && pastOrderRecord?.delivery_date === delivery_date && pastOrderRecord?.time_stamp === time_stamp) remarks_freebies_concern = null
+                                            
                     return (
-                    <tr key={i}>
+                    <tr key={i} onClick={() => router.push(`/records/order/${order_id}`)} className='cursor-pointer'>
                         <td className='border border-black text-center'>{new Date(order_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{new Date(delivery_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{customer_name}</td>
@@ -266,7 +269,7 @@ const OrderRecord = () => {
                         <td className='border border-black text-center'>{terms}</td>
                         <td className='border border-black text-center'>{location}</td>
                         <td className='border border-black text-center'>{dsp}</td>
-                        <td className='border border-black text-center'>{remarks_freebies_concern}</td>
+                        <td className={`${remarks_freebies_concern ? "border-b-0 border-t" : "border-y-0"} border-black text-center`}>{remarks_freebies_concern}</td>
                         <td className='border border-black text-center'>{new Date(Number(time_stamp)).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}</td>
                         {decodedJWTToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE ? 
                             <td className='border border-black text-center cursor-pointer'>
