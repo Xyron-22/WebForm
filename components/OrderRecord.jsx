@@ -253,12 +253,12 @@ const OrderRecord = () => {
             </tr>
             </thead>
             <tbody>
-                {orderRecordsShown.map(({order_id, order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price, time_stamp, status}, i) => {
+                {orderRecordsShown.map(({order_id, order_date, account_name, account_id, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price, time_stamp, status}, i) => {
                     let pastOrderRecord = orderRecordsShown[i - 1]
                     if (pastOrderRecord?.order_date === order_date && pastOrderRecord?.delivery_date === delivery_date && pastOrderRecord?.time_stamp === time_stamp) remarks_freebies_concern = null
                                             
                     return (
-                    <tr key={i} onClick={() => router.push(`/records/order/${order_id}`)} className='cursor-pointer'>
+                    <tr key={i} onClick={() => router.push(`/records/order/${account_id}?time_stamp=${time_stamp}&order_date=${order_date}&delivery_date=${delivery_date}`)} className='cursor-pointer'>
                         <td className='border border-black text-center'>{new Date(order_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{new Date(delivery_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{customer_name}</td>

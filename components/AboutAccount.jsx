@@ -1,19 +1,17 @@
 "use client"
 
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import toast, {Toaster} from "react-hot-toast";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
 import Link from 'next/link';
-import ModalForDelete from './ModalForDelete';
-import ModalForEdit from './ModalForEdit';
-import {IoMdInformationCircleOutline} from "react-icons/io";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { FaEdit } from "react-icons/fa";
+import { IoPencil } from "react-icons/io5";
+import { CiSearch } from "react-icons/ci";
+import { AiOutlineDownload } from "react-icons/ai";
 import {
   Card,
   CardHeader,
@@ -27,130 +25,55 @@ import {
   Tooltip,
   Input,
 } from "@material-tailwind/react";
+import { Checkbox } from "@material-tailwind/react";
  
-const TABLE_HEAD = ["Order Date", "Delivery Date", "Product", "Quantity", "Price", "Term", "Location", "DSP", "Freebies/Remarks/Concern", "Time Stamp", "Status", ""];
+const TABLE_HEAD = ["Order Date", "Delivery Date", "Product", "Quantity", "Price", "Term", "Location", "DSP", "Freebies/Remarks/Concern", "Time Stamp", "Status", "", ""];
  
-const TABLE_ROWS = [
-  {
-    // img: "https://docs.material-tailwind.com/img/logos/logo-spotify.svg",
-    name: "07/23/2023",
-    amount: "$2,500",
-    date: "Wed 3:00pm",
-    status: "paid",
-    account: "visa",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-amazon.svg",
-    name: "Amazon",
-    amount: "$5,000",
-    date: "Wed 1:00pm",
-    status: "paid",
-    account: "master-card",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-pinterest.svg",
-    name: "Pinterest",
-    amount: "$3,400",
-    date: "Mon 7:40pm",
-    status: "pending",
-    account: "master-card",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-google.svg",
-    name: "Google",
-    amount: "$1,000",
-    date: "Wed 5:00pm",
-    status: "paid",
-    account: "visa",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-netflix.svg",
-    name: "netflix",
-    amount: "$14,000",
-    date: "Wed 3:30am",
-    status: "cancelled",
-    account: "visa",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-netflix.svg",
-    name: "netflix",
-    amount: "$14,000",
-    date: "Wed 3:30am",
-    status: "cancelled",
-    account: "visa",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-netflix.svg",
-    name: "netflix",
-    amount: "$14,000",
-    date: "Wed 3:30am",
-    status: "cancelled",
-    account: "visa",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-netflix.svg",
-    name: "netflix",
-    amount: "$14,000",
-    date: "Wed 3:30am",
-    status: "cancelled",
-    account: "visa",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-netflix.svg",
-    name: "netflix",
-    amount: "$14,000",
-    date: "Wed 3:30am",
-    status: "cancelled",
-    account: "visa",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-netflix.svg",
-    name: "netflix",
-    amount: "$14,000",
-    date: "Wed 3:30am",
-    status: "cancelled",
-    account: "visa",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-];
-
 const AboutAccount = ({params}) => {
   
   const router = useRouter()
 
+  const checkboxRef = useRef()
+
   const token = useStore((state) => state.token)
 
+  const searchParams = useSearchParams()
+
+  let queryStrings = {};
+
+  searchParams.forEach((value, key) => {
+    queryStrings[key] = value;
+  });
+ 
+
   const [initialOrderRecordsShown, setInitialOrderRecordsShown] = useState([])
+
+  const [ordersToApprove, setOrdersToApprove] = useState([])
 
   const [isLoading, setIsLoading] = useState(true)
   const [errorInformation, setErrorInformation] = useState("")
   const [disableButton, setDisableButton] = useState(false)
-
+ 
   const fetchAccountOrders = async () => {
     setDisableButton(true)
     try {
-      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/`)
+      setIsLoading(true)
+      const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order/account/${params.accountId}`)
+      setInitialOrderRecordsShown(data.data)
+      setIsLoading(false)
     } catch (error) {
-      
+      if (error?.response?.data) {
+        setErrorInformation(error.response.data)
+    } else {
+        setErrorInformation({
+            status: "failed",
+            message: "Cannot connect to server..."
+        })
+    }
+    toast.error("Error occurred, please try again", {
+        duration: 3000,
+        className: "text-2xl"
+    })
     }
     setDisableButton(false)
   }
@@ -160,16 +83,16 @@ const AboutAccount = ({params}) => {
     const decodedToken = jwtDecode(token)
     if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
     if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
-    // fetchAllProductRecords()
-  setIsLoading(!isLoading)
+    fetchAccountOrders()
 },[])
+
     
   return (
     // <div className='flex-col flex items-center w-screen lg:w-[80%] bg-white shadow-2xl relative'>AboutAccount</div>
     <>{errorInformation.status === "failed" || errorInformation.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{errorInformation.message}</div> : 
     <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
     <Card className="h-full w-full my-4">
-      <CardHeader floated={false} shadow={false} className="sticky top-0 m-0 bg-white z-[999] border-b rounded-none">
+      <CardHeader floated={false} shadow={false} className="sticky top-0 m-0 bg-white z-[999] border-b rounded-none p-4">
         <div className="mb-4 flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
           <div>
             <Typography variant="h5" color="blue-gray">
@@ -200,10 +123,11 @@ const AboutAccount = ({params}) => {
             <div className="w-full md:w-72">
               <Input
                 label="Search"
+                icon={<CiSearch className='h-5 w-5' />}
               />
             </div>
-            <Button className="flex items-center gap-3 text-black" size="sm">
-             Download
+            <Button className="flex items-center gap-3 bg-black" size="sm">
+              <AiOutlineDownload strokeWidth={2} className='h-5 w-5'/> Download
             </Button>
           </div>
         </div>
@@ -212,15 +136,15 @@ const AboutAccount = ({params}) => {
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
-              {TABLE_HEAD.map((head) => (
+              {TABLE_HEAD.map((head, i) => (
                 <th
-                  key={head}
+                  key={i}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                 >
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="font-normal leading-none opacity-70"
+                    className="font-bold leading-none opacity-70"
                   >
                     {head}
                   </Typography>
@@ -229,41 +153,42 @@ const AboutAccount = ({params}) => {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(
+            {initialOrderRecordsShown.map(
               (
                 {
-                  img,
-                  name,
-                  amount,
-                  date,
+                  order_id,
+                  order_date,
+                  delivery_date,
+                  product_id,
+                  quantity,
+                  price,
+                  terms,
+                  location,
+                  dsp,
+                  remarks_freebies_concern,
+                  time_stamp,
                   status,
-                  account,
-                  accountNumber,
-                  expiry,
+                  mat_description
                 },
                 index,
               ) => {
-                const isLast = index === TABLE_ROWS.length - 1;
+                const isLast = index === initialOrderRecordsShown.length - 1;
                 const classes = isLast
                   ? "p-4"
                   : "p-4 border-b border-blue-gray-50";
- 
+
+                let pastOrderRecord = initialOrderRecordsShown[index - 1]
+                  if (pastOrderRecord?.order_date === order_date && pastOrderRecord?.delivery_date === delivery_date && pastOrderRecord?.time_stamp === time_stamp) remarks_freebies_concern = ""
+                  
                 return (
-                  <tr key={name}>
+                  <tr key={index}>
                     <td className={classes}>
                       <div className="flex items-center gap-3">
-                        <Avatar
-                          src={img}
-                          alt={name}
-                          size="md"
-                          className="border border-blue-gray-50 bg-blue-gray-50/50 object-contain p-1"
-                        />
                         <Typography
                           variant="small"
                           color="blue-gray"
-                          className="font-bold"
                         >
-                          {name}
+                          {new Date(order_date).toDateString()}
                         </Typography>
                       </div>
                     </td>
@@ -273,7 +198,7 @@ const AboutAccount = ({params}) => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {amount}
+                        {new Date(delivery_date).toDateString()}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -282,7 +207,70 @@ const AboutAccount = ({params}) => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {date}
+                        {mat_description}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {quantity}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        &#x20B1;{price}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {terms}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {location}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {dsp}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="text-center font-normal"
+                      >
+                        {remarks_freebies_concern}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {new Date(Number(time_stamp)).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -292,51 +280,24 @@ const AboutAccount = ({params}) => {
                           variant="ghost"
                           value={status}
                           color={
-                            status === "paid"
+                            status === "Approved"
                               ? "green"
-                              : status === "pending"
+                              : status === "Pending"
                               ? "amber"
                               : "red"
                           }
                         />
                       </div>
                     </td>
-                    <td className={classes}>
-                      <div className="flex items-center gap-3">
-                        <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
-                          <Avatar
-                            src={
-                              account === "visa"
-                                ? "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/logos/visa.png"
-                                : "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/logos/mastercard.png"
-                            }
-                            size="sm"
-                            alt={account}
-                            variant="square"
-                            className="h-full w-full object-contain p-1"
-                          />
-                        </div>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal capitalize"
-                          >
-                            {account.split("-").join(" ")} {accountNumber}
-                          </Typography>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal opacity-70"
-                          >
-                            {expiry}
-                          </Typography>
-                        </div>
-                      </div>
+                    <td className={classes} ref={checkboxRef}>
+                      <Tooltip content="Select">
+                          <input type='checkbox' value={order_id} className='h-5 w-5 cursor-pointer' defaultChecked={order_date === queryStrings.order_date} onLoad={() => console.log("worked")} onChange={(e) => console.log()}></input>
+                      </Tooltip>
                     </td>
                     <td className={classes}>
                       <Tooltip content="Edit User">
                         <IconButton variant="text">
+                          <IoPencil className='h-5 w-5'/>
                         </IconButton>
                       </Tooltip>
                     </td>
