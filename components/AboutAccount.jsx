@@ -25,13 +25,14 @@ import {
   Tooltip,
   Input,
 } from "@material-tailwind/react";
-import { Checkbox } from "@material-tailwind/react";
  
 const TABLE_HEAD = ["Order Date", "Delivery Date", "Product", "Quantity", "Price", "Term", "Location", "DSP", "Freebies/Remarks/Concern", "Time Stamp", "Status", "", ""];
  
 const AboutAccount = ({params}) => {
   
   const router = useRouter()
+  const setOrdersForInvoice = useStore((state) => state.setOrdersForInvoice)
+  const ordersForInvoice = useStore((state) => state.ordersForInvoice)
 
   const checkboxRef = useRef()
 
@@ -59,6 +60,27 @@ const AboutAccount = ({params}) => {
     try {
       setIsLoading(true)
       const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order/account/${params.accountId}`)
+      let initialOrdersToApprove = []
+      data.data.map(({order_id, order_date, delivery_date, customer_name, tin, terms, remarks_freebies_concern, quantity, price, account_name, location, mat_description, time_stamp}, i) => {
+        if (order_date === queryStrings.order_date && time_stamp === queryStrings.time_stamp) {
+          initialOrdersToApprove.push({
+            order_id,
+            order_date,
+            delivery_date,
+            customer_name,
+            tin,
+            terms,
+            remarks_freebies_concern,
+            quantity,
+            price,
+            account_name,
+            location,
+            mat_description,
+            time_stamp
+          })
+        }
+      })
+      setOrdersToApprove(initialOrdersToApprove)  
       setInitialOrderRecordsShown(data.data)
       setIsLoading(false)
     } catch (error) {
@@ -78,6 +100,19 @@ const AboutAccount = ({params}) => {
     setDisableButton(false)
   }
 
+  const handleOrdersToApprove = (e, orderObject) => {
+    const {checked} = e.target;
+    let updateOrdersToApprove = [...ordersToApprove]
+    if (checked) {
+        orderObject.order_id = Number(orderObject.order_id)
+        updateOrdersToApprove.push(orderObject)
+    } else {
+        updateOrdersToApprove = updateOrdersToApprove.filter(({order_id}) => order_id !== Number(orderObject.order_id))
+    }
+    setOrdersToApprove(updateOrdersToApprove)
+  }
+
+ 
   useLayoutEffect(() => {
     if (!token) return router.replace("/auth/login")
     const decodedToken = jwtDecode(token)
@@ -85,10 +120,8 @@ const AboutAccount = ({params}) => {
     if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
     fetchAccountOrders()
 },[])
-
     
   return (
-    // <div className='flex-col flex items-center w-screen lg:w-[80%] bg-white shadow-2xl relative'>AboutAccount</div>
     <>{errorInformation.status === "failed" || errorInformation.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{errorInformation.message}</div> : 
     <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
     <Card className="h-full w-full my-4">
@@ -127,7 +160,8 @@ const AboutAccount = ({params}) => {
               />
             </div>
             <Button className="flex items-center gap-3 bg-black" size="sm">
-              <AiOutlineDownload strokeWidth={2} className='h-5 w-5'/> Download
+              {/* <AiOutlineDownload strokeWidth={2} className='h-5 w-5'/>  */}
+              Checkout
             </Button>
           </div>
         </div>
@@ -159,16 +193,18 @@ const AboutAccount = ({params}) => {
                   order_id,
                   order_date,
                   delivery_date,
-                  product_id,
+                  customer_name,
+                  tin,
+                  terms,
+                  remarks_freebies_concern,
                   quantity,
                   price,
-                  terms,
+                  account_name,
                   location,
-                  dsp,
-                  remarks_freebies_concern,
+                  mat_description,
                   time_stamp,
-                  status,
-                  mat_description
+                  dsp,
+                  status
                 },
                 index,
               ) => {
@@ -291,7 +327,23 @@ const AboutAccount = ({params}) => {
                     </td>
                     <td className={classes} ref={checkboxRef}>
                       <Tooltip content="Select">
-                          <input type='checkbox' value={order_id} className='h-5 w-5 cursor-pointer' defaultChecked={order_date === queryStrings.order_date} onLoad={() => console.log("worked")} onChange={(e) => console.log()}></input>
+                          <input type='checkbox' className='h-5 w-5 cursor-pointer' defaultChecked={order_date === queryStrings.order_date} onChange={(e) => handleOrdersToApprove(e,
+                            {
+                              order_id,
+                              order_date,
+                              delivery_date,
+                              customer_name,
+                              tin,
+                              terms,
+                              remarks_freebies_concern,
+                              quantity,
+                              price,
+                              account_name,
+                              location,
+                              mat_description,
+                              time_stamp
+                            }
+                          )}></input>
                       </Tooltip>
                     </td>
                     <td className={classes}>
@@ -312,29 +364,6 @@ const AboutAccount = ({params}) => {
         <Button variant="outlined" size="sm">
           Previous
         </Button>
-        {/* <div className="flex items-center gap-2">
-          <IconButton variant="outlined" size="sm">
-            1
-          </IconButton>
-          <IconButton variant="text" size="sm">
-            2
-          </IconButton>
-          <IconButton variant="text" size="sm">
-            3
-          </IconButton>
-          <IconButton variant="text" size="sm">
-            ...
-          </IconButton>
-          <IconButton variant="text" size="sm">
-            8
-          </IconButton>
-          <IconButton variant="text" size="sm">
-            9
-          </IconButton>
-          <IconButton variant="text" size="sm">
-            10
-          </IconButton>
-        </div> */}
         <Button variant="outlined" size="sm">
           Next
         </Button>
