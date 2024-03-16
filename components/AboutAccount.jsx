@@ -159,14 +159,13 @@ const AboutAccount = ({params}) => {
                 icon={<CiSearch className='h-5 w-5' />}
               />
             </div>
-            <Button className="flex items-center gap-3 bg-black" size="sm">
-              {/* <AiOutlineDownload strokeWidth={2} className='h-5 w-5'/>  */}
-              Checkout
+            <Button className="flex items-center gap-3 bg-black" size="sm" onClick={() => router.push("/invoice")}>
+              Invoice
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardBody className="overflow-scroll px-0">
+      <CardBody className="overflow-auto px-0">
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
