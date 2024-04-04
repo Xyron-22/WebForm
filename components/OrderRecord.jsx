@@ -20,12 +20,11 @@ const OrderRecord = () => {
     const token = useStore((state) => state.token)
 
     const [decodedJWTToken, setDecodedJWTToken] = useState("")
-  
     const [isLoading, setIsLoading] = useState(true)
+    const [errorInformation, setErrorInformation] = useState("")
+
     const [orderRecordsShown, setOrderRecordsShown] = useState([])
     const [initialOrderRecordsShown, setInitialOrderRecordsShown] = useState([])
-
-    const [errorInformation, setErrorInformation] = useState("")
 
     //state for toggling the delete modal
     const [toggleModal, setToggleModal] = useState(false)
@@ -258,7 +257,7 @@ const OrderRecord = () => {
                     if (pastOrderRecord?.order_date === order_date && pastOrderRecord?.delivery_date === delivery_date && pastOrderRecord?.time_stamp === time_stamp) remarks_freebies_concern = null
                                             
                     return (
-                    <tr key={i} onClick={() => router.push(`/records/order/${account_id}?time_stamp=${time_stamp}&order_date=${order_date}&delivery_date=${delivery_date}`)} className='cursor-pointer'>
+                    <tr key={i} onClick={() => router.push(`/records/order/${account_id}?account_name=${account_name}&time_stamp=${time_stamp}&order_date=${order_date}&delivery_date=${delivery_date}`)} className='cursor-pointer'>
                         <td className='border border-black text-center'>{new Date(order_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{new Date(delivery_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{customer_name}</td>

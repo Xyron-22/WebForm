@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { IoPencil } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { AiOutlineDownload } from "react-icons/ai";
+import { FaArrowLeft } from "react-icons/fa";
 import {
   Card,
   CardHeader,
@@ -31,8 +32,6 @@ const TABLE_HEAD = ["Order Date", "Delivery Date", "Product", "Quantity", "Price
 const AboutAccount = ({params}) => {
   
   const router = useRouter()
-  const setOrdersForInvoice = useStore((state) => state.setOrdersForInvoice)
-  const ordersForInvoice = useStore((state) => state.ordersForInvoice)
 
   const checkboxRef = useRef()
 
@@ -49,7 +48,7 @@ const AboutAccount = ({params}) => {
 
   const [initialOrderRecordsShown, setInitialOrderRecordsShown] = useState([])
 
-  const [ordersToApprove, setOrdersToApprove] = useState([])
+  const [ordersToInvoice, setOrdersToInvoice] = useState([])
 
   const [isLoading, setIsLoading] = useState(true)
   const [errorInformation, setErrorInformation] = useState("")
@@ -60,10 +59,11 @@ const AboutAccount = ({params}) => {
     try {
       setIsLoading(true)
       const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order/account/${params.accountId}`)
-      let initialOrdersToApprove = []
+      if(!queryStrings.account_name) return router.push("/records/order")
+      let initialOrdersToInvoice = []
       data.data.map(({order_id, order_date, delivery_date, customer_name, tin, terms, remarks_freebies_concern, quantity, price, account_name, location, mat_description, time_stamp}, i) => {
         if (order_date === queryStrings.order_date && time_stamp === queryStrings.time_stamp) {
-          initialOrdersToApprove.push({
+          initialOrdersToInvoice.push({
             order_id,
             order_date,
             delivery_date,
@@ -80,7 +80,7 @@ const AboutAccount = ({params}) => {
           })
         }
       })
-      setOrdersToApprove(initialOrdersToApprove)  
+      setOrdersToInvoice(initialOrdersToInvoice)  
       setInitialOrderRecordsShown(data.data)
       setIsLoading(false)
     } catch (error) {
@@ -100,16 +100,22 @@ const AboutAccount = ({params}) => {
     setDisableButton(false)
   }
 
-  const handleOrdersToApprove = (e, orderObject) => {
+  const handleOrdersToInvoice = (e, orderObject) => {
     const {checked} = e.target;
-    let updateOrdersToApprove = [...ordersToApprove]
+    let updateOrdersToInvoice = [...ordersToInvoice]
     if (checked) {
         orderObject.order_id = Number(orderObject.order_id)
-        updateOrdersToApprove.push(orderObject)
+        updateOrdersToInvoice.push(orderObject)
     } else {
-        updateOrdersToApprove = updateOrdersToApprove.filter(({order_id}) => order_id !== Number(orderObject.order_id))
+        updateOrdersToInvoice = updateOrdersToInvoice.filter(({order_id}) => order_id !== Number(orderObject.order_id))
     }
-    setOrdersToApprove(updateOrdersToApprove)
+    setOrdersToInvoice(updateOrdersToInvoice)
+  }
+
+  const handleInvoiceData = () => {
+    localStorage.removeItem("invoice")
+    localStorage.setItem("invoice", JSON.stringify(ordersToInvoice))
+    router.push("/invoice")
   }
 
  
@@ -124,34 +130,39 @@ const AboutAccount = ({params}) => {
   return (
     <>{errorInformation.status === "failed" || errorInformation.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{errorInformation.message}</div> : 
     <>{isLoading ? <ReactLoading type={"spin"} color={"#FFFFFF"} height={"10%"} width={"10%"} className="m-auto"></ReactLoading> : <>
-    <Card className="h-full w-full my-4">
+    <Card className="h-full w-full">
       <CardHeader floated={false} shadow={false} className="sticky top-0 m-0 bg-white z-[999] border-b rounded-none p-4">
-        <div className="mb-4 flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
+        <div className="md:mb-4 flex flex-col justify-between gap-1 md:gap-8 lg:flex-row lg:items-center">
           <div>
+            <div className='flex items-center'>
+            <button type='button' className='ml-1 mr-6' onClick={() => router.push("/records/order")}>
+              <FaArrowLeft className='w-7 h-7 text-black'></FaArrowLeft>
+            </button>
             <Typography variant="h5" color="blue-gray">
-              Recent Transactions
+              {queryStrings?.account_name || "Account name"}
             </Typography>
+            </div>
             <Typography color="gray" className="mt-1 font-normal">
               These are details about the last transactions
             </Typography>
           </div>
-          <div className='flex flex-col lg:flex-row md:gap-2'>
-            <Typography color="gray" className="mt-1 font-normal">
+          {/* <div className='flex lg:flex-row md:gap-2 flex-wrap'>
+            <Typography color="gray" className="mt-1 font-normal mr-1">
               <span className='font-bold'>Credit Limit:</span> 256455644
             </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
+            <Typography color="gray" className="mt-1 font-normal mr-1">
             <span className='font-bold'>Price:</span> 58
             </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
-            <span className='font-bold'>Balances:</span>
+            <Typography color="gray" className="mt-1 font-normal mr-1">
+            <span className='font-bold'>Balances:</span> 1231232342
             </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
-            <span className='font-bold'>Terms:</span>
+            <Typography color="gray" className="mt-1 font-normal mr-1">
+            <span className='font-bold'>Terms:</span> testTerm
             </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
+            <Typography color="gray" className="mt-1 font-normal mr-1">
             <span className='font-bold'>Inventory:</span> 12312
             </Typography>
-          </div>
+          </div> */}
           <div className="flex w-full shrink-0 gap-2 md:w-max">
             <div className="w-full md:w-72">
               <Input
@@ -159,7 +170,7 @@ const AboutAccount = ({params}) => {
                 icon={<CiSearch className='h-5 w-5' />}
               />
             </div>
-            <Button className="flex items-center gap-3 bg-black" size="sm" onClick={() => router.push("/invoice")}>
+            <Button className="flex items-center gap-3 bg-black" size="sm" onClick={handleInvoiceData}>
               Invoice
             </Button>
           </div>
@@ -326,7 +337,7 @@ const AboutAccount = ({params}) => {
                     </td>
                     <td className={classes} ref={checkboxRef}>
                       <Tooltip content="Select">
-                          <input type='checkbox' className='h-5 w-5 cursor-pointer' defaultChecked={order_date === queryStrings.order_date} onChange={(e) => handleOrdersToApprove(e,
+                          <input type='checkbox' className='h-5 w-5 cursor-pointer' defaultChecked={order_date === queryStrings.order_date} onChange={(e) => handleOrdersToInvoice(e,
                             {
                               order_id,
                               order_date,

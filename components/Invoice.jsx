@@ -1,6 +1,8 @@
 "use client"
 
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useLayoutEffect } from 'react'
+import useStore from '@/stateManagement/store';
+import { jwtDecode } from 'jwt-decode';
 import { Button, ButtonGroup, Typography, Card } from "@material-tailwind/react";
 import { FaPrint, FaArrowLeft } from "react-icons/fa";
 import { AiOutlineDownload, AiOutlineSend } from "react-icons/ai";
@@ -11,39 +13,24 @@ import jsPDF from 'jspdf';
 
 const TABLE_HEAD = ["Product", "Price", "Quantity", ""];
 
-const TABLE_ROWS = [
-  {
-    name: "John Michael michaelasdasdasdasdasdasdsaasdasdasdasdasdasooooooasddddddddddddddddddddoiiiiasdasdasdssssasdasdasdasdasds",
-    job: "Manager",
-    date: "23/04/18",
-  },
-  {
-    name: "Alexa Liras",
-    job: "Developer",
-    date: "23/04/18",
-  },
-  {
-    name: "Laurent Perrier",
-    job: "Executive",
-    date: "19/09/17",
-  },
-  {
-    name: "Michael Levi",
-    job: "Developer",
-    date: "24/12/08",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-];
-
 const Invoice = () => {
 
   const invoiceSection = useRef()
 
   const router = useRouter()
+
+  const token = useStore((state) => state.token)
+
+  const [invoiceOrders, setInvoiceOrders] = useState([])
+
+  const getInvoiceOrdersFromLocalStorage = () => {
+    if (!localStorage.getItem("invoice")) {
+      router.back()
+    } else {
+      const ordersToInvoice = JSON.parse(localStorage.getItem("invoice"))
+      setInvoiceOrders(ordersToInvoice)
+    }
+  }
 
   const handlePrintOfInvoice = useReactToPrint({
     content: () => invoiceSection.current,
@@ -56,18 +43,24 @@ const Invoice = () => {
       const pdf = new jsPDF('p', 'mm', 'a4', true)
       const imgProps= pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth()
-      // const pdfHeight = pdf.internal.pageSize.getHeight()
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
       const imgWidth = canvas.width
       const imgHeight = canvas.height
       const ratio = Math.min(pdfWidth / imgWidth / pdfHeight / imgHeight)
       const imgX = (pdfWidth - imgWidth * ratio) / 2
       const imgY = 30
-      // pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio)
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
       pdf.save('downloaded-invoice.pdf')
     })
   }
+
+  useLayoutEffect(() => {
+    if (!token) return router.replace("/auth/login")
+    const decodedToken = jwtDecode(token)
+    if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
+    if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
+    getInvoiceOrdersFromLocalStorage()
+  },[])
 
   return (
     <div className='w-full bg-white min-h-[86vh]'>
@@ -93,20 +86,20 @@ const Invoice = () => {
       <section className='lg:mx-[20%] p-3 bg-white mb-[2%]' ref={invoiceSection}>
         <header className='flex justify-between mb-[5%] lg:p-5'>
           <Typography variant='h1'>Invoice</Typography>
-          <Typography variant='h1'>Company Logo</Typography>
+          <Typography variant='h1' className='break-all'>Company Logo</Typography>
         </header>
         <main>
           <section className='flex mb-[5%]'>
             <div className='w-[50%] p-2 text-2xl'>
               <p>From</p>
-              <Typography variant='h5'>Business Name</Typography>
+              <Typography variant='h5'>Western Brothers Oil And Lubricant Inc.</Typography>
               <p>Company Email</p>
               <p>Company Address</p>
               <p>Company Contact</p>
             </div>
             <div className='w-[50%] p-2 text-2xl'>
               <p>For</p>
-              <Typography variant='h5'>Client Name</Typography>
+              <Typography variant='h5'>{invoiceOrders[0]?.account_name || "Client Name"}</Typography>
               <p>Client Email</p>
               <p>Client Address</p>
               <p>Client Contact</p>
@@ -114,18 +107,18 @@ const Invoice = () => {
           </section>
           <section className='p-2 mb-[5%] text-2xl'>
               <p>Number</p>
-              <p>Date</p>
-              <p>Terms</p>
-              <p>Due</p>
+              <p>Date: {new Date(Date.now()).toDateString()}</p>
+              <p>Terms: {invoiceOrders[0]?.terms || "N/A"}</p>
+              <p>Due:</p>
           </section>
           <section>
-          <Card className="h-full w-full rounded-none overflow-scroll lg:overflow-auto">
-      <table className="w-full min-w-max table-auto lg:table-fixed text-left">
+          <Card className="h-full w-full rounded-none overflow-scroll sm:overflow-visible">
+      <table className="w-full min-w-max table-auto sm:table-fixed text-left">
         <thead>
           <tr>
-            {TABLE_HEAD.map((head) => (
+            {TABLE_HEAD.map((head, index) => (
               <th
-                key={head}
+                key={index}
                 className="border-b border-blue-gray-100 bg-lightGreen p-4"
               >
                 <Typography
@@ -140,19 +133,19 @@ const Invoice = () => {
           </tr>
         </thead>
         <tbody>
-          {TABLE_ROWS.map(({ name, job, date }, index) => {
-            const isLast = index === TABLE_ROWS.length - 1;
+          {invoiceOrders.map(({ mat_description, price, quantity }, index) => {
+            const isLast = index === invoiceOrders.length - 1;
             const classes = isLast ? "p-4 w-[25%]" : "p-4 border-b border-blue-gray-50 w-[25%]";
  
             return (
-              <tr key={name}>
+              <tr key={index}>
                 <td className={classes} >
                   <Typography
                     variant="lead"
                     color="blue-gray"
                     className="font-normal w-[100%] break-all"
                   >
-                    {name}
+                    {mat_description}
                   </Typography>
                 </td>
                 <td className={classes}>
@@ -161,7 +154,7 @@ const Invoice = () => {
                     color="blue-gray"
                     className="font-normal w-[100%] break-all"
                   >
-                    {job}
+                    {price}
                   </Typography>
                 </td>
                 <td className={classes}>
@@ -170,7 +163,7 @@ const Invoice = () => {
                     color="blue-gray"
                     className="font-normal w-[100%] break-all"
                   >
-                    {date}
+                    {quantity}
                   </Typography>
                 </td>
                 <td className={classes}>
