@@ -147,6 +147,7 @@ const OrderForm = ({data}) => {
           setOutletArray([])
           setArrayProducts([])
           setForm({
+          ...form,
           orderDate: "",
           accountId: "",
           customerName: "",
@@ -156,7 +157,6 @@ const OrderForm = ({data}) => {
           products: "",
           remarksFreebiesConcern: "",
           deliveryDate: "",
-          auth_id: null
       })
       toast.success("Form submitted", {
         duration: 3000,
