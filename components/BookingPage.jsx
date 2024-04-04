@@ -240,8 +240,13 @@ const handleFilterCustomerName = (e) => {
     }
 
     //handler for deleting selected orders
-    const handleDeleteSelectedOrders = (e) => {
+    const handleDeleteSelectedOrders = async (e) => {
       setDisableButton(true)
+      // try {
+      //   await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/`)
+      // } catch (error) {
+        
+      // }
       let arrayOfOrdersToDelete = [...setOfOrderIdsToDelete]
       const filteredPendingOrders = pendingOrderRecordsShown.filter((order, index) => !setOfOrderIdsToDelete.has(order.order_id))
       setSelectedOrders([])
