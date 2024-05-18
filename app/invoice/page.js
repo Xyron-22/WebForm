@@ -4,7 +4,7 @@ import Invoice from '@/components/Invoice'
 const InvoicePage = async () => {
    
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col min-h-[86vh] justify-center items-center">
         <Invoice></Invoice>
     </div>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import AccountForm from '@/components/AccountForm'
+import AccountForm from '@/components/AccountForm(current)'
 
 const Accountpage = () => {
   return (

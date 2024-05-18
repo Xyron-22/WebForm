@@ -1,5 +1,5 @@
 import React from 'react'
-import AccountRecord from '@/components/AccountRecord'
+import AccountRecord from '@/components/AccountRecord(current)'
 
 const AccountRecordPage = async () => {
    

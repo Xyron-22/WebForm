@@ -121,29 +121,29 @@ const OrderRecord = () => {
         setDisableButton(false)
     }
 
-    //this function is for updating the status of an order either pending or approved
-    const updateStatusOfAnOrder = async (newStatus, currentStatus, order_id, i) => {
-        setDisableButton(true)
-        if (newStatus !== currentStatus) {
-            try {
-                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`, {order_id, status: newStatus}, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-                const tempArr = [...orderRecordsShown]
-                tempArr[i].status = newStatus
-                setOrderRecordsShown(tempArr)
-            } catch (error) {
-                toast.error(error.response.data.message, {
-                    duration: 3000,
-                    className: "text-2xl"
-                })
-            }
-        }
-        setDisableButton(false)
-    }
+    // //this function is for updating the status of an order either pending or approved
+    // const updateStatusOfAnOrder = async (newStatus, currentStatus, order_id, i) => {
+    //     setDisableButton(true)
+    //     if (newStatus !== currentStatus) {
+    //         try {
+    //             await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`, {order_id, status: newStatus}, {
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "Authorization": `Bearer ${token}`
+    //                 }
+    //             })
+    //             const tempArr = [...orderRecordsShown]
+    //             tempArr[i].status = newStatus
+    //             setOrderRecordsShown(tempArr)
+    //         } catch (error) {
+    //             toast.error(error.response.data.message, {
+    //                 duration: 3000,
+    //                 className: "text-2xl"
+    //             })
+    //         }
+    //     }
+    //     setDisableButton(false)
+    // }
 
     //function for sorting the records by account name
     const handleSortByName = () => {

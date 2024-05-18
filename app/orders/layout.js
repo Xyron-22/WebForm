@@ -1,12 +1,10 @@
 import '../../app/globals.css'
-import Footer from '@/components/Footer'
-import Header from '@/components/Header'
 
 export const metadata = {
   title: 'WesternBrothers',
   description: 'Data Management System',
   icons: {
-    icon: "/logo/oil-drop-logo.png"
+    icon: "/logo/westernBrothersLogo.jpg"
   }
 }
 

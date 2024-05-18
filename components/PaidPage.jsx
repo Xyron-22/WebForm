@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import ReactLoading from "react-loading";
 import useStore from '@/stateManagement/store';
-import { IoPencil } from "react-icons/io5";
+import { IoPencil, IoChevronDown } from "react-icons/io5";
 import {AiOutlineDownload, AiOutlineReload} from "react-icons/ai"
 import { MdArrowForwardIos } from "react-icons/md";
 import DrawerNav from './DrawerNav';
@@ -31,13 +31,21 @@ import {
     DialogHeader,
     DialogBody,
     DialogFooter,
-    Drawer,
+    //
+    Navbar,
+    Collapse,
+    List,
+    ListItem,
+    Menu,
+    MenuHandler,
+    MenuList,
+    MenuItem,
   } from "@material-tailwind/react";
 
   const TABLE_HEAD = ["Order Date", "Delivery Date", "Customer Name", "Account Name", "Product", "Quantity", "Price", "Term", "Location", "DSP", "Freebies/Remarks/Concern", "Time Stamp", "Status", "", ""];
   
  
-const BookingPage = () => {
+const PaidPage = () => {
  
     const router = useRouter()
 
@@ -71,9 +79,8 @@ const BookingPage = () => {
       setOrderToEdit({})
     }
 
-    const [initialPendingOrderRecordsShown, setInitialPendingOrderRecordsShown] = useState([])
-    const [pendingOrderRecordsShown, setPendingOrderRecordsShown] = useState([])
-    const [selectedOrders, setSelectedOrders] = useState([])
+    const [initialPaidOrderRecordsShown, setInitialPaidOrderRecordsShown] = useState([])
+    const [paidOrderRecordsShown, setPaidOrderRecordsShown] = useState([])
     const [chosenFilter, setChosenFilter] = useState({
       label: "",
       function: null
@@ -86,19 +93,19 @@ const BookingPage = () => {
       setOrderToEdit({...orderToEdit, [e.target.name]: e.target.name === "quantity" || e.target.name === "price" ? Number(e.target.value) : e.target.value})
     }
 
-    //function for fetching records with a status of pending
-    const fetchAllPendingOrders = async () => {
+    //function for fetching records with a status of paid
+    const fetchAllPaidOrders = async () => {
         setDisableButton(true)
         try {
             setIsLoading(true)
-            const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order/pending`)
+            const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order/paid`)
             if (paginated) {
               const arrayOfOrdersInPage = data.data.filter((order, index) => index < (numberOfItemsPerPage * currentPage) && index >= numberOfItemsPerPage * (currentPage - 1))
-              setPendingOrderRecordsShown(arrayOfOrdersInPage)
+              setPaidOrderRecordsShown(arrayOfOrdersInPage)
             } else {
-              setPendingOrderRecordsShown(data.data)
+              setPaidOrderRecordsShown(data.data)
             }
-            setInitialPendingOrderRecordsShown(data.data)
+            setInitialPaidOrderRecordsShown(data.data)
             setIsLoading(false) 
         } catch (error) {
           if (error?.response?.data) {
@@ -111,9 +118,9 @@ const BookingPage = () => {
               })
               timeOut = setTimeout(() => {
                 setOpenAlert({
-                  ...openAlert,
+                    ...openAlert,
                   status: false,
-                  message: ""
+                  message: "",
                 })
                 Cookies.remove("jwt")
                 router.replace("/auth/login")
@@ -131,15 +138,15 @@ const BookingPage = () => {
         setDisableButton(false)
     }
 
-    //handler for switching what is shown, either paginated or all of the pending order records
+    //handler for switching what is shown, either paginated or all of the paid order records
     const handleSwitchPagination = () => {
       if (paginated) {
         setToggleModify(false)
-        setPendingOrderRecordsShown(initialPendingOrderRecordsShown)
+        setPaidOrderRecordsShown(initialPaidOrderRecordsShown)
         setPaginated(false)
       } else {
-        const arrayOfOrdersInPage = initialPendingOrderRecordsShown.filter((order, index) => index < (numberOfItemsPerPage * currentPage) && index >= numberOfItemsPerPage * (currentPage - 1))
-        setPendingOrderRecordsShown(arrayOfOrdersInPage)
+        const arrayOfOrdersInPage = initialPaidOrderRecordsShown.filter((order, index) => index < (numberOfItemsPerPage * currentPage) && index >= numberOfItemsPerPage * (currentPage - 1))
+        setPaidOrderRecordsShown(arrayOfOrdersInPage)
         setPaginated(true)
       }
       setChosenFilter({
@@ -152,30 +159,30 @@ const BookingPage = () => {
   const handleFilterDSP = (e) => {
     e.preventDefault()
     if (paginated) {
-      const arrayOfFilteredDSP = pendingOrderRecordsShown.filter((order) => {
+      const arrayOfFilteredDSP = paidOrderRecordsShown.filter((order) => {
         return order.dsp.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       })
-      setPendingOrderRecordsShown(arrayOfFilteredDSP) 
+      setPaidOrderRecordsShown(arrayOfFilteredDSP) 
     } else {
-      const arrayOfFilteredDSP = initialPendingOrderRecordsShown.filter((order) => {
+      const arrayOfFilteredDSP = initialPaidOrderRecordsShown.filter((order) => {
         return order.dsp.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       })
-      setPendingOrderRecordsShown(arrayOfFilteredDSP)
+      setPaidOrderRecordsShown(arrayOfFilteredDSP)
     }
   }
  //handler for filtering the order record base on the location
  const handleFilterLocation = (e) => {
     e.preventDefault()
     if (paginated) {
-      const arrayOfFilteredLocation = pendingOrderRecordsShown.filter((order) => {
+      const arrayOfFilteredLocation = paidOrderRecordsShown.filter((order) => {
         return order.location.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       })
-      setPendingOrderRecordsShown(arrayOfFilteredLocation)
+      setPaidOrderRecordsShown(arrayOfFilteredLocation)
     } else {
-      const arrayOfFilteredLocation = initialPendingOrderRecordsShown.filter((order) => {
+      const arrayOfFilteredLocation = initialPaidOrderRecordsShown.filter((order) => {
         return order.location.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       })
-      setPendingOrderRecordsShown(arrayOfFilteredLocation)
+      setPaidOrderRecordsShown(arrayOfFilteredLocation)
     }
   }
 
@@ -183,15 +190,15 @@ const BookingPage = () => {
 const handleFilterAccountName = (e) => {
     e.preventDefault()
     if (paginated) {
-      const arrayOfFilteredAccountName = pendingOrderRecordsShown.filter((order) => {
+      const arrayOfFilteredAccountName = paidOrderRecordsShown.filter((order) => {
         return order.account_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       })
-      setPendingOrderRecordsShown(arrayOfFilteredAccountName)
+      setPaidOrderRecordsShown(arrayOfFilteredAccountName)
     } else {
-      const arrayOfFilteredAccountName = initialPendingOrderRecordsShown.filter((order) => {
+      const arrayOfFilteredAccountName = initialPaidOrderRecordsShown.filter((order) => {
         return order.account_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       })
-      setPendingOrderRecordsShown(arrayOfFilteredAccountName)
+      setPaidOrderRecordsShown(arrayOfFilteredAccountName)
     }
   }
 
@@ -199,15 +206,15 @@ const handleFilterAccountName = (e) => {
 const handleFilterCustomerName = (e) => {
     e.preventDefault()
     if (paginated) {
-      const arrayOfFilteredCustomerName = pendingOrderRecordsShown.filter((order) => {
+      const arrayOfFilteredCustomerName = paidOrderRecordsShown.filter((order) => {
         return order.customer_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       })
-      setPendingOrderRecordsShown(arrayOfFilteredCustomerName)
+      setPaidOrderRecordsShown(arrayOfFilteredCustomerName)
     } else {
-      const arrayOfFilteredCustomerName = initialPendingOrderRecordsShown.filter((order) => {
+      const arrayOfFilteredCustomerName = initialPaidOrderRecordsShown.filter((order) => {
         return order.customer_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       })
-      setPendingOrderRecordsShown(arrayOfFilteredCustomerName)
+      setPaidOrderRecordsShown(arrayOfFilteredCustomerName)
     }
 }
 
@@ -215,15 +222,15 @@ const handleFilterCustomerName = (e) => {
  const handleFilterByOrderDate = (e) => {
   e.preventDefault()
   if (paginated) {
-    const arrayOfFilteredOrderDate = pendingOrderRecordsShown.filter((order) => {
+    const arrayOfFilteredOrderDate = paidOrderRecordsShown.filter((order) => {
       return new Date(order.order_date).toDateString().toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
     })
-    setPendingOrderRecordsShown(arrayOfFilteredOrderDate)
+    setPaidOrderRecordsShown(arrayOfFilteredOrderDate)
   } else {
-    const arrayOfFilteredOrderDate = initialPendingOrderRecordsShown.filter((order) => {
+    const arrayOfFilteredOrderDate = initialPaidOrderRecordsShown.filter((order) => {
       return new Date(order.order_date).toDateString().toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
     })
-    setPendingOrderRecordsShown(arrayOfFilteredOrderDate)
+    setPaidOrderRecordsShown(arrayOfFilteredOrderDate)
   }
 }
 
@@ -244,7 +251,7 @@ const handleFilterCustomerName = (e) => {
 
     //handler for sorting based on location
     const handleSortByLocation = () => {
-      let tempArr = [...pendingOrderRecordsShown]
+      let tempArr = [...paidOrderRecordsShown]
       tempArr.sort((a, b) => {
           if(a.location.trim() < b.location.trim()) {
               return -1
@@ -254,12 +261,12 @@ const handleFilterCustomerName = (e) => {
           }
           return 0
       })
-      setPendingOrderRecordsShown(tempArr)
+      setPaidOrderRecordsShown(tempArr)
   }
 
    //handler for sorting based on account name
    const handleSortByName = () => {
-    let tempArr = [...pendingOrderRecordsShown]
+    let tempArr = [...paidOrderRecordsShown]
     tempArr.sort((a, b) => {
         if(a.account_name.trim() < b.account_name.trim()) {
             return -1
@@ -269,69 +276,26 @@ const handleFilterCustomerName = (e) => {
         }
         return 0
     })
-    setPendingOrderRecordsShown(tempArr)
+    setPaidOrderRecordsShown(tempArr)
 }
 
   //handler for sorting the records by order date
   const handleSortByOrderDate = () => {
-    let tempArr = [...pendingOrderRecordsShown]
+    let tempArr = [...paidOrderRecordsShown]
     tempArr.sort((a,b) => Date.parse(b.order_date.trim()) - Date.parse(a.order_date.trim()))
-    setPendingOrderRecordsShown(tempArr)
+    setPaidOrderRecordsShown(tempArr)
   }
 
-    //handler for selecting orders to be invoiced
+    //handler for selecting orders to be deleted
     const handleSelectedOrders = (e, orderObject) => {
       const {checked} = e.target;
-      let updateSelectedOrders = [...selectedOrders]
+      const tempSet = new Set([...setOfOrderIdsToDelete])
       if (checked) {
-          orderObject.order_id = Number(orderObject.order_id)
-          updateSelectedOrders.push(orderObject)
-          setOfOrderIdsToDelete.add(orderObject.order_id)
+        tempSet.add(orderObject.order_id)
       } else {
-        updateSelectedOrders = updateSelectedOrders.filter(({order_id}) => order_id !== Number(orderObject.order_id))
-        setOfOrderIdsToDelete.delete(orderObject.order_id)
+        tempSet.delete(orderObject.order_id)
       }
-      setSelectedOrders(updateSelectedOrders)
-    }
-
-    //handler for storing array of orders to be invoiced in the local storage
-    const handleInvoiceData = () => {
-      if (selectedOrders.length > 0) {
-        const result = selectedOrders.every((order) => order.account_name === selectedOrders[0]?.account_name)
-        if (result) {
-          localStorage.removeItem("invoice")
-          localStorage.setItem("invoice", JSON.stringify(selectedOrders))
-          router.push("/invoice")
-        } else {
-          clearTimeout(timeOut)
-          setOpenAlert({
-            status: true,
-            message: "Cannot proceed, different account names",
-            color: "orange"
-          })
-          timeOut = setTimeout(() => {
-            setOpenAlert({
-              ...openAlert,
-              status: false,
-              message: ""
-            })
-          }, 3000)
-        }
-      } else {
-        clearTimeout(timeOut)
-        setOpenAlert({
-          status: true,
-          message: "Cannot proceed, Select booking/s to invoice.",
-          color: "orange"
-        })
-        timeOut = setTimeout(() => {
-          setOpenAlert({
-            ...openAlert,
-            status: false,
-            message: ""
-          })
-        }, 3000)
-      }
+      setSetOfOrderIdsToDelete(tempSet)
     }
 
     //handler for deleting selected orders
@@ -345,26 +309,25 @@ const handleFilterCustomerName = (e) => {
               "Authorization": `Bearer ${token}`
           },
         })
-        const filteredPendingOrders = pendingOrderRecordsShown.filter((order, index) => !setOfOrderIdsToDelete.has(order.order_id))
-        const filteredInitialPendingOrdersShown = initialPendingOrderRecordsShown.filter((order, index) => !setOfOrderIdsToDelete.has(order.order_id))
-        setSelectedOrders([])
+        const filteredPaidOrders = paidOrderRecordsShown.filter((order, index) => !setOfOrderIdsToDelete.has(order.order_id))
+        const filteredInitialPaidOrdersShown = initialPaidOrderRecordsShown.filter((order, index) => !setOfOrderIdsToDelete.has(order.order_id))
         setSetOfOrderIdsToDelete(new Set())
-        setPendingOrderRecordsShown(filteredPendingOrders)
-        setInitialPendingOrderRecordsShown(filteredInitialPendingOrdersShown)
+        setPaidOrderRecordsShown(filteredPaidOrders)
+        setInitialPaidOrderRecordsShown(filteredInitialPaidOrdersShown)
         handleOpenDeleteDialogue()
         clearTimeout(timeOut)
         setOpenAlert({
-          status: true,
-          message: "Delete Successful",
-          color: "green"
-        })
-        timeOut = setTimeout(() => {
-          setOpenAlert({
-            ...openAlert,
-            status: false,
-            message: ""
+            status: true,
+            message: "Delete Successful",
+            color: "green"
           })
-        }, 1000)
+          timeOut = setTimeout(() => {
+            setOpenAlert({
+              ...openAlert,
+              status: false,
+              message: ""
+            })
+          }, 1000)
       } catch (error) {
         clearTimeout(timeOut)
         setOpenAlert({
@@ -393,8 +356,8 @@ const handleFilterCustomerName = (e) => {
             "Authorization": `Bearer ${token}`
           }
         })
-        let updatedArrayOfPendingOrders = [...pendingOrderRecordsShown]
-        let order = updatedArrayOfPendingOrders[orderToEdit.index]
+        let updatedArrayOfPaidOrders = [...paidOrderRecordsShown]
+        let order = updatedArrayOfPaidOrders[orderToEdit.index]
         order.order_date = orderToEdit.order_date
         order.delivery_date = orderToEdit.delivery_date
         order.customer_name = orderToEdit.customer_name
@@ -402,22 +365,22 @@ const handleFilterCustomerName = (e) => {
         order.price = orderToEdit.price
         order.terms = orderToEdit.terms
         order.remarks_freebies_concern = orderToEdit.remarks_freebies_concern
-        setPendingOrderRecordsShown(updatedArrayOfPendingOrders)
+        setPaidOrderRecordsShown(updatedArrayOfPaidOrders)
         setOrderToEdit({})
         setOpenEditDialogue(!openEditDialogue)
         clearTimeout(timeOut)
         setOpenAlert({
-          status: true,
-          message: "Update Successful",
-          color: "green"
-        })
-        timeOut = setTimeout(() => {
-          setOpenAlert({
-            ...openAlert,
-            status: false,
-            message: ""
+            status: true,
+            message: "Update Successful",
+            color: "green"
           })
-        }, 1000)
+          timeOut = setTimeout(() => {
+            setOpenAlert({
+              ...openAlert,
+              status: false,
+              message: ""
+            })
+          }, 1000)
       } catch (error) {
         if (error?.response?.data) {
           setOpenEditDialogue(!openEditDialogue)
@@ -451,8 +414,8 @@ const handleFilterCustomerName = (e) => {
     }
 
     //memoized function for displaying large list of orders
-    const listOfBookings = useMemo(() => {
-      return pendingOrderRecordsShown.map(
+    const listOfPaid = useMemo(() => {
+      return paidOrderRecordsShown.map(
         (
           {
             order_id,
@@ -483,10 +446,10 @@ const handleFilterCustomerName = (e) => {
           index,
         ) => {
 
-          let pastOrderRecord = pendingOrderRecordsShown[index - 1]
+          let pastOrderRecord = paidOrderRecordsShown[index - 1]
           if (pastOrderRecord?.order_date === order_date && pastOrderRecord?.delivery_date === delivery_date && new Date(Number(pastOrderRecord?.time_stamp)).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) === new Date(Number(time_stamp)).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})) remarks_freebies_concern = null
 
-          const isLast = index === pendingOrderRecordsShown.length - 1;
+          const isLast = index === paidOrderRecordsShown.length - 1;
           const classes = isLast
             ? "p-4"
             : "p-4 border-b border-blue-gray-50";
@@ -539,7 +502,7 @@ const handleFilterCustomerName = (e) => {
                         : status === "Pending"
                         ? "amber"
                         : status === "Invoiced"
-                        ? "blue"
+                        ? "teal"
                         : "red"
                     }/>
                 </div>
@@ -591,7 +554,7 @@ const handleFilterCustomerName = (e) => {
           );
         },
       )
-    }, [pendingOrderRecordsShown, toggleModify, selectedOrders, setOfOrderIdsToDelete])
+    }, [paidOrderRecordsShown, toggleModify, setOfOrderIdsToDelete])
 
     //function for the page buttons
     const getItemProps = (page) =>
@@ -599,28 +562,28 @@ const handleFilterCustomerName = (e) => {
       className: page === currentPage ? "bg-light font-bold" : "text-black font-bold bg-gray bg-opacity-30",
       onClick: () => {
         setCurrentPage(page)
-        const arrayOfOrdersInPage = initialPendingOrderRecordsShown.filter((order, index) => index < (numberOfItemsPerPage * page) && index >= numberOfItemsPerPage * (page - 1))
-        setPendingOrderRecordsShown(arrayOfOrdersInPage)
+        const arrayOfOrdersInPage = initialPaidOrderRecordsShown.filter((order, index) => index < (numberOfItemsPerPage * page) && index >= numberOfItemsPerPage * (page - 1))
+        setPaidOrderRecordsShown(arrayOfOrdersInPage)
       },
     });
  
     const next = () => {
-      if (currentPage === Math.ceil(initialPendingOrderRecordsShown.length / numberOfItemsPerPage)) return;
-      const arrayOfOrdersInPage = initialPendingOrderRecordsShown.filter((order, index) => index < numberOfItemsPerPage * (currentPage + 1) && index >= numberOfItemsPerPage * currentPage)
-      setPendingOrderRecordsShown(arrayOfOrdersInPage)
+      if (currentPage === Math.ceil(initialPaidOrderRecordsShown.length / numberOfItemsPerPage)) return;
+      const arrayOfOrdersInPage = initialPaidOrderRecordsShown.filter((order, index) => index < numberOfItemsPerPage * (currentPage + 1) && index >= numberOfItemsPerPage * currentPage)
+      setPaidOrderRecordsShown(arrayOfOrdersInPage)
       setCurrentPage(currentPage + 1);
     };
  
     const prev = () => {
       if (currentPage <= 1) return;
-      const arrayOfOrdersInPage = initialPendingOrderRecordsShown.filter((order, index) => index < numberOfItemsPerPage * (currentPage - 1) && index >= numberOfItemsPerPage * (currentPage - 2))
-      setPendingOrderRecordsShown(arrayOfOrdersInPage)
+      const arrayOfOrdersInPage = initialPaidOrderRecordsShown.filter((order, index) => index < numberOfItemsPerPage * (currentPage - 1) && index >= numberOfItemsPerPage * (currentPage - 2))
+      setPaidOrderRecordsShown(arrayOfOrdersInPage)
       setCurrentPage(currentPage - 1);
     };
 
     //function for returning numbers of page to show in pagination
     const numberOfPagesToShow = useMemo(() => {
-      const totalNumberOfPages = Math.ceil(initialPendingOrderRecordsShown.length / numberOfItemsPerPage)
+      const totalNumberOfPages = Math.ceil(initialPaidOrderRecordsShown.length / numberOfItemsPerPage)
       let arrayOfNumbers = []
       for (let i = 1; i <= totalNumberOfPages; i++) {
         arrayOfNumbers.push(i)
@@ -632,14 +595,14 @@ const handleFilterCustomerName = (e) => {
             </div>
           )
       })
-    }, [initialPendingOrderRecordsShown, currentPage])
+    }, [initialPaidOrderRecordsShown, currentPage])
 
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
-        fetchAllPendingOrders()
+        fetchAllPaidOrders()
     },[])
 
   return (
@@ -649,14 +612,14 @@ const handleFilterCustomerName = (e) => {
       <CardHeader floated={false} shadow={false} className="rounded-none h-auto overflow-visible">
         <div className="mb-4 flex flex-col justify-between md:flex-row md:items-start">
           <div>
-            <Typography variant="h5" color="blue-gray" className='flex items-center'>
+            <Typography variant="h5" color="blue-gray">
               <Button color='blue-gray' className='p-2 mr-1 rounded-full text-white' onClick={() => setOpenDrawer(true)}>
                 <MdArrowForwardIos className='text-2xl'></MdArrowForwardIos>
-              </Button>  
-              Bookings
+              </Button>   
+                Paid
             </Typography>
             <Typography color="gray" className="mt-1 font-normal">
-              These are details about the last transactions
+              These are details about the paid transactions
             </Typography>
           </div>
           <div className='absolute top-0 w-full flex justify-center'>
@@ -677,7 +640,7 @@ const handleFilterCustomerName = (e) => {
             </Alert>  
           </div>
           <div className='xl:flex flex-row'>
-             <div className="w-full">
+             <div className='w-full'>
                 <Select
                   label="Sort By"
                   animate={{
@@ -690,7 +653,7 @@ const handleFilterCustomerName = (e) => {
                   <Option onClick={handleSortByOrderDate}>Date</Option>
                 </Select>
               </div>
-             <div className="w-full">
+             <div className='w-full'>
                 <Select
                   label="Filter By"
                   animate={{
@@ -712,17 +675,17 @@ const handleFilterCustomerName = (e) => {
           <div className="flex w-full flex-wrap justify-evenly shrink-0 gap-2 md:w-[50%] lg:w-max">
             <Tooltip content="Reload">
               <IconButton variant="text">
-                <AiOutlineReload className='h-6 w-6' disabled={disableButton} onClick={fetchAllPendingOrders}></AiOutlineReload>
+                <AiOutlineReload className='h-6 w-6' disabled={disableButton} onClick={fetchAllPaidOrders}></AiOutlineReload>
               </IconButton>
             </Tooltip>
             <Tooltip content="Download">
               <IconButton variant="text">
                 <ReactHTMLTableToExcel
-                  id="export-pending-orders-button"
+                  id="export-paid-orders-button"
                   className="text-center cursor-pointer text-black p-1 shadow-2xl m-2 rounded"
-                  table="export-pending-order-table"
-                  filename="Pending Orders"
-                  sheet="Bookings"
+                  table="export-paid-order-table"
+                  filename="Paid Orders"
+                  sheet="Paid"
                   buttonText={<AiOutlineDownload className='h-7 w-7'></AiOutlineDownload>}
                 />
               </IconButton>
@@ -731,19 +694,16 @@ const handleFilterCustomerName = (e) => {
                {paginated ? "Show All" : "Paginate"}
             </Button>
             <Button color='blue-gray' className="flex items-center gap-3" size="sm" disabled={!paginated} onClick={() => setToggleModify(!toggleModify)}>
-               Select
+              Select
             </Button>
-            <Button className="flex items-center gap-3" variant='gradient' color="teal" size="sm" disabled={selectedOrders.length === 0} onClick={handleInvoiceData}>
-               Invoice
-            </Button>
-            <Button onClick={handleOpenDeleteDialogue} variant="gradient" color="deep-orange" disabled={selectedOrders.length === 0}>
+            <Button onClick={handleOpenDeleteDialogue} variant="gradient" color="deep-orange" disabled={setOfOrderIdsToDelete.size === 0}>
               Delete
             </Button>
           </div>
         </div>
       </CardHeader>
       <CardBody className="overflow-auto px-0 py-0">
-        <table id='export-pending-order-table' className="w-full min-w-max table-auto text-left">
+        <table id='export-paid-order-table' className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
               {TABLE_HEAD.map((head, index) => (
@@ -763,26 +723,24 @@ const handleFilterCustomerName = (e) => {
             </tr>
           </thead>
           <tbody>
-            {listOfBookings}
+            {listOfPaid}
           </tbody>
         </table>
       </CardBody>
       <CardFooter className="flex items-end justify-between border-t border-blue-gray-50 p-2 md:p-6 mt-auto">
-        {paginated && 
-        <>
+        {paginated && <>
           <Button className='my-auto' variant="outlined" size="sm" onClick={prev}>
             Previous
-          </Button>
-          <div className='flex overflow-auto justify-evenly w-auto mx-1 border rounded-lg py-1 border-gray'>
-            {numberOfPagesToShow}
-          </div>
-          <Button className='my-auto' variant="outlined" size="sm" onClick={next}>
+        </Button>
+        <div className='flex overflow-auto justify-evenly w-auto mx-1 border rounded-lg py-1 border-gray'>
+          {numberOfPagesToShow}
+        </div>
+        <Button className='my-auto' variant="outlined" size="sm" onClick={next}>
             Next
-          </Button>
-        </>
-        }
+        </Button>
+        </>}
       </CardFooter>
-            <Dialog open={openDeleteDialogue} handler={handleOpenDeleteDialogue}>
+      <Dialog open={openDeleteDialogue} handler={handleOpenDeleteDialogue}>
               <DialogHeader>Are you sure you want to delete the selected record/s ?</DialogHeader>
               <DialogBody>
                 Selected record/s will be permanently removed from the database.
@@ -834,4 +792,4 @@ const handleFilterCustomerName = (e) => {
   )
 }
 
-export default BookingPage
+export default PaidPage

@@ -1,5 +1,5 @@
 import React from 'react'
-import OrderRecord from '@/components/OrderRecord'
+import OrderRecord from '@/components/OrderRecord(current)'
 
 const OrderRecordPage = async () => {
  
