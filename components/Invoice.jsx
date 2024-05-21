@@ -4,8 +4,8 @@ import React, { useRef, useState, useLayoutEffect } from 'react'
 import useStore from '@/stateManagement/store';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { Button, ButtonGroup, Typography, Card, Alert } from "@material-tailwind/react";
-import { FaPrint, FaArrowLeft, FaCheck } from "react-icons/fa";
+import { Button, ButtonGroup, Typography, Card, Alert, Input } from "@material-tailwind/react";
+import { FaPrint, FaArrowLeft, FaCheck, FaRegEdit } from "react-icons/fa";
 import { AiOutlineDownload, AiOutlineSend } from "react-icons/ai";
 import { useRouter } from 'next/navigation';
 import { useReactToPrint } from 'react-to-print';
@@ -26,8 +26,19 @@ const Invoice = () => {
   const [errorInformation, setErrorInformation] = useState("")
   const [disableButton, setDisableButton] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false)
+  const [toggleEdit, setToggleEdit] = useState(false)
 
   const [invoiceOrders, setInvoiceOrders] = useState([])
+  const [invoiceInfoObject, setInvoiceInfoObject] = useState({
+    date: new Date(Date.now()).toLocaleDateString(),
+    account_name: "",
+    tin: "",
+    terms: "",
+    location: "",
+    osca_pwd_id_number: "",
+    business_style: "",
+    blank: ""
+  })
 
   const [orderIdAndStatus, setOrderIdAndStatus] = useState()
 
@@ -60,6 +71,19 @@ const Invoice = () => {
     message: "",
     color: "green"
   })
+
+  const handleEditInvoice = (e) => {
+    setInvoiceInfoObject({
+      ...invoiceInfoObject,
+      [e.target.name]: e.target.name === "date" ? new Date(e.target.value).toLocaleDateString() : e.target.value
+    })
+  }
+
+  const handleEditUnit = (e, index) => {
+    let tempTable_Body = [...table_body]
+    tempTable_Body[index].unit = e.target.value
+    setTable_Body(tempTable_Body)
+  }
 
   const getInvoiceOrdersFromLocalStorage = () => {
     setDisableButton(true)
@@ -94,6 +118,13 @@ const Invoice = () => {
             {mat_description: "", price: "", quantity: "", total: Number(amountNetOfVAT.toFixed(2))}
           )
         } 
+      })
+      setInvoiceInfoObject({
+        ...invoiceInfoObject,
+        account_name: ordersToInvoice[0]?.account_name,
+        tin: ordersToInvoice[0]?.tin,
+        terms: ordersToInvoice[0]?.terms,
+        location: ordersToInvoice[0]?.location,
       })
       setTable_Body(tempTable_Body)
       setInvoiceOrders(ordersToInvoice)
@@ -192,15 +223,19 @@ const Invoice = () => {
       <div className='flex flex-wrap flex-col items-center lg:mx-[20%] justify-center px-3 pt-2'>
         <Typography className='h-full text-center'>Print first before confirming.</Typography>
         <ButtonGroup className='flex justify-center flex-wrap'>
-        <Button className="gap-3 bg-gray flex items-center rounded-none" size='md' onClick={handlePrintOfInvoice}>
+        <Button className="gap-3 bg-dark flex items-center rounded-none" size='md' disabled={toggleEdit} onClick={handlePrintOfInvoice}>
             Print
             <FaPrint></FaPrint>
         </Button>
-        <Button className="gap-3 bg-lightBlue flex items-center rounded-none" size='md' onClick={handleDownloadOfInvoice}>
+        <Button className="gap-3 bg-dark flex items-center rounded-none" size='md' disabled={toggleEdit} onClick={handleDownloadOfInvoice}>
             Download
             <AiOutlineDownload className='text-xl'></AiOutlineDownload>
         </Button>
-        <Button className="gap-3 bg-lightGreen flex items-center rounded-none" size='md' disabled={disableButton} onClick={handleConfirmInvoice}>
+        <Button className="gap-3 bg-dark flex items-center rounded-none" size='md' onClick={() => setToggleEdit(!toggleEdit)}>
+            Edit
+            <FaRegEdit className='text-xl'></FaRegEdit>
+        </Button>
+        <Button className="gap-3 bg-lightGreen flex items-center rounded-none" size='md' disabled={disableButton || toggleEdit} onClick={handleConfirmInvoice}>
             Confirm
             <FaCheck className='text-xl'></FaCheck>
         </Button>
@@ -223,150 +258,82 @@ const Invoice = () => {
       <section className='lg:mx-[20%] pl-[5.5%] pr-[3.5%] bg-white mb-[2%]' ref={invoiceSection}>
         <header className='w-full h-32'></header>
         <main>
-          <section className='flex flex-col w-full'>
+          <section className={`flex flex-col w-full ${toggleEdit && "gap-2"}`}>
             <div className='w-full flex justify-between'>
-              <Typography className='font-semibold w-[60%]'>SALES INVOICE</Typography>
+              <Typography className={`font-semibold w-[60%] ${!toggleEdit && "text-transparent"}`}>SALES INVOICE</Typography>
               <div className='flex w-[40%]'>
                 <div className='w-[60%] flex'>
-                  <Typography>Date: </Typography>
-                  <Typography className='w-full text-center font-semibold'>{new Date(Date.now()).toLocaleDateString()}</Typography>,
+                  <Typography className={!toggleEdit && "text-transparent"}>Date: </Typography>
+                  {toggleEdit ? <Input type='date' label='Date' name='date' onChange={handleEditInvoice}></Input> : <Typography className='w-full text-center font-semibold'>{invoiceInfoObject.date}</Typography>}
                 </div>
                 <div className='w-[40%] flex'>
-                  <Typography className='w-[40%]'>20</Typography>
+                  <Typography className="text-transparent">20</Typography>
                   <Typography className='w-full'></Typography>
                 </div>
               </div>
             </div>
             <div className='w-full flex'>
-              <Typography>Sold to: </Typography>
-              <Typography className='w-[90%] text-center uppercase font-semibold'>{invoiceOrders[0]?.account_name || "Client Name"}</Typography>
+              <Typography className={!toggleEdit && "text-transparent"}>Sold to: </Typography>
+              {toggleEdit ? <Input type='text' label='Account Name' name='account_name' value={invoiceInfoObject.account_name} onChange={handleEditInvoice}></Input> : <Typography className='w-[90%] text-center uppercase font-semibold'>{invoiceInfoObject.account_name || "Client Name"}</Typography>}
             </div>
             <div className='w-full flex justify-between'>
               <div className='w-[60%] flex'>
-                <Typography>TIN: </Typography>
-                <Typography className='w-full text-center font-semibold'>Test Tin</Typography>
+                <Typography className={!toggleEdit && "text-transparent"}>TIN: </Typography>
+                {toggleEdit ? <Input type='text' label='TIN' name='tin' value={invoiceInfoObject.tin} onChange={handleEditInvoice}></Input> : <Typography className='w-full text-center font-semibold'>{invoiceInfoObject.tin}</Typography>}
               </div>
               <div className='w-[40%] flex'>
-                <Typography>TERMS: </Typography>
-                <Typography className='w-full text-center font-semibold'>45 Days</Typography>
+                <Typography className={!toggleEdit && "text-transparent"}>TERMS: </Typography>
+                {toggleEdit ? <Input type='text' label='Terms' name='terms' value={invoiceInfoObject.terms} onChange={handleEditInvoice}></Input> : <Typography className='w-full text-center font-semibold'>{invoiceInfoObject.terms}</Typography>}
               </div>
             </div>
             <div className='w-full flex justify-between'>
               <div className='w-[60%] flex'>
-                <Typography>Address: </Typography>
-                <Typography className='w-full text-center font-semibold'>Test Address</Typography>
+                <Typography className={!toggleEdit && "text-transparent"}>Address: </Typography>
+                {toggleEdit ? <Input type='text' label='Address' name='location' value={invoiceInfoObject.location} onChange={handleEditInvoice}></Input> : <Typography className='w-full text-center font-semibold'>{invoiceInfoObject.location}</Typography>}
               </div>
               <div className='w-[40%] flex'>
-                <Typography>OSCA/PWD ID No.: </Typography>
-                <Typography className='w-[45%] text-center font-semibold'>12345222</Typography>
+                <Typography className={!toggleEdit && "text-transparent"}>OSCA/PWD ID No.: </Typography>
+                {toggleEdit ? <Input type='text' label='OSCA/PWD ID No.' name='osca_pwd_id_number' value={invoiceInfoObject.osca_pwd_id_number} onChange={handleEditInvoice}></Input> : <Typography className='w-[45%] text-center font-semibold'>{invoiceInfoObject.osca_pwd_id_number}</Typography>}
               </div>
             </div>
             <div className='w-full flex justify-between'>
-              <div className='w-[60%] flex flex-col'>
-                <Typography className='w-full text-center font-semibold'>Test Text</Typography>
+              <div className={`w-[60%] flex flex-col ${toggleEdit && "gap-2"}`}>
+                {toggleEdit ? <Input type='text' name='blank' value={invoiceInfoObject.blank} onChange={handleEditInvoice}></Input> : <Typography className='w-full text-center font-semibold'>{invoiceInfoObject.blank}<span className='text-transparent'>.</span></Typography>}
                 <div className='flex'>
-                  <Typography>Business Style: </Typography>
-                  <Typography className='w-[70%] text-center font-semibold'>Test Business Style</Typography>
+                  <Typography className={!toggleEdit && "text-transparent"}>Business Style: </Typography>
+                  {toggleEdit ? <Input type='text' label='Business Style' name='business_style' value={invoiceInfoObject.business_style} onChange={handleEditInvoice}></Input> : <Typography className='w-[70%] text-center font-semibold'>{invoiceInfoObject.business_style}</Typography>}
                 </div>
               </div>
               <div className='w-[40%] flex'>
-                <Typography>Cardholder's Signature: </Typography>
-                <Typography className='w-full text-center font-semibold flex items-end'>Test Signature</Typography>
+                <Typography className={!toggleEdit && "text-transparent"}>Cardholder's Signature: </Typography>
+                <Typography className='w-full text-center font-semibold flex items-end'></Typography>
               </div>
             </div>
           </section>
-          <table className='w-full border border-black'>
-              <thead className='border border-black'>
-                <tr>
-                  <th className='border border-black w-[8%]'>Qty.</th>
-                  <th className='border border-black w-[8%]'>Unit</th>
-                  <th className='border border-black'>DESCRIPTION</th>
-                  <th className='border border-black w-[12%]'>Unit Price</th>
-                  <th className='border border-black w-[15%]'>Amount</th>
+          <table className={`w-full ${toggleEdit && "border"}`}>
+              <thead>
+                <tr className={!toggleEdit && "text-transparent"}>
+                  <th className='w-[8%]'>Qty.</th>
+                  <th className='w-[8%]'>Unit</th>
+                  <th>DESCRIPTION</th>
+                  <th className='w-[12%]'>Unit Price</th>
+                  <th className='w-[15%]'>Amount</th>
                 </tr>
               </thead>
               <tbody>
                 {table_body.map(({ mat_description, price, quantity, total, unit, amount}, index) => {
                   return (
-                    <tr key={index} className='text-center'>
-                      <td className='border border-black'>{quantity}</td>
-                      <td className='border border-black'>{unit || ""}</td>
-                      <td className='border border-black'>{mat_description}.</td>
-                      <td className='border border-black'>{price}</td>
-                      <td className='border border-black'>{total ? total : quantity * price ? quantity * price : amount}</td>
+                    <tr key={index} className={`text-center ${toggleEdit && "border"}`}>
+                      <td className={toggleEdit && "border"}>{quantity}</td>
+                      {toggleEdit ? <td className='border'><input type='text' name='unit' autoFocus={index === 0} value={unit} onChange={(e) => handleEditUnit(e, index)}></input></td> : <td>{unit || ""}</td>}
+                      <td className={!mat_description && "text-transparent"}>{mat_description || "."}</td>
+                      <td className={toggleEdit && "border"}>{price}</td>
+                      <td>{total ? total : quantity * price ? quantity * price : amount}</td>
                     </tr>
                   )
                 })}
               </tbody>
           </table>
-          {/* <section>
-          <Card className="h-full w-full rounded-none overflow-scroll sm:overflow-visible">
-      <table className="w-full min-w-max table-auto sm:table-fixed text-left">
-        <thead>
-          <tr>
-            {TABLE_HEAD.map((head, index) => (
-              <th
-                key={index}
-                className="-b -blue-gray-100 bg-lightGreen p-4"
-              >
-                <Typography
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70 w-[25%]"
-                >
-                  {head}
-                </Typography>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {invoiceOrders.map(({ mat_description, price, quantity, total}, index) => {
-            const isLast = index === invoiceOrders.length - 1;
-            const classes = isLast ? "p-4 w-[25%]" : "p-4 -b -blue-gray-50 w-[25%]";
- 
-            return (
-              <tr key={index}>
-                <td className={classes} >
-                  <Typography
-                    color="blue-gray"
-                    className="font-normal w-[100%] break-all"
-                  >
-                    {mat_description}
-                  </Typography>
-                </td>
-                <td className={classes}>
-                  <Typography
-                    color="blue-gray"
-                    className="font-normal w-[100%] break-all"
-                  >
-                    {price}
-                  </Typography>
-                </td>
-                <td className={classes}>
-                  <Typography
-                    color="blue-gray"
-                    className="font-normal w-[100%] break-all"
-                  >
-                    {quantity}
-                  </Typography>
-                </td>
-                <td className={classes}>
-                  <Typography
-                    as="a"
-                    href="#"
-                    color="blue-gray"
-                    className="font-normal w-[100%] break-all"
-                  >
-                    {total ? total : price * quantity}
-                  </Typography>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </Card>
-          </section> */}
         </main>
       </section>
       <DrawerNav openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}></DrawerNav>
