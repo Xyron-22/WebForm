@@ -349,7 +349,7 @@ const handleFilterAccountName = (e) => {
           );
         },
       )
-    }, [accountRecordsShown, toggleModify, setOfAccountIdsToDelete, handleSelectedAccounts])
+    }, [accountRecordsShown, toggleModify, setOfAccountIdsToDelete])
 
     //function for the page buttons
     const getItemProps = (page) =>
@@ -398,7 +398,7 @@ const handleFilterAccountName = (e) => {
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
         fetchAllAccountRecords()
-    },[fetchAllAccountRecords, router, token])
+    },[router, token])
 
   return (
     <>{errorInformation.status === "failed" || errorInformation.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{errorInformation.message}</div> : 

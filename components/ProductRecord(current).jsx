@@ -452,7 +452,7 @@ const ProductRecord = () => {
           );
         },
       )
-    }, [productRecordsShown, toggleModify, setOfProductIdsToDelete, handleSelectedProducts, openEditDialogue])
+    }, [productRecordsShown, toggleModify, setOfProductIdsToDelete, openEditDialogue])
 
     //function for the page buttons
     const getItemProps = (page) =>
@@ -502,7 +502,7 @@ const ProductRecord = () => {
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
         setDecodedJWTToken(decodedToken)
         fetchAllProducts()
-    },[fetchAllProducts, router, token])
+    },[router, token])
 
   return (
     <>{errorInformation.status === "failed" || errorInformation.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{errorInformation.message}</div> : 
