@@ -554,7 +554,7 @@ const handleFilterCustomerName = (e) => {
           );
         },
       )
-    }, [paidOrderRecordsShown, toggleModify, setOfOrderIdsToDelete, openEditDialogue])
+    }, [paidOrderRecordsShown, toggleModify, setOfOrderIdsToDelete])
 
     //function for the page buttons
     const getItemProps = (page) =>

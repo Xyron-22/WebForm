@@ -591,7 +591,7 @@ const handleFilterCustomerName = (e) => {
           );
         },
       )
-    }, [pendingOrderRecordsShown, toggleModify, selectedOrders, setOfOrderIdsToDelete, openEditDialogue])
+    }, [pendingOrderRecordsShown, toggleModify, selectedOrders, setOfOrderIdsToDelete])
 
     //function for the page buttons
     const getItemProps = (page) =>

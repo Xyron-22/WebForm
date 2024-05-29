@@ -575,7 +575,7 @@ const handleFilterCustomerName = (e) => {
           );
         },
       )
-    }, [orderRecordsShown, toggleModify, setOfOrderIdsToDelete, decodedJWTToken.role, openEditDialogue])
+    }, [orderRecordsShown, toggleModify, setOfOrderIdsToDelete])
 
     //function for the page buttons
     const getItemProps = (page) =>

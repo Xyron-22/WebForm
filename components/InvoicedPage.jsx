@@ -604,7 +604,7 @@ const handleFilterCustomerName = (e) => {
           );
         },
       )
-    }, [invoicedOrderRecordsShown, toggleModify, setOfOrderIdsToApproveOrDelete, openEditDialogue])
+    }, [invoicedOrderRecordsShown, toggleModify, setOfOrderIdsToApproveOrDelete])
 
     //function for the page buttons
     const getItemProps = (page) =>

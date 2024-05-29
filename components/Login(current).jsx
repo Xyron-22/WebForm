@@ -22,7 +22,7 @@ import {
     Alert
   } from "@material-tailwind/react";
    
-const LoginForm = () => {
+const LoginFormCurrent = () => {
 
     const form = useRef()
 
@@ -201,4 +201,4 @@ const LoginForm = () => {
     );
   }
 
-export default LoginForm
+export default LoginFormCurrent

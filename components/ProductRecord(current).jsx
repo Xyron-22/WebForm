@@ -452,7 +452,7 @@ const ProductRecord = () => {
           );
         },
       )
-    }, [productRecordsShown, toggleModify, setOfProductIdsToDelete, openEditDialogue])
+    }, [productRecordsShown, toggleModify, setOfProductIdsToDelete])
 
     //function for the page buttons
     const getItemProps = (page) =>

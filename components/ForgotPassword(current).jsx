@@ -14,7 +14,7 @@ import {
     Alert
   } from "@material-tailwind/react";
 
-const ForgotPassword = () => {
+const ForgotPasswordCurrent = () => {
     const form = useRef(null)
 
     const [isConfirmed, setIsConfirmed] = useState(false)
@@ -125,4 +125,4 @@ const ForgotPassword = () => {
     )
 }
 
-export default ForgotPassword
+export default ForgotPasswordCurrent

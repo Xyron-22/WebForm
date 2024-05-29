@@ -15,7 +15,7 @@ import jsPDF from 'jspdf';
 import ReactLoading from "react-loading";
 import { MdArrowForwardIos } from "react-icons/md";
 
-const Invoice = () => {
+const InvoicePrintAndDownloadPage = () => {
 
   const invoiceSection = useRef()
 
@@ -343,4 +343,4 @@ const Invoice = () => {
   )
 }
 
-export default Invoice
+export default InvoicePrintAndDownloadPage

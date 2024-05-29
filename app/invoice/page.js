@@ -1,7 +1,7 @@
 import React from 'react'
 import Invoice from '@/components/Invoice'
 
-const InvoicePage = async () => {
+const InvoicePage = () => {
    
   return (
     <div className="flex flex-col min-h-[86vh] justify-center items-center">
