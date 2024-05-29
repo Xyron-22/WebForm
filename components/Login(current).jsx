@@ -3,19 +3,14 @@
 import React, {useState, useRef, useLayoutEffect} from 'react'
 import Cookies from 'js-cookie'
 import Link from 'next/link'
-import {AiFillEyeInvisible, AiFillEye, AiOutlineLogin, AiOutlineMail} from "react-icons/ai"
-import {BiRegistered} from "react-icons/bi"
-import {RiLockPasswordLine} from "react-icons/ri"
+import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai"
 import axios from "axios"
 import { useRouter } from 'next/navigation'
 import useStore from '@/stateManagement/store'
-import toast, {Toaster} from 'react-hot-toast'
 import { jwtDecode } from 'jwt-decode'
-import ReactLoading from "react-loading";
 import {
     Card,
     Input,
-    Checkbox,
     Button,
     Typography,
     Spinner,

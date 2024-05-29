@@ -1,7 +1,7 @@
 import React from 'react'
 import ForgotPassword from '@/components/ForgotPassword(current)'
 
-const forgotPasswordPage = () => {
+const ForgotPasswordPage = () => {
   return (
     <div className="flex flex-col min-h-[82vh] justify-center items-center">
       <ForgotPassword></ForgotPassword>
@@ -9,4 +9,4 @@ const forgotPasswordPage = () => {
   )
 }
 
-export default forgotPasswordPage
+export default ForgotPasswordPage

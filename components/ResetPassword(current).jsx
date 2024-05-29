@@ -3,13 +3,11 @@
 import React, {useState, useRef} from 'react'
 import axios from 'axios'
 import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai"
-import toast, {Toaster} from "react-hot-toast"
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 import {
     Card,
     Input,
-    Checkbox,
     Button,
     Typography,
     Spinner,

@@ -4,16 +4,15 @@ import React, { useRef, useState, useLayoutEffect } from 'react'
 import useStore from '@/stateManagement/store';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { Button, ButtonGroup, Typography, Card, Alert, Input } from "@material-tailwind/react";
-import { FaPrint, FaArrowLeft, FaCheck, FaRegEdit } from "react-icons/fa";
-import { AiOutlineDownload, AiOutlineSend } from "react-icons/ai";
+import { Button, ButtonGroup, Typography, Alert, Input } from "@material-tailwind/react";
+import { FaPrint, FaCheck, FaRegEdit } from "react-icons/fa";
+import { AiOutlineDownload } from "react-icons/ai";
 import { useRouter } from 'next/navigation';
 import { useReactToPrint } from 'react-to-print';
 import DrawerNav from './DrawerNav';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import ReactLoading from "react-loading";
-import { MdArrowForwardIos } from "react-icons/md";
 
 const InvoicePrintAndDownloadPage = () => {
 

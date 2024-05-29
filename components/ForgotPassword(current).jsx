@@ -3,11 +3,9 @@
 import React, { useState, useRef } from 'react'
 import Link from "next/link"
 import axios from "axios"
-import toast, {Toaster} from "react-hot-toast"
 import {
     Card,
     Input,
-    Checkbox,
     Button,
     Typography,
     Spinner,
