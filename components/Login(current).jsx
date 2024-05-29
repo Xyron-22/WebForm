@@ -90,7 +90,7 @@ const LoginForm = () => {
 
   useLayoutEffect(() => {
     if (token) router.replace("/")
-  }, [])
+  }, [router, token])
 
     return (
         <>

@@ -34,7 +34,7 @@ const DrawerNav = ({openDrawer, setOpenDrawer}) => {
         if (!token) return router.replace("/auth/login")
         const decodedToken = jwtDecode(token)
         setDecodedToken(decodedToken)
-    },[])
+    },[router, token])
 
   return (
     <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} className="p-4 overflow-auto">

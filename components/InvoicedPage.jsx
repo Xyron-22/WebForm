@@ -579,7 +579,7 @@ const handleFilterCustomerName = (e) => {
                     </Tooltip>
                   </td>
                   <td className={classes} onClick={() => {
-                          setOpenEditDialogue(!openEditDialogue)
+                          setOpenEditDialogue(() => !openEditDialogue)
                           setOrderToEdit({
                             order_id,
                             order_date: new Date(order_date).toLocaleDateString('sv-SE'),
@@ -604,7 +604,7 @@ const handleFilterCustomerName = (e) => {
           );
         },
       )
-    }, [invoicedOrderRecordsShown, toggleModify, setOfOrderIdsToApproveOrDelete])
+    }, [invoicedOrderRecordsShown, toggleModify, setOfOrderIdsToApproveOrDelete, handleSelectedOrders, openEditDialogue])
 
     //function for the page buttons
     const getItemProps = (page) =>
@@ -640,12 +640,12 @@ const handleFilterCustomerName = (e) => {
       }
       return arrayOfNumbers.map((page, index) => {
           return (
-            <div className="flex items-center gap-2 mx-1">
+            <div key={index} className="flex items-center gap-2 mx-1">
               <IconButton {...getItemProps(page)}>{page}</IconButton>
             </div>
           )
       })
-    }, [initialInvoicedOrderRecordsShown, currentPage])
+    }, [initialInvoicedOrderRecordsShown, currentPage, getItemProps])
 
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
@@ -653,7 +653,7 @@ const handleFilterCustomerName = (e) => {
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
         fetchAllInvoicedOrders()
-    },[])
+    },[fetchAllInvoicedOrders, router, token])
 
   return (
     <>{errorInformation.status === "failed" || errorInformation.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{errorInformation.message}</div> : 

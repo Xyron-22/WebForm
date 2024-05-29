@@ -349,7 +349,7 @@ const handleFilterAccountName = (e) => {
           );
         },
       )
-    }, [accountRecordsShown, toggleModify, setOfAccountIdsToDelete])
+    }, [accountRecordsShown, toggleModify, setOfAccountIdsToDelete, handleSelectedAccounts])
 
     //function for the page buttons
     const getItemProps = (page) =>
@@ -385,12 +385,12 @@ const handleFilterAccountName = (e) => {
       }
       return arrayOfNumbers.map((page, index) => {
           return (
-            <div className="flex items-center gap-2 mx-1">
+            <div key={index} className="flex items-center gap-2 mx-1">
               <IconButton {...getItemProps(page)}>{page}</IconButton>
             </div>
           )
       })
-    }, [initialAccountRecordsShown, currentPage])
+    }, [initialAccountRecordsShown, currentPage, getItemProps])
 
     useLayoutEffect(() => {
         if (!token) return router.replace("/auth/login")
@@ -398,7 +398,7 @@ const handleFilterAccountName = (e) => {
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
         fetchAllAccountRecords()
-    },[])
+    },[fetchAllAccountRecords, router, token])
 
   return (
     <>{errorInformation.status === "failed" || errorInformation.status === "error" ? <div className='bg-whiteSmoke m-auto w-[40%] h-[40%]'>{errorInformation.message}</div> : 

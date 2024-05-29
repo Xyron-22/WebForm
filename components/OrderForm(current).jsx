@@ -307,7 +307,7 @@ const OrderForm = ({data}) => {
       return initialProductArray.map((val, i) => {
         return (
             <Button variant='gradient' color='teal' className='h-[25%] m-1 hover:cursor-pointer shadow hover:scale-110 p-1' key={i} name="product" type='button' value={val.mat_description} onClick={(e) => {
-            setToggleAddProductDialogue(!toggleAddProductDialogue);
+            setToggleAddProductDialogue(() => !toggleAddProductDialogue);
             setProduct({
                 product: val.mat_description,
                 productId: val.product_id
@@ -317,7 +317,7 @@ const OrderForm = ({data}) => {
             </Button>
         )
       })
-    }, [initialProductArray])
+    }, [initialProductArray, toggleAddProductDialogue])
 
     //memoized outletArray
     const memoizedOutletArray = useMemo(() => {
@@ -343,7 +343,7 @@ const OrderForm = ({data}) => {
         setForm({...form, auth_id: decodeToken.id})
         setIsLoading(false)
       }
-    }, [])
+    }, [form, router, token])
 
   return (
     <>

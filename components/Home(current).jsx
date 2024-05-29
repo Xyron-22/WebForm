@@ -162,7 +162,7 @@ const Home = () => {
         
         fetchAllOrderData()
         setIsLoading(false)        
-    },[])
+    },[router, token])
 
     const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {

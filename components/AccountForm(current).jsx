@@ -141,7 +141,7 @@ const AccountForm = () => {
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodedToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) return router.replace("/auth/login")
         if (decodedToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE) return router.replace("/form/order")
         setIsLoading(false)
-      }, [])
+      }, [router, token])
 
   return (
     <>

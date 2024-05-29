@@ -109,13 +109,13 @@ const Invoice = () => {
             mat_description: "",
             price: "",
             quantity: "",
-            total: "Bill: " + total
+            total: "PHP " + total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
           })
           const amountNetOfVAT = total / 1.12
           tempTable_Body.splice(14, 3, 
-            {mat_description: "", price: "", quantity: "", total: Number(total.toFixed(2))},
-            {mat_description: "", price: "", quantity: "", total: Number((total - amountNetOfVAT).toFixed(2))},
-            {mat_description: "", price: "", quantity: "", total: Number(amountNetOfVAT.toFixed(2))}
+            {mat_description: "", price: "", quantity: "", total: total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')},
+            {mat_description: "", price: "", quantity: "", total: (total - amountNetOfVAT).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')},
+            {mat_description: "", price: "", quantity: "", total: amountNetOfVAT.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
           )
         } 
       })
@@ -305,7 +305,7 @@ const Invoice = () => {
                 </div>
               </div>
               <div className='w-[40%] flex'>
-                <Typography className={!toggleEdit && "text-transparent"}>Cardholder's Signature: </Typography>
+                <Typography className={!toggleEdit && "text-transparent"}>Cardholder&apos;s Signature: </Typography>
                 <Typography className='w-full text-center font-semibold flex items-end'></Typography>
               </div>
             </div>
@@ -327,8 +327,8 @@ const Invoice = () => {
                       <td className={toggleEdit && "border"}>{quantity}</td>
                       {toggleEdit ? <td className='border'><input type='text' name='unit' autoFocus={index === 0} value={unit} onChange={(e) => handleEditUnit(e, index)}></input></td> : <td>{unit || ""}</td>}
                       <td className={!mat_description && "text-transparent"}>{mat_description || "."}</td>
-                      <td className={toggleEdit && "border"}>{price}</td>
-                      <td>{total ? total : quantity * price ? quantity * price : amount}</td>
+                      <td className={toggleEdit && "border"}>{price && Number(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</td>
+                      <td>{total ? total : quantity && price ? (quantity * price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') : amount}</td>
                     </tr>
                   )
                 })}
