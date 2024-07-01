@@ -62,7 +62,6 @@ const InvoicePrintAndDownloadPage = () => {
     {quantity: "", unit: "", mat_description: "", price: "", amount: ""}, 
     {quantity: "", unit: "", mat_description: "", price: "", amount: ""}, 
     {quantity: "", unit: "", mat_description: "", price: "", amount: ""}, 
-    {quantity: "", unit: "", mat_description: "", price: "", amount: ""}, 
   ])
 
   const [openAlert, setOpenAlert] = useState({
@@ -257,10 +256,10 @@ const InvoicePrintAndDownloadPage = () => {
       <section className='lg:mx-[20%] pl-[5.5%] pr-[3.5%] bg-white mb-[2%]' ref={invoiceSection}>
         <header className='w-full h-32'></header>
         <main>
-          <section className={`flex flex-col w-full ${toggleEdit && "gap-2"}`}>
+          <section className={`flex flex-col w-full mt-2.5 ${toggleEdit && "gap-2"}`}>
             <div className='w-full flex justify-between'>
-              <Typography className={`font-semibold w-[60%] ${!toggleEdit && "text-transparent"}`}>SALES INVOICE</Typography>
-              <div className='flex w-[40%]'>
+              <Typography className={`font-semibold w-[62%] ${!toggleEdit && "text-transparent"}`}>SALES INVOICE</Typography>
+              <div className='flex w-[38%]'>
                 <div className='w-[60%] flex'>
                   <Typography className={!toggleEdit && "text-transparent"}>Date: </Typography>
                   {toggleEdit ? <Input type='date' label='Date' name='date' onChange={handleEditInvoice}></Input> : <Typography className='w-full text-center font-semibold'>{invoiceInfoObject.date}</Typography>}
@@ -286,11 +285,11 @@ const InvoicePrintAndDownloadPage = () => {
               </div>
             </div>
             <div className='w-full flex justify-between'>
-              <div className='w-[60%] flex'>
+              <div className='w-[62%] flex'>
                 <Typography className={!toggleEdit && "text-transparent"}>Address: </Typography>
                 {toggleEdit ? <Input type='text' label='Address' name='location' value={invoiceInfoObject.location} onChange={handleEditInvoice}></Input> : <Typography className='w-full text-center font-semibold'>{invoiceInfoObject.location}</Typography>}
               </div>
-              <div className='w-[40%] flex'>
+              <div className='w-[38%] flex'>
                 <Typography className={!toggleEdit && "text-transparent"}>OSCA/PWD ID No.: </Typography>
                 {toggleEdit ? <Input type='text' label='OSCA/PWD ID No.' name='osca_pwd_id_number' value={invoiceInfoObject.osca_pwd_id_number} onChange={handleEditInvoice}></Input> : <Typography className='w-[45%] text-center font-semibold'>{invoiceInfoObject.osca_pwd_id_number}</Typography>}
               </div>
@@ -314,12 +313,12 @@ const InvoicePrintAndDownloadPage = () => {
                 <tr className={!toggleEdit && "text-transparent"}>
                   <th className='w-[8%]'>Qty.</th>
                   <th className='w-[8%]'>Unit</th>
-                  <th>DESCRIPTION</th>
-                  <th className='w-[12%]'>Unit Price</th>
-                  <th className='w-[15%]'>Amount</th>
+                  <th className='w-[50%]'>DESCRIPTION</th>
+                  <th>Unit Price</th>
+                  <th>Amount</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className='leading-[1.4]'>
                 {table_body.map(({ mat_description, price, quantity, total, unit, amount}, index) => {
                   return (
                     <tr key={index} className={`text-center ${toggleEdit && "border"}`}>
