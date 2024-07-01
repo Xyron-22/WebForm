@@ -7,6 +7,8 @@ const useStore = create((set) => ({
     // extractJwtFromStorage: () => set({token: Cookies.get("jwt")}),
     setToken: () => set({token: Cookies.get("jwt")}),
     setTokenToNull: () => set({token: null}),
+    ordersForInvoice: [],
+    setOrdersForInvoice: (ordersForInvoiceArray) => set({ordersForInvoice: ordersForInvoiceArray}),
 }))
 
 export default useStore;

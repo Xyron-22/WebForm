@@ -20,12 +20,11 @@ const OrderRecord = () => {
     const token = useStore((state) => state.token)
 
     const [decodedJWTToken, setDecodedJWTToken] = useState("")
-  
     const [isLoading, setIsLoading] = useState(true)
+    const [errorInformation, setErrorInformation] = useState("")
+
     const [orderRecordsShown, setOrderRecordsShown] = useState([])
     const [initialOrderRecordsShown, setInitialOrderRecordsShown] = useState([])
-
-    const [errorInformation, setErrorInformation] = useState("")
 
     //state for toggling the delete modal
     const [toggleModal, setToggleModal] = useState(false)
@@ -122,29 +121,29 @@ const OrderRecord = () => {
         setDisableButton(false)
     }
 
-    //this function is for updating the status of an order either pending or approved
-    const updateStatusOfAnOrder = async (newStatus, currentStatus, order_id, i) => {
-        setDisableButton(true)
-        if (newStatus !== currentStatus) {
-            try {
-                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`, {order_id, status: newStatus}, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-                const tempArr = [...orderRecordsShown]
-                tempArr[i].status = newStatus
-                setOrderRecordsShown(tempArr)
-            } catch (error) {
-                toast.error(error.response.data.message, {
-                    duration: 3000,
-                    className: "text-2xl"
-                })
-            }
-        }
-        setDisableButton(false)
-    }
+    // //this function is for updating the status of an order either pending or approved
+    // const updateStatusOfAnOrder = async (newStatus, currentStatus, order_id, i) => {
+    //     setDisableButton(true)
+    //     if (newStatus !== currentStatus) {
+    //         try {
+    //             await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/order`, {order_id, status: newStatus}, {
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "Authorization": `Bearer ${token}`
+    //                 }
+    //             })
+    //             const tempArr = [...orderRecordsShown]
+    //             tempArr[i].status = newStatus
+    //             setOrderRecordsShown(tempArr)
+    //         } catch (error) {
+    //             toast.error(error.response.data.message, {
+    //                 duration: 3000,
+    //                 className: "text-2xl"
+    //             })
+    //         }
+    //     }
+    //     setDisableButton(false)
+    // }
 
     //function for sorting the records by account name
     const handleSortByName = () => {
@@ -253,9 +252,12 @@ const OrderRecord = () => {
             </tr>
             </thead>
             <tbody>
-                {orderRecordsShown.map(({order_id, order_date, account_name, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price, time_stamp, status}, i) => {
+                {orderRecordsShown.map(({order_id, order_date, account_name, account_id, location, dsp, mat_description, quantity, price, customer_name, tin, contact, terms, remarks_freebies_concern, delivery_date, total_price, time_stamp, status}, i) => {
+                    let pastOrderRecord = orderRecordsShown[i - 1]
+                    if (pastOrderRecord?.order_date === order_date && pastOrderRecord?.delivery_date === delivery_date && pastOrderRecord?.time_stamp === time_stamp) remarks_freebies_concern = null
+                                            
                     return (
-                    <tr key={i}>
+                    <tr key={i} onClick={() => router.push(`/records/order/${account_id}?account_name=${account_name}&time_stamp=${time_stamp}&order_date=${order_date}&delivery_date=${delivery_date}`)} className='cursor-pointer'>
                         <td className='border border-black text-center'>{new Date(order_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{new Date(delivery_date).toLocaleDateString()}</td>
                         <td className='border border-black'>{customer_name}</td>
@@ -266,7 +268,7 @@ const OrderRecord = () => {
                         <td className='border border-black text-center'>{terms}</td>
                         <td className='border border-black text-center'>{location}</td>
                         <td className='border border-black text-center'>{dsp}</td>
-                        <td className='border border-black text-center'>{remarks_freebies_concern}</td>
+                        <td className={`${remarks_freebies_concern ? "border-b-0 border-t" : "border-y-0"} border-black text-center`}>{remarks_freebies_concern}</td>
                         <td className='border border-black text-center'>{new Date(Number(time_stamp)).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})}</td>
                         {decodedJWTToken.role === process.env.NEXT_PUBLIC_AUTHORIZED_ROLE ? 
                             <td className='border border-black text-center cursor-pointer'>

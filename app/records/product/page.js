@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductRecord from '@/components/ProductRecord'
+import ProductRecord from '@/components/ProductRecord(current)'
 
 const ProductPage = async () => {
     

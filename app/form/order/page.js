@@ -1,5 +1,5 @@
 import React from 'react'
-import OrderForm from '@/components/OrderForm'
+import OrderForm from '@/components/OrderForm(current)'
 
 async function getProductRecords () {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/form/product`, {cache: 'no-store'})

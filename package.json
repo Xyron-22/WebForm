@@ -9,16 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@material-tailwind/react": "^2.1.9",
     "axios": "^1.5.1",
+    "caniuse-lite": "^1.0.30001610",
+    "create-next-app": "^14.2.3",
+    "html2canvas": "^1.4.1",
     "js-cookie": "^3.0.5",
+    "jspdf": "^2.5.1",
     "jwt-decode": "^4.0.0",
-    "next": "13.5.5",
+    "next": "13.4.19",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-html-table-to-excel": "^2.0.0",
     "react-icons": "^4.11.0",
     "react-loading": "^2.0.3",
+    "react-to-print": "^2.15.1",
     "react-tooltip": "^5.24.0",
     "recharts": "^2.10.1",
     "zustand": "^4.4.4"
