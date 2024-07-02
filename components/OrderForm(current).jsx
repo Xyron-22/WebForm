@@ -53,7 +53,6 @@ const OrderForm = ({data}) => {
   let timeOut;
   const [openDrawer, setOpenDrawer] = useState(false)
   const [errorInformation, setErrorInformation] = useState("")
-  const [decodedToken, setDecodedToken] = useState(null)
 
   // DSP ASSIGNED -----------------------------------------------------
   //state for DSP Assigned
@@ -339,11 +338,10 @@ const OrderForm = ({data}) => {
     if (decodeToken.role !== process.env.NEXT_PUBLIC_AUTHORIZED_ROLE && decodeToken.role !== process.env.NEXT_PUBLIC_UNAUTHORIZED_ROLE) {
       router.replace("/auth/login")
     } else {
-        setDecodedToken(decodeToken)
         setForm({...form, auth_id: decodeToken.id})
         setIsLoading(false)
       }
-    }, [form, router, token])
+    }, [router, token])
 
   return (
     <>
